@@ -58,5 +58,36 @@ async update(req, res) {
       res.status(500).json({ error: 'Artist update failed' });
     }
   }
+
+  // Получение электронной почты художника по его идентификатору
+async getEmailById(artistId) {
+    try {
+      const artist = await Artists.findOne({
+        attributes: ['authorization_data_id'],
+        where: { id: artistId },
+      });
+  
+      if (!artist) {
+        return null; // или выбросить ошибку, в зависимости от логики вашего приложения
+      }
+  
+      const { authorization_data_id } = artist;
+      
+      // Предположим, что в модели AuthorizationData есть атрибут email
+      const authorizationData = await AuthorizationData.findByPk(authorization_data_id, {
+        attributes: ['email'],
+      });
+  
+      if (!authorizationData) {
+        return null; // или выбросить ошибку
+      }
+  
+      return authorizationData.email;
+    } catch (error) {
+      console.error('Error retrieving artist email:', error);
+      throw error;
+    }
+  }
+  
 }
 module.exports = new ArtistController();
