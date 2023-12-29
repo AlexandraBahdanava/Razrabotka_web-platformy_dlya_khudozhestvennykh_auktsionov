@@ -9,3 +9,5 @@ router.use("/auth", authRouter);
 router.use("/api", authMiddleware, protectedRouter);
 
 module.exports = router;
+
+
