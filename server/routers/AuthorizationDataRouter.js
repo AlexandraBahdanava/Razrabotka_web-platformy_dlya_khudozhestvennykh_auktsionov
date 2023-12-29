@@ -1,7 +1,7 @@
 const { Router } = require("express");
-const artistController = require("../controllers/artistController");
-const authController = require("../controllers/authController");
-const collectorController = require("../controllers/collectorController");
+const artistController = require("../controllers/ArtistsController");
+const authController = require("../controllers/AuthorizationDataController");
+const collectorController = require("../controllers/CollectorsController");
 
 const router = new Router();
 
