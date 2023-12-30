@@ -1,6 +1,6 @@
 const AuthorizationData = require('../models/AuthorizationData');
-const Artist = require('../models/Artists');
-const Collector = require('../models/Collectors');
+const {Artist} = require('../models/Artists');
+const {Collector} = require('../models/Collectors');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -8,44 +8,62 @@ const jwt = require('jsonwebtoken');
 class AuthController {
   async login(req, res) {
     try {
-      const { login, password } = req.body;
+        const { login, password } = req.body;
 
-      // Поиск пользователя в AuthorizationData
-      const authData = await AuthorizationData.findOne({
-        where: { login },
-        include: [Artist, Collector],
-      });
+        const artist = await Artist.findOne({ where: { login: login } });
+        const collector = await Collector.findOne({ where: { login: login } });
 
-      // Проверка существования пользователя и сопоставление пароля
-      if (!authData || !(await bcrypt.compare(password, authData.password))) {
-        return res.status(401).json({ error: 'Invalid login or password' });
-      }
+        if (!artist && !collector) {
+            return res.status(401).json({ error: "Authentication failed" });
+        }
 
-      // Определение, к какой таблице относится пользователь
-      let userRole = null;
-      let userDetails = null;
+        if (artist) {
+            const passwordMatch = await bcrypt.compare(password, artist.password);
 
-      if (authData.Artist) {
-        userRole = 'artist';
-        userDetails = authData.Artist;
-      } else if (authData.Collector) {
-        userRole = 'collector';
-        userDetails = authData.Collector;
-      }
+            if (!passwordMatch) {
+                return res.status(401).json({ error: "Authentication failed" });
+            }
 
-      // Создание JWT токена для аутентификации
-      const token = jwt.sign(
-        { userId: authData.id, role: userRole, userDetails },
-        process.env.SECRET_KEY,
-        { expiresIn: '1h' }
-      );
+            const token = jwt.sign({ id: artist.id }, a6bj7dkvh43kge, {
+                expiresIn: "1h",
+            });
 
-      res.status(200).json({ token, role: userRole, userDetails });
+            res.status(200).json({ token: token, role: "artist" });
+        } else {
+            const passwordMatch = await bcrypt.compare(password, collector.password);
+
+            if (!passwordMatch) {
+                return res.status(401).json({ error: "Authentication failed" });
+            }
+
+            const token = jwt.sign({ id: collector.id }, a6bj7dkvh43kge, {
+                expiresIn: "1h",
+            });
+
+            res.status(200).json({ token: token, role: "collector" });
+        }
     } catch (error) {
-      console.error('Error authenticating user', error);
-      res.status(500).json({ error: 'Authentication failed' });
+        res.status(500).json({ error: "Login failed" });
     }
-  }
+}
+
+async checkEmail(req, res) {
+    try {
+        const { email } = { ...req.body };
+
+        const artist = await Artist.findOne({ where: { email: email } });
+        const collector = await Collector.findOne({ where: { email: email } });
+
+        if (!artist && !collector) {
+            return res.status(200).json({ available: true });
+        }
+
+        return res.status(200).json({ available: false });
+    } catch (error) {
+        res.status(500).json({ error: "Email check failed" });
+    }
+}
+
 }
 
 module.exports = new AuthController();

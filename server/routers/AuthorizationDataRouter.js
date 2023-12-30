@@ -1,12 +1,13 @@
 const { Router } = require("express");
 const artistController = require("../controllers/ArtistsController");
-const authController = require("../controllers/AuthorizationDataController");
+const authorizationDataController = require("../controllers/AuthorizationDataController");
 const collectorController = require("../controllers/CollectorsController");
 
 const router = new Router();
 
-router.post("/login", authController.login);
+router.post("/login", authorizationDataController.login);
+router.post("/register", authorizationDataController.checkEmail);
 router.post("/register/artist", artistController.create);
-router.post("/register/company", collectorController.create);
+router.post("/register/collector", collectorController.create);
 
 module.exports = router;

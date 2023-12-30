@@ -3,7 +3,7 @@ const router = express.Router();
 const CollectorController = require('../controllers/CollectorsController');
 
 // Создание записи о коллекционере
-router.post('/collectors', async (req, res) => {
+router.post('/collector', async (req, res) => {
   try {
     const { phone } = req.body;
 
@@ -11,7 +11,7 @@ router.post('/collectors', async (req, res) => {
     const authorization_data_id = req.authorization_data_id;
 
     // Вызов метода контроллера для создания коллекционера
-    const collector = await CollectorController.createCollector({ phone, authorization_data_id });
+    const collector = await CollectorController.create({ phone, authorization_data_id });
 
     // Отправка успешного ответа
     res.status(201).json({ message: 'Collector created successfully', collector });

@@ -4,6 +4,7 @@ import { publicRoutes } from "./publicRoutes";
 import { artistRoutes } from "./artistRoutes";
 import { collectorRouter } from "./collectorRouter";
 
+
 const AppRouter = () => {
     const [jwt, setJwt] = useState(localStorage.getItem("jwt"));
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ const AppRouter = () => {
                 {artistRoutes.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} exact />
                 ))}
-                <Route key="*" path="*" element={<Navigate to={"/artist"} />} />
+                <Route key="*" path="*" element={<Navigate to="/artist" />} />
             </Routes>
         );
     }
@@ -34,7 +35,7 @@ const AppRouter = () => {
                 {collectorRouter.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} exact />
                 ))}
-                <Route key="*" path="*" element={<Navigate to={"/collector"} />} />
+                <Route key="*" path="*" element={<Navigate to="/collector" />} />
             </Routes>
         );
     }
@@ -45,7 +46,7 @@ const AppRouter = () => {
                 {publicRoutes.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} exact />
                 ))}
-                <Route key="*" path="*" element={<Navigate to={"/login"} />} />
+                <Route key="*" path="*" element={<Navigate to="/login" />} />
             </Routes>
         );
     }

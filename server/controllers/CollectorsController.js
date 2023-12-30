@@ -4,36 +4,27 @@ const  AuthorizationData = require('../models/AuthorizationData');
 class CollectorController {
   async create(req, res) {
     try {
-      const { phone } = req.body;
+        const collector = {
+            phone: req.body.phone,
+        };
 
-      // Проверка существования пользователя в AuthorizationData
-      const authData = await AuthorizationData.findByPk(req.authorization_data_id);
+        if ((await Collectors.findOne({ where: { email: collector.email } })) !== null) {
+            return res.status(400).json({ error: "Email is taken" });
+        }
 
-      if (!authData) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+        collector.password = await bcrypt.hash(collector.password, 10);
 
-      // Проверка наличия записи о коллекционере для данного пользователя
-      const existingCollector = await Collectors.findOne({
-        where: { authorization_data_id: authData.id }
-      });
+        const createdCollectors = await Collectors.create({
+            ...collector,
+        });
 
-      if (existingCollector) {
-        return res.status(400).json({ error: 'Collector record already exists' });
-      }
+        await createdContactPerson.setCompany(createdCollectors.id);
 
-      // Создание записи о коллекционере
-      const collector = await Collectors.create({
-        phone,
-        authorization_data_id: authData.id
-      });
-
-      res.status(201).json({ message: 'Collector created successfully', collector });
-    } catch (error) {
-      console.error('Error creating collector', error);
-      res.status(500).json({ error: 'Collector creation failed' });
+        return res.status(201).json(createdCollectors);
+    } catch (err) {
+        return res.sendStatus(500);
     }
-  }
+}
 }
 
 module.exports = new CollectorController();
