@@ -24,7 +24,7 @@ const AppRouter = () => {
                 {artistRoutes.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} exact />
                 ))}
-                <Route key="*" path="*" element={<Navigate to="/artist" />} />
+                <Route key="*" path="*" element={<Navigate to="/artists" />} />
             </Routes>
         );
     }
@@ -35,7 +35,7 @@ const AppRouter = () => {
                 {collectorRouter.map(({ path, Component }) => (
                     <Route key={path} path={path} element={<Component />} exact />
                 ))}
-                <Route key="*" path="*" element={<Navigate to="/collector" />} />
+                <Route key="*" path="*" element={<Navigate to="/collectors" />} />
             </Routes>
         );
     }

@@ -1,11 +1,12 @@
 const AuthorizationData = require('../models/AuthorizationData');
-const {Artist} = require('../models/Artists');
-const {Collector} = require('../models/Collectors');
+const Artist = require('../models/Artists');
+const Collector = require('../models/Collectors');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { use } = require('../routers/AuctionArchiveRouter');
 
-class AuthController {
+class AuthorizationDataController {
   async login(req, res) {
     try {
         const { login, password } = req.body;
@@ -51,19 +52,20 @@ async checkEmail(req, res) {
     try {
         const { email } = { ...req.body };
 
-        const artist = await Artist.findOne({ where: { email: email } });
-        const collector = await Collector.findOne({ where: { email: email } });
-
-        if (!artist && !collector) {
+        // Используйте методы, предоставленные Sequelize для работы с ассоциациями
+        const user = await AuthorizationData.findOne({ where: { email: email } });
+        if (!user ) {
             return res.status(200).json({ available: true });
         }
 
         return res.status(200).json({ available: false });
     } catch (error) {
+        console.error("Error during email check:", error);
         res.status(500).json({ error: "Email check failed" });
     }
 }
 
+
 }
 
-module.exports = new AuthController();
+module.exports = new AuthorizationDataController();

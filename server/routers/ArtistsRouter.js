@@ -1,7 +1,8 @@
-const express = require('express');
-const router = express.Router();
+const { Router } = require("express");
 const artistController = require('../controllers/ArtistsController');
 
+
+const router = new Router();
 // Роут для создания художника
 router.post('/artists', artistController.create);
 

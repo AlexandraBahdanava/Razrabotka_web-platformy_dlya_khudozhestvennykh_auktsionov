@@ -1,4 +1,4 @@
-import host from "."; // Укажите правильный путь к файлу с host
+import host from ".";
 
 const api = {
   createArtist: async (artistData) => {

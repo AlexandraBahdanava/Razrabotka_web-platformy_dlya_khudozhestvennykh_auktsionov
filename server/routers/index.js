@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const authRouter = require("./AuthorizationDataRouter");
-const protectedRouter = require("./routers");
+const protectedRouter = require("./protectedRouter");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = new Router();

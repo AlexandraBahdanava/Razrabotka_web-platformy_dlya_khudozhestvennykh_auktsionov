@@ -19,10 +19,9 @@ const login = async (loginData) => {
 const checkEmail = async (email) => {
     try {
         const response = await host.post("/auth/register", { email });
-        console.log("Server response:", response);
+
         return response;
     } catch (error) {
-        console.error("Error during checkEmail:", error);
         if (error.response) {
             return error.response;
         } else if (error.request) {
@@ -31,12 +30,12 @@ const checkEmail = async (email) => {
             console.log("Error while creating request");
         }
     }
-
 };
+
 
 const registerArtist = async (artistData) => {
     try {
-        const response = await host.post("/auth/register/artist", artistData);
+        const response = await host.post("/auth/register/artists", artistData);
 
         return response;
     } catch (error) {
@@ -52,7 +51,7 @@ const registerArtist = async (artistData) => {
 
 const registerCollector = async (collectorData) => {
     try {
-        const response = await host.post("/auth/register/collector", collectorData);
+        const response = await host.post("/auth/register/collectors", collectorData);
 
         return response;
     } catch (error) {
