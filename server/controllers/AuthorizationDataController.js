@@ -1,6 +1,6 @@
-const AuthorizationData = require('../models/AuthorizationData');
-const Artist = require('../models/Artists');
-const Collector = require('../models/Collectors');
+const AuthorizationData = require('../database/models/AuthorizationData');
+const Artist = require('../database/models/Artists');
+const Collector = require('../database/models/Collectors');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');

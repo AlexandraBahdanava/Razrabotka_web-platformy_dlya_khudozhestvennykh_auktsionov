@@ -1,5 +1,5 @@
-const  Collectors = require('../models/Collectors');
-const  AuthorizationData = require('../models/AuthorizationData');
+const  Collectors = require('../database/models/Collectors');
+const  AuthorizationData = require('../database/models/AuthorizationData');
 
 class CollectorController {
   async create(req, res) {

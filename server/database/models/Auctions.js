@@ -1,13 +1,9 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Auctions', {
-    id: {
-      autoIncrement: true,
-      autoIncrementIdentity: true,
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      primaryKey: true
-    },
+const { DataTypes, INTEGER } = require("sequelize");
+const sequelize = require("../index");
+
+const Auctions = sequelize.define(
+    "Auctions",
+    {
     title: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -30,15 +26,15 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     duration: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.SMALLINT,
       allowNull: false
     },
     starting_price: {
-      type: DataTypes.DECIMAL(19,4),
+      type: DataTypes.SMALLINT,
       allowNull: false
     },
     rate_step: {
-      type: DataTypes.DECIMAL(19,4),
+      type: DataTypes.SMALLINT,
       allowNull: false
     },
     bidding: {
@@ -47,11 +43,11 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 0
     },
     bidding_rate: {
-      type: DataTypes.DECIMAL(19,4),
+      type: DataTypes.SMALLINT,
       allowNull: true
     },
     auto_renewal: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.SMALLINT,
       allowNull: false,
       defaultValue: 0
     },
@@ -59,27 +55,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.ARRAY(DataTypes.TEXT),
       allowNull: false
     },
-    artist_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      references: {
-        model: 'Artists',
-        key: 'id'
-      }
-    }
-  }, {
-    sequelize,
-    tableName: 'Auctions',
-    schema: 'public',
-    timestamps: false,
-    indexes: [
-      {
-        name: "Auctions_pkey",
-        unique: true,
-        fields: [
-          { name: "id" },
-        ]
-      },
-    ]
-  });
-};
+  
+  }, 
+  );
+  module.exports = {Auctions};

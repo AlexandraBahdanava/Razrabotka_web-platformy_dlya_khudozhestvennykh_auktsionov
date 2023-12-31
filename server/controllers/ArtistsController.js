@@ -1,5 +1,5 @@
-const Artists = require('../models/Artists');
-const  AuthorizationData  = require('../models/AuthorizationData');
+const Artists = require('../database/models/Artists');
+const  AuthorizationData  = require('../database/models/AuthorizationData');
 
 class ArtistController {
   async create(req, res) {
