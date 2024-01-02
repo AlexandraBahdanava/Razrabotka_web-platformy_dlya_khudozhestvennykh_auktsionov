@@ -8,10 +8,10 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         const extension = path.extname(file.originalname);
 
-        if (req.artistId) {
-            cb(null, req.artistId + extension);
+        if (req.artistsId) {
+            cb(null, req.artistsId + extension);
         } else {
-            cb(null, req.collectorId + extension);
+            cb(null, req.collectorsId + extension);
         }
     },
 });
@@ -20,7 +20,6 @@ const upload = multer({ storage: storage });
 
 const artistController = require("../controllers/ArtistsController");
 const collectorController = require("../controllers/CollectorsController");
-
 
 const router = new Router();
 

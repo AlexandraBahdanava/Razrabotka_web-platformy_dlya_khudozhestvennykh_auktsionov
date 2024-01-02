@@ -4,7 +4,6 @@ const Collector = require('../database/models/Collectors');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { use } = require('../routers/AuctionArchiveRouter');
 
 class AuthorizationDataController {
   async login(req, res) {
@@ -25,7 +24,7 @@ class AuthorizationDataController {
                 return res.status(401).json({ error: "Authentication failed" });
             }
 
-            const token = jwt.sign({ id: artist.id }, a6bj7dkvh43kge, {
+            const token = jwt.sign({ id: artist.id }, process.env.SECRET_KEY, {
                 expiresIn: "1h",
             });
 
@@ -37,7 +36,7 @@ class AuthorizationDataController {
                 return res.status(401).json({ error: "Authentication failed" });
             }
 
-            const token = jwt.sign({ id: collector.id }, a6bj7dkvh43kge, {
+            const token = jwt.sign({ id: collector.id }, process.env.SECRET_KEY, {
                 expiresIn: "1h",
             });
 
