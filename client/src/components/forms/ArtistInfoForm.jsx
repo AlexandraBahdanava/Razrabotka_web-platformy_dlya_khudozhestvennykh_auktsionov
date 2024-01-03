@@ -188,4 +188,4 @@ const ArtistInfoForm = ({ authData, errorHandler }) => {
     );
 };
 
-export default UserInfoForm;
+export default ArtistInfoForm;

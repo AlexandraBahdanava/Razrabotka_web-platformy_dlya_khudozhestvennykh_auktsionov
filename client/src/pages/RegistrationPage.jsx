@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import PublicHeader from "../components/headers/PublicHeader";
 import ArtistInfoForm from "../components/forms/ArtistInfoForm";
 import AuthDataForm from "../components/forms/AuthDataForm";
-import CollectorInfoForm from "../components/forms/collectorInfoForm";
+import CollectorInfoForm from "../components/forms//CollectorInfoForm";
 
 const RegistrationPage = () => {
     const [authData, setAuthData] = useState({

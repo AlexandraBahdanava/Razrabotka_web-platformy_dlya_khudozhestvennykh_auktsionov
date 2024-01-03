@@ -1,5 +1,5 @@
 const { DataTypes, INTEGER } = require("sequelize");
-const sequelize = require("../index");
+const sequelize = require("./index");
 
 const Artist = sequelize.define(
     "Artist",
@@ -27,7 +27,8 @@ const Artist = sequelize.define(
   },
     {
       tableName: "Artists", // фактическое имя таблицы в базе данных
-    });
+    }
+    );
 
 
 const AuctionArchive = sequelize.define(
@@ -74,7 +75,7 @@ const AuctionArchive = sequelize.define(
       allowNull: false
     },
     duration: {
-      type: DataTypes.SMALLINT,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     starting_price: {

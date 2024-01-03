@@ -4,7 +4,7 @@ const collectorController = require("../controllers/collectorController");
 
 const router = new Router();
 
-router.get("/artists", artistController.getAll);
-router.get("/collectors", collectorController.getAll);
+router.get("/artists", artistController.create);
+router.get("/collectors", collectorController.create);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { Artist, AuthorizationData }= require("../database/models");
+const { Artists, AuthorizationData }= require("../database/models");
 const bcrypt = require("bcrypt");
 
 class ArtistController {

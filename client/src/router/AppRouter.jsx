@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { publicRoutes } from "./publicRoutes";
 import { artistRoutes } from "./artistRoutes";
 import { collectorRoutes } from "./collectorRoutes";
-import { COMPANY_PROFILE_ROUTE, LOGIN_ROUTE, USER_PROFILE_ROUTE } from "../utils/consts";
+import { COLLECTOR_PROFILE_ROUTE, LOGIN_ROUTE, ARTIST_PROFILE_ROUTE } from "../utils/consts";
 
 const AppRouter = () => {
     const [jwt, setJwt] = useState(localStorage.getItem("jwt"));
