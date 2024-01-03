@@ -1,7 +1,9 @@
-export const userRoutes = [
+import CollectorProfilePage from "../pages/CollectorProfilePage";
+
+export const collectorRoutes = [
     {
-        path: "/orders",
-        Component: "Orders page",
+        path: "/profile",
+        Component: CollectorProfilePage,
     },
     {
         path: "/orders/:id",

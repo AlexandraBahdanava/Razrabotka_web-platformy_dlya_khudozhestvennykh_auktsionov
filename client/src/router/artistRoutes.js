@@ -1,7 +1,9 @@
+import ArtistProfilePage from "../pages/ArtistProfilePage";
+
 export const artistRoutes = [
     {
-        path: "/artist",
-        Component: "My orders page",
+        path: "/profile",
+        Component: ArtistProfilePage,
     },
     {
         path: "/artist/:id",

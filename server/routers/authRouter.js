@@ -5,8 +5,9 @@ const collectorController = require("../controllers/collectorController");
 
 const router = new Router();
 
-router.post("/artist/register", artistController.create);
-router.post("/collector/register", collectorController.create);
 router.post("/login", authController.login);
+router.post("/register", authController.checkEmail);
+router.post("/register/artist", artistController.create);
+router.post("/register/collector", collectorController.create);
 
 module.exports = router;
