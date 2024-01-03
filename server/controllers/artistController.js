@@ -1,12 +1,12 @@
-const { Artists, }= require("../database/models");
+const { Artist }= require("../database/models");
 
-class ArtistsController {
+class ArtistController {
 
     async create(req, res) {
         const artist = { ...req.body };
 
         try {
-            const createdArtist = await Artists.create(artist);
+            const createdArtist = await Artist.create(artist);
 
             return res.status(201).json(createdArtist);
         } catch (err) {
@@ -23,12 +23,12 @@ class ArtistsController {
             return res.sendStatus(400);
         }
 
-        if ((await Artists.findOne({ where: { id: id } })) == null) {
+        if ((await Artist.findOne({ where: { id: id } })) == null) {
             return res.sendStatus(404);
         }
 
         try {
-            await Artists.update(artist, { where: { id: id } });
+            await Artist.update(artist, { where: { id: id } });
 
             return res.sendStatus(204);
         } catch (err) {
@@ -39,7 +39,7 @@ class ArtistsController {
       // Получение электронной почты художника по его идентификатору
     async getEmailById(artistId) {
         try {
-          const artist = await Artists.findOne({
+          const artist = await Artist.findOne({
             attributes: ['authorization_data_id'],
             where: { id: id },
           });
@@ -68,4 +68,4 @@ class ArtistsController {
       
 }
 
-module.exports = new ArtistsController();
+module.exports = new ArtistController();

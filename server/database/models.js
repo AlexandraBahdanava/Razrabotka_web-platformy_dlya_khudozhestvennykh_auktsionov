@@ -1,8 +1,8 @@
 const { DataTypes, INTEGER } = require("sequelize");
 const sequelize = require("../index");
 
-const Artists = sequelize.define(
-    "Artists",
+const Artist = sequelize.define(
+    "Artist",
     {
     name: {
       type: DataTypes.STRING,
@@ -25,7 +25,10 @@ const Artists = sequelize.define(
       allowNull: true
     },
   },
-);
+    {
+      tableName: "Artists", // фактическое имя таблицы в базе данных
+    });
+
 
 const AuctionArchive = sequelize.define(
     "AuctionArchive",
@@ -46,8 +49,8 @@ const AuctionArchive = sequelize.define(
   },
   );
 
-  const Auctions = sequelize.define(
-    "Auctions",
+  const Auction = sequelize.define(
+    "Auction",
     {
     title: {
       type: DataTypes.TEXT,
@@ -102,7 +105,10 @@ const AuctionArchive = sequelize.define(
     },
   
   }, 
-  );
+  {
+    tableName: "Auctions", // фактическое имя таблицы в базе данных
+  });
+
 
   
 const AuthorizationData = sequelize.define(
@@ -123,8 +129,8 @@ const AuthorizationData = sequelize.define(
   },
   );
 
-  const Collectors = sequelize.define(
-    "Collectors",
+  const Collector = sequelize.define(
+    "Collector",
     {
     phone: {
       type: DataTypes.TEXT,
@@ -132,10 +138,12 @@ const AuthorizationData = sequelize.define(
     },
    
   },
-  );
+  {
+    tableName: "Collectors", // фактическое имя таблицы в базе данных
+  });
   
-  const ExhibitedPaintings = sequelize.define(
-    "ExhibitedPaintings",
+  const ExhibitedPainting = sequelize.define(
+    "ExhibitedPainting",
     {
     photo: {
       type: DataTypes.TEXT,
@@ -147,10 +155,13 @@ const AuthorizationData = sequelize.define(
       defaultValue: "Без названия"
     },
    
+  },
+  {
+    tableName: "ExhibitedPaintings", // фактическое имя таблицы в базе данных
   });
 
-  const Exhibitions = sequelize.define(
-    "Exhibitions",
+  const Exhibition = sequelize.define(
+    "Exhibition",
     {
     title: {
       type: DataTypes.TEXT,
@@ -172,11 +183,14 @@ const AuthorizationData = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true
     }
+  },
+  {
+    tableName: "Exhibitions", // фактическое имя таблицы в базе данных
   });
 
   
-const FeaturedArtists = sequelize.define(
-    "FeaturedArtists",
+const FeaturedArtist = sequelize.define(
+    "FeaturedArtist",
     {
     collector_id: {
       type: DataTypes.BIGINT,
@@ -187,7 +201,9 @@ const FeaturedArtists = sequelize.define(
       allowNull: false,
     }
   },
-  );
+  {
+    tableName: "FeaturedArtists", // фактическое имя таблицы в базе данных
+  });
 
   const Portfolio = sequelize.define(
     "Portfolio",
@@ -199,18 +215,21 @@ const FeaturedArtists = sequelize.define(
   }
   );
 
-  const Rates = sequelize.define(
-    "Rates",
+  const Rate = sequelize.define(
+    "Rate",
     {
     bet_size: {
       type: DataTypes.SMALLINT,
       allowNull: false
     },
    
+  },
+  {
+    tableName: "Rates", // фактическое имя таблицы в базе данных
   });
 
-  const Reviews = sequelize.define(
-    "Reviews",
+  const Review = sequelize.define(
+    "Review",
     {
     text: {
       type: DataTypes.TEXT,
@@ -221,62 +240,65 @@ const FeaturedArtists = sequelize.define(
       allowNull: false
     },
    
+  },
+  {
+    tableName: "Reviews", // фактическое имя таблицы в базе данных
   });
 
-  Artists.belongsToMany(Collectors, { through: FeaturedArtists});
-  Artists.belongsToMany(Exhibitions, {through: ExhibitedPaintings});
-  Collectors.belongsToMany(Artists, { through: FeaturedArtists});
-  Exhibitions.belongsToMany(Artists, {through: ExhibitedPaintings});
+  Artist.belongsToMany(Collector, { through: FeaturedArtist});
+  Artist.belongsToMany(Exhibition, {through: ExhibitedPainting});
+  Collector.belongsToMany(Artist, { through: FeaturedArtist});
+  Exhibition.belongsToMany(Artist, {through: ExhibitedPainting});
 
-  AuctionArchive.belongsTo(Artists);
-  Artists.hasMany(AuctionArchive);
+  AuctionArchive.belongsTo(Artist);
+  Artist.hasMany(AuctionArchive);
 
-  Auctions.belongsTo(Artists);
-  Artists.hasMany(Auctions);
+  Auction.belongsTo(Artist);
+  Artist.hasMany(Auction);
 
-  ExhibitedPaintings.belongsTo(Artists);
-  Artists.hasMany(ExhibitedPaintings);
+  ExhibitedPainting.belongsTo(Artist);
+  Artist.hasMany(ExhibitedPainting);
 
-  FeaturedArtists.belongsTo(Artists);
-  Artists.hasMany(FeaturedArtists);
+  FeaturedArtist.belongsTo(Artist);
+  Artist.hasMany(FeaturedArtist);
 
-  Portfolio.belongsTo(Artists);
-  Artists.hasMany(Portfolio);
+  Portfolio.belongsTo(Artist);
+  Artist.hasMany(Portfolio);
 
-  Reviews.belongsTo(Artists);
-  Artists.hasMany(Reviews);
+  Review.belongsTo(Artist);
+  Artist.hasMany(Review);
 
-  Rates.belongsTo(Auctions);
-  Auctions.hasMany(Rates);
+  Rate.belongsTo(Auction);
+  Auction.hasMany(Rate);
 
-  Artists.belongsTo(AuthorizationData);
-  AuthorizationData.hasMany(Artists);
+  Artist.belongsTo(AuthorizationData);
+  AuthorizationData.hasMany(Artist);
 
-  Collectors.belongsTo(AuthorizationData);
-  AuthorizationData.hasMany(Collectors);
+  Collector.belongsTo(AuthorizationData);
+  AuthorizationData.hasMany(Collector);
 
-  FeaturedArtists.belongsTo(Collectors);
-  Collectors.hasMany(FeaturedArtists);
+  FeaturedArtist.belongsTo(Collector);
+  Collector.hasMany(FeaturedArtist);
 
-  Rates.belongsTo(Collectors);
-  Collectors.hasMany(Rates);
+  Rate.belongsTo(Collector);
+  Collector.hasMany(Rate);
 
-  Reviews.belongsTo(Collectors);
-  Collectors.hasMany(Reviews);
+  Review.belongsTo(Collector);
+  Collector.hasMany(Review);
   
-  ExhibitedPaintings.belongsTo(Exhibitions);
-  Exhibitions.hasMany(ExhibitedPaintings);
+  ExhibitedPainting.belongsTo(Exhibition);
+  Exhibition.hasMany(ExhibitedPainting);
 
   module.exports = {
-    Artists,
+    Artist,
     AuctionArchive,
-    Auctions,
+    Auction,
     AuthorizationData,
-    Collectors,
-    ExhibitedPaintings,
-    Exhibitions,
-    FeaturedArtists,
+    Collector,
+    ExhibitedPainting,
+    Exhibition,
+    FeaturedArtist,
     Portfolio,
-    Rates,
-    Reviews,
+    Rate,
+    Review,
   };
