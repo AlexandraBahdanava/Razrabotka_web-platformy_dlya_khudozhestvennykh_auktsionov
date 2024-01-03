@@ -6,25 +6,36 @@ import "moment/locale/en-gb";
 import AppRouter from "./router/AppRouter";
 
 const App = () => {
-  const theme = createTheme({
-    palette: {
-        primary: {
-            main: "#DDC12C",
+    const theme = createTheme({
+        palette: {
+            primary: {
+                main: "#DDC12C",
+            },
+            text: {
+                main: "#000000",
+            }
         },
-    },
-});
-  return (
-    <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
-             <BrowserRouter>
-                <AppRouter />
+        typography: {
+            h1: {
+                fontSize: "36px",
+            },
+            h2: {
+                fontSize: "24px",
+            },
+            h3: {
+                fontSize: "16px",
+            },
+        },
+    });
+        return (
+            <BrowserRouter>
+                <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale="en-gb">
+                    <ThemeProvider theme={theme}>
+                        <AppRouter />
+                    </ThemeProvider>
+                </LocalizationProvider>
             </BrowserRouter>
-            <ThemeProvider theme={theme}>
-                <BrowserRouter>
-                    <AppRouter />
-                </BrowserRouter>
-            </ThemeProvider>
-        </LocalizationProvider>  
-  );
-};
+        );
+    };
 
 export default App;
