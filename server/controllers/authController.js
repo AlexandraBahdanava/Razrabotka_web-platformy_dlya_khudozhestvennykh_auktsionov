@@ -22,7 +22,7 @@ class AuthorizationDataController {
                 }
 
                 const token = jwt.sign({ artistId: artist.id }, process.env.SECRET_KEY, {
-                    expiresIn: "1h",
+                    expiresIn: "24h",
                 });
 
                 res.status(200).json({ token: token, role: "artist" });
@@ -34,7 +34,7 @@ class AuthorizationDataController {
                 }
 
                 const token = jwt.sign({ collectorId: collector.id }, process.env.SECRET_KEY, {
-                    expiresIn: "1h",
+                    expiresIn: "24h",
                 });
 
                 res.status(200).json({ token: token, role: "collector" });

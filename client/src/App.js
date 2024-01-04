@@ -9,15 +9,15 @@ const App = () => {
     const theme = createTheme({
         palette: {
             primary: {
-                main: "#DDC12C",
+                main: "#FFFFFF",
             },
             text: {
-                main: "#000000",
+                main: "#42526D",
             }
         },
         typography: {
             h1: {
-                fontSize: "36px",
+                fontSize: "14px",
             },
             h2: {
                 fontSize: "24px",

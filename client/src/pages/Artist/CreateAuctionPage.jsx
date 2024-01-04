@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid, Snackbar, Alert } from "@mui/material";
 import ArtistHeader from "../../components/headers/ArtistHeader";
 import CreateAuctionForm from "../../components/forms/CreateAuctionForm";
-import { createAuction } from "../../api/auctionApi";
+import { create } from "../../api/auctionApi";
 import { useNavigate } from "react-router-dom";
 
 const CreateAuctionPage = () => {
@@ -11,8 +11,8 @@ const CreateAuctionPage = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const create = async (auctionData) => {
-        const response = await createAuction(auctionData);
+    const created = async (auctionData) => {
+        const response = await create(auctionData);
 
         if (!response) {
             displayError("Сервис временно недоступен");
@@ -45,24 +45,15 @@ const CreateAuctionPage = () => {
         <Grid
             container
             width={"100%"}
-            height={"100vh"}
             flexDirection={"column"}
             justifyContent={"flex-start"}
             alignItems={"center"}
             bgcolor={"#E7E7E7"}
         >
             <ArtistHeader />
-            <Grid
-                container
-                item
-                flexDirection={"column"}
-                alignItems={"center"}
-                maxWidth={"1300px"}
-                flexGrow={1}
-                bgcolor={"#FFFFFF"}
-            >
-                <CreateAuctionForm submitHandler={create} />
-            </Grid>
+
+          <CreateAuctionForm submitHandler={created} />
+
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}

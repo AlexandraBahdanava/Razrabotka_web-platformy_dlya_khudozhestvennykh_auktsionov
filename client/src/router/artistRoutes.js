@@ -8,10 +8,6 @@ export const artistRoutes = [
         Component: ArtistProfilePage,
     },
     {
-        path: "/auction/create",
-        Component: CreateAuctionPage,
-    },
-    {
         path: "/artist/:id",
         Component: "User details page",
     },
@@ -20,7 +16,7 @@ export const artistRoutes = [
         Component: "Order Creation Page",
     },
     {
-        path: "/profile",
-        Component: "Company profile",
+        path: "auction/create",
+        Component: CreateAuctionPage,
     },
 ];

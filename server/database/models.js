@@ -112,7 +112,10 @@ const AuctionArchive = sequelize.define(
       type: DataTypes.ARRAY(DataTypes.TEXT),
       allowNull: false
     },
-  
+    photo: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
   }, 
   {
     tableName: "Auctions", // фактическое имя таблицы в базе данных

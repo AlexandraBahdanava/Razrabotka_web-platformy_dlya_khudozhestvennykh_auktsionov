@@ -1,7 +1,8 @@
 import React from "react";
-import { Grid, TextField, Typography, Button,Radio, RadioGroup, FormControlLabel,  Select, MenuItem, FormControl, InputLabel  } from "@mui/material";
+import { Checkbox, Grid, TextField, Typography, Button,Radio, RadioGroup, FormControlLabel,  Select, MenuItem, FormControl, InputLabel  } from "@mui/material";
 import { useFormik } from "formik";
 import validateAuctionData from "../../utils/validateAuctionData";
+import ImageUpload from "../ImageUpload";
 
 const CreateAuctionForm = ({ submitHandler }) => {
     const formik = useFormik({
@@ -14,6 +15,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
             duration: "",
             starting_price: "",
             rate_step: "",
+            bidding:"",
             bidding_rate: "",
             auto_renewal: "",
             tags: "",
@@ -24,6 +26,11 @@ const CreateAuctionForm = ({ submitHandler }) => {
         },
     });
 
+    const handleImageUpload = (image) => {
+        // Обработчик загрузки изображения, можете добавить логику, если необходимо
+        console.log("Image uploaded:", image);
+      };
+
     return (
         <form onSubmit={formik.handleSubmit}>
             <Grid container item maxWidth={"500px"} width={"500px"} gap={"15px"} mt={"50px"}>
@@ -32,12 +39,13 @@ const CreateAuctionForm = ({ submitHandler }) => {
                         Создание аукциона
                     </Typography>
                 </Grid>
+                <Typography variant="body1" style={{ marginRight: "10px" }}>Заголовок:</Typography>
                 <TextField
                     id="title"
                     name="title"
                     fullWidth
                     variant="outlined"
-                    label="Название"
+                    label="Придумайте заголовок"
                     value={formik.values.title}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -47,12 +55,27 @@ const CreateAuctionForm = ({ submitHandler }) => {
                     }
                     required
                 />
+               <Typography variant="body1" style={{ marginRight: "10px" }}>Теги:</Typography>
+                  <TextField
+                    id="tags"
+                    name="tags"
+                    fullWidth
+                    variant="outlined"
+                    label="Начните писать (через запятую)"
+                    value={formik.values.tags}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.tags && formik.errors.tags !== undefined}
+                    helperText={formik.touched.tags && formik.errors.tags !== undefined ? formik.errors.tags : ""}
+                    required
+                />
+                <Typography variant="body1" style={{ marginRight: "10px" }}>Описание:</Typography>
                 <TextField
                     id="description"
                     name="description"
                     fullWidth
                     variant="outlined"
-                    label="Описание"
+                    label="Заполните описание"
                     multiline
                     minRows={2}
                     maxRows={7}
@@ -67,7 +90,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
                     }
                 />
                  <FormControl fullWidth>
-                    <InputLabel id="genre-label">Жанр</InputLabel>
+                    <Typography variant="body1" style={{ marginRight: "10px" }}>Жанр:</Typography>
                     <Select
                         labelId="genre-label"
                         id="genre"
@@ -78,14 +101,15 @@ const CreateAuctionForm = ({ submitHandler }) => {
                         error={formik.touched.genre && formik.errors.genre !== undefined}
                         label="Жанр"
                     >
-                        <MenuItem value="жанр1">Жанр 1</MenuItem>
-                        <MenuItem value="жанр2">Жанр 2</MenuItem>
-                        <MenuItem value="жанр3">Жанр 3</MenuItem>
-                        <MenuItem value="жанр4">Жанр 4</MenuItem>
+                        <MenuItem value="Мифологический">Мифологический</MenuItem>
+                        <MenuItem value="Портрет">Портрет</MenuItem>
+                        <MenuItem value="Анималистический">Анималистический</MenuItem>
+                        <MenuItem value="Бытовой">Бытовой</MenuItem>
+                        <MenuItem value="Пейзаж">Пейзаж</MenuItem>
                     </Select>
                 </FormControl>
+                <Typography variant="body1" style={{ marginRight: "10px" }}>Материал:</Typography>
                 <FormControl fullWidth>
-                    <InputLabel id="material-label">Материал</InputLabel>
                     <Select
                         labelId="material-label"
                         id="material"
@@ -96,47 +120,52 @@ const CreateAuctionForm = ({ submitHandler }) => {
                         error={formik.touched.material && formik.errors.material !== undefined}
                         label="Материал"
                     >
-                        <MenuItem value="жанр1">Материал 1</MenuItem>
-                        <MenuItem value="жанр2">Материал 2</MenuItem>
-                        <MenuItem value="жанр3">Материал 3</MenuItem>
-                        <MenuItem value="жанр4">Материал 4</MenuItem>
+                        <MenuItem value="Цифровое">Цифровое</MenuItem>
+                        <MenuItem value="Акрил">Акрил</MenuItem>
+                        <MenuItem value="Карандаш">Карандаш</MenuItem>
+                        <MenuItem value="Акварель">Акварель</MenuItem>
                     </Select>
                 </FormControl>
-               <RadioGroup
-                    aria-label="color"
-                    name="color"
-                    value={formik.values.color}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.color && formik.errors.color !== undefined}
-                >
-                    <Typography variant="body1">Цвет:</Typography>
-                    <FormControlLabel value="цвет1" control={<Radio />} label="Цвет 1" />
-                    <FormControlLabel value="цвет2" control={<Radio />} label="Цвет 2" />
-                    <FormControlLabel value="цвет3" control={<Radio />} label="Цвет 3" />
-                    <FormControlLabel value="цвет4" control={<Radio />} label="Цвет 4" />
-                </RadioGroup>
+                <Typography variant="body1" style={{ marginRight: "10px" }}>Цвет:</Typography>
+                <Grid container direction="row" alignItems="center">
                     <RadioGroup
-                    aria-label="duration"
-                    name="duration"
-                    value={formik.values.duration}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.duration && formik.errors.duration !== undefined}
-                >
-                    <Typography variant="body1">Длительность:</Typography>
-                    <FormControlLabel value="1" control={<Radio />} label="1 день" />
-                    <FormControlLabel value="3" control={<Radio />} label="3 дня" />
-                    <FormControlLabel value="7" control={<Radio />} label="7 дней" />
-                    <FormControlLabel value="12" control={<Radio />} label="12 дней" />
-                </RadioGroup>
+                        aria-label="color"
+                        name="color"
+                        value={formik.values.color}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.color && formik.errors.color !== undefined}
+                        style={{ display: "flex", flexDirection: "row" }}
+                    >
+                        <FormControlLabel value="Пастельное" control={<Radio />} label="Пастельное" />
+                        <FormControlLabel value="Черно-белое" control={<Radio />} label="Черно-белое" />
+                        <FormControlLabel value="Яркое" control={<Radio />} label="Яркое" />
+                    </RadioGroup>
+                </Grid>
+                <Typography variant="body1">Продолжительность аукциона:</Typography>
+                <Grid container direction="row" alignItems="center">
+                    <RadioGroup
+                        aria-label="duration"
+                        name="duration"
+                        value={formik.values.duration}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.duration && formik.errors.duration !== undefined}
+                        style={{ display: "flex", flexDirection: "row" }}
+                    >
+                        <FormControlLabel value="1" control={<Radio />} label="1 день" />
+                        <FormControlLabel value="3" control={<Radio />} label="3 дня" />
+                        <FormControlLabel value="7" control={<Radio />} label="7 дней" />
+                        <FormControlLabel value="12" control={<Radio />} label="12 дней" />
+                    </RadioGroup>
+                </Grid>
+                <Typography variant="body1">Начальная цена:</Typography>
                 <TextField
                     id="starting_price"
                     name="starting_price"
                     fullWidth
                     variant="outlined"
-                    label="Начальная цена"
-                    type="number"
+                    label="Введите сумму"
                     value={formik.values.starting_price}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -148,13 +177,13 @@ const CreateAuctionForm = ({ submitHandler }) => {
                     }
                     required
                 />
+                <Typography variant="body1">Шаг ставки:</Typography>
                 <TextField
                     id="rate_step"
                     name="rate_step"
                     fullWidth
                     variant="outlined"
-                    label="Шаг ставки"
-                    type="number"
+                    label="Введите сумму"
                     value={formik.values.rate_step}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -162,13 +191,28 @@ const CreateAuctionForm = ({ submitHandler }) => {
                     helperText={formik.touched.rate_step && formik.errors.rate_step !== undefined ? formik.errors.rate_step : ""}
                     required
                 />
+                  <Grid container direction="row" alignItems="center">
+                    <FormControlLabel
+                     label="Возможность биддинга"
+                    control={
+                        <Checkbox
+                        id="bidding"
+                        name="bidding"
+                        value="1"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        color="secondary"
+                        />
+                    }
+                    />
+                </Grid>
+                <Typography variant="body1">Цена биддинга:</Typography>
                 <TextField
                     id="bidding_rate"
                     name="bidding_rate"
                     fullWidth
                     variant="outlined"
-                    label="Ставка участника"
-                    type="number"
+                    label="Введите сумму"
                     value={formik.values.bidding_rate}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -178,37 +222,22 @@ const CreateAuctionForm = ({ submitHandler }) => {
                             ? formik.errors.bidding_rate
                             : ""
                     }
-                />
-                <TextField
-                    id="auto_renewal"
-                    name="auto_renewal"
-                    fullWidth
-                    variant="outlined"
-                    label="Автоматическое продление"
-                    type="number"
-                    value={formik.values.auto_renewal}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.auto_renewal && formik.errors.auto_renewal !== undefined}
-                    helperText={
-                        formik.touched.auto_renewal && formik.errors.auto_renewal !== undefined
-                            ? formik.errors.auto_renewal
-                            : ""
-                    }
-                />
-                <TextField
-                    id="tags"
-                    name="tags"
-                    fullWidth
-                    variant="outlined"
-                    label="Теги (через запятую)"
-                    value={formik.values.tags}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.tags && formik.errors.tags !== undefined}
-                    helperText={formik.touched.tags && formik.errors.tags !== undefined ? formik.errors.tags : ""}
                     required
                 />
+                <Grid container direction="row" alignItems="center">
+                    <FormControlLabel
+                      label="Автопродление аукциона"
+                    control={
+                        <Checkbox
+                        color="secondary"
+                        id="auto_renewal"
+                        name="auto_renewal"
+                        value="1"
+                        />
+                    }
+                    />
+                </Grid>
+                <ImageUpload onImageUpload={handleImageUpload} /> 
                 <Button type="submit" variant="contained" fullWidth>
                     Создать аукцион
                 </Button>

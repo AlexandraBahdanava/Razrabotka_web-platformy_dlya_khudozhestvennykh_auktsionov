@@ -1,7 +1,9 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import Logo from "./Logo";
+import Logo from "./Logo.png";
+import { Icon } from '@iconify/react';
+import SearchBar from '../SearchBar';
 
 const PublicHeader = () => {
     const theme = useTheme();
@@ -15,7 +17,8 @@ const PublicHeader = () => {
             pl={"42px"}
             alignItems={"center"}
         >
-             <Logo />  
+            <img src={Logo} alt="Logo" />
+            <SearchBar/> 
         </Grid>
     );
 };

@@ -8,7 +8,7 @@ class AuctionController {
           const auction = await Auction.findAll({
             include: [
               {
-                model: Rates,
+                model: Rate,
                 where: { collector_id: collectorId },
                 required: true,
               },
@@ -151,17 +151,19 @@ class AuctionController {
           throw error;
         }
       }
-      
+
       // Создание аукциона
-      async  create(auctionData) {
+      async create(req, res) {
         try {
-          const newAuction = await Auction.create(auctionData);
-          return newAuction;
-        } catch (error) {
-          console.error('Error creating auction:', error);
-          throw error;
+            const auction = { ...req.body };
+
+            const createdAuction = await Auction.create(auction);
+    
+            return res.status(201).json(createdAuction);
+        } catch (err) {
+            return res.sendStatus(500);
         }
-      }
+    }
       
       // Перемещение аукционов в таблицу архива после окончания
       async  moveAuctionsToArchive() {
