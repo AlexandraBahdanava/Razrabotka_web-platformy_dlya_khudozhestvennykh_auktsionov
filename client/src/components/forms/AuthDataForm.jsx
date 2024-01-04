@@ -12,7 +12,6 @@ const AuthDataForm = ({ nextStepHandler, errorHandler }) => {
     const formik = useFormik({
         initialValues: {
             email: "",
-            login: "",
             password: "",
             passwordRepeat: "",
         },
@@ -80,31 +79,6 @@ const AuthDataForm = ({ nextStepHandler, errorHandler }) => {
                         error={formik.touched.email && formik.errors.email !== undefined}
                         helperText={
                             formik.touched.email && formik.errors.email !== undefined ? formik.errors.email : ""
-                        }
-                    ></TextField>
-                     <TextField
-                        sx={{
-                            "& .MuiInput-underline:before": {
-                                borderBottomColor: theme.palette.primary.main,
-                            },
-                            "& .MuiInput-underline:after": {
-                                borderBottomColor: theme.palette.primary.main,
-                            },
-                        }}
-                        id="login"
-                        name="login"
-                        fullWidth
-                        variant="standard"
-                        type="login"
-                        label="Логин"
-                        value={formik.values.login}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        error={formik.touched.login && formik.errors.login !== undefined}
-                        helperText={
-                            formik.touched.login && formik.errors.login !== undefined
-                                ? formik.errors.login
-                                : ""
                         }
                     ></TextField>
                     <TextField

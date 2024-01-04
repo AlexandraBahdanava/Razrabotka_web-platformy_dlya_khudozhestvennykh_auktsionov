@@ -9,7 +9,7 @@ const LoginPage = () => {
     const theme = useTheme();
 
     const [loginData, setLoginData] = useState({
-        login: "",
+        email: "",
         password: "",
     });
 
@@ -82,10 +82,10 @@ const LoginPage = () => {
                         }}
                             fullWidth
                             variant="standard"
-                            label="Логин"
-                            type="login"
-                            value={loginData.login}
-                            onChange={(e) => setLoginData({ ...loginData, login: e.target.value })}
+                            label="Эл. почта"
+                            type="email"
+                            value={loginData.email}
+                            onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                         ></TextField>
                         <Grid item>
                             <TextField

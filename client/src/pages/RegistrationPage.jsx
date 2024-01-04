@@ -8,7 +8,6 @@ import CollectorInfoForm from "../components/forms//CollectorInfoForm";
 const RegistrationPage = () => {
     const [authData, setAuthData] = useState({
         email: "",
-        login: "",
         password: "",
     });
     const [isCollector, setIsCollector] = useState(false);
@@ -32,7 +31,7 @@ const RegistrationPage = () => {
     };
 
     const nextStep = (authData, isCollector) => {
-        setAuthData({ email: authData.email,login: authData.login, password: authData.password });
+        setAuthData({ email: authData.email, password: authData.password });
         setIsCollector(isCollector);
 
         setStep(2);

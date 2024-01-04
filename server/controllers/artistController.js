@@ -1,30 +1,22 @@
-const { Artists, AuthorizationData }= require("../database/models");
+const { Artist }= require("../database/models");
 const bcrypt = require("bcrypt");
 
 class ArtistController {
 
   async create(req, res) {
-    const { login, password, ...artistData } = req.body;
-
     try {
-        // Хеширование пароля
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const artist = { ...req.body };
 
-        // Создание записи в таблице ДанныеАвторизации
-        const createdAuthorizationData = await AuthorizationData.create({
-            login: login,
-            password: hashedPassword,
-        });
+        if ((await Artist.findOne({ where: { email: artist.email } })) !== null) {
+            return res.status(400).json({ error: "Email is taken" });
+        }
 
-        // Создание записи в таблице художники с привязкой к записи в таблице ДанныеАвторизации
-        const createdArtist = await Artist.create({
-            ...artistData,
-            AuthorizationDataId: createdAuthorizationData.id,
-        });
+        artist.password = await bcrypt.hash(artist.password, 10);
+
+        const createdArtist = await Artist.create(artist);
 
         return res.status(201).json(createdArtist);
     } catch (err) {
-        console.error("Error during artist creation:", err);
         return res.sendStatus(500);
     }
 }

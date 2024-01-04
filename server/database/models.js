@@ -24,6 +24,14 @@ const Artist = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true
     },
+    email: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    }
   },
     {
       tableName: "Artists", // фактическое имя таблицы в базе данных
@@ -111,25 +119,6 @@ const AuctionArchive = sequelize.define(
   });
 
 
-  
-const AuthorizationData = sequelize.define(
-    "AuthorizationData",
-    {
-    email: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    login: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    }
-  },
-  );
-
   const Collector = sequelize.define(
     "Collector",
     {
@@ -137,7 +126,14 @@ const AuthorizationData = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true
     },
-   
+    email: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    password: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    }
   },
   {
     tableName: "Collectors", // фактическое имя таблицы в базе данных
@@ -272,12 +268,6 @@ const FeaturedArtist = sequelize.define(
   Rate.belongsTo(Auction);
   Auction.hasMany(Rate);
 
-  Artist.belongsTo(AuthorizationData);
-  AuthorizationData.hasMany(Artist);
-
-  Collector.belongsTo(AuthorizationData);
-  AuthorizationData.hasMany(Collector);
-
   FeaturedArtist.belongsTo(Collector);
   Collector.hasMany(FeaturedArtist);
 
@@ -294,7 +284,6 @@ const FeaturedArtist = sequelize.define(
     Artist,
     AuctionArchive,
     Auction,
-    AuthorizationData,
     Collector,
     ExhibitedPainting,
     Exhibition,

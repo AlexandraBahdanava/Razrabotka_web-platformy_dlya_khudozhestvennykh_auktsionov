@@ -4,7 +4,7 @@ import CreateAuctionPage from "../pages/Artist/CreateAuctionPage";
 
 export const artistRoutes = [
     {
-        path: "/profile",
+        path: "/artist",
         Component: ArtistProfilePage,
     },
     {

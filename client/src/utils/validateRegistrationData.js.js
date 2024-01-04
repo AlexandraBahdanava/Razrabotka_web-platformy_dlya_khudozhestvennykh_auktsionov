@@ -7,12 +7,6 @@ const validateRegistration = (values) => {
         errors.email = "Неверный адрес";
     }
 
-    if (!values.login) {
-        errors.login = "Обязательное поле";
-    } else if (values.login.length < 8) {
-        errors.login = "Логин короче 8 символов";
-    }
-
     if (!values.password) {
         errors.password = "Обязательное поле";
     } else if (values.password.length < 8) {
