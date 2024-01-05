@@ -1,8 +1,8 @@
 import host from ".";
 
-const create = async (auctionData) => {
+const createAuction = async (auctionData) => {
     try {
-        const response = await host.post("/api/auction/create", auctionData);
+        const response = await host.post("/api/auctions", auctionData);
         return response;
     } catch (error) {
         handleRequestError(error);
@@ -19,4 +19,4 @@ const handleRequestError = (error) => {
     }
 };
 
-export { create };
+export { createAuction };

@@ -29,7 +29,6 @@ const RegistrationPage = () => {
 
         setError(false);
     };
-
     const nextStep = (authData, isCollector) => {
         setAuthData({ email: authData.email, password: authData.password });
         setIsCollector(isCollector);

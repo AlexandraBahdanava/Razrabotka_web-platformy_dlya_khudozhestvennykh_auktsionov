@@ -1,4 +1,4 @@
-const { Auction, Collector, AuctionArchive} = require("../database/models");
+const { Artist, Auction, Collector, AuctionArchive} = require("../database/models");
 const bcrypt = require("bcrypt");
 
 class AuctionController {
@@ -156,6 +156,8 @@ class AuctionController {
       async create(req, res) {
         try {
             const auction = { ...req.body };
+
+            const artistId = req.artistId;
 
             const createdAuction = await Auction.create(auction);
     

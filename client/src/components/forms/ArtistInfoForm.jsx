@@ -1,7 +1,6 @@
 import { Grid, TextField, Typography, Button } from "@mui/material";
 import React from "react";
 import { useFormik } from "formik";
-import InputMask from "react-input-mask";
 import validateArtistData from "../../utils/validateArtistData";
 import { useTheme } from "@emotion/react";
 import { registerArtist } from "../../api/authApi";

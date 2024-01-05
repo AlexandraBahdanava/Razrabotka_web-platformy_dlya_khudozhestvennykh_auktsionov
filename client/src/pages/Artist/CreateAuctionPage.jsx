@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Grid, Snackbar, Alert } from "@mui/material";
 import ArtistHeader from "../../components/headers/ArtistHeader";
 import CreateAuctionForm from "../../components/forms/CreateAuctionForm";
-import { create } from "../../api/auctionApi";
+import { createAuction } from "../../api/auctionApi";
 import { useNavigate } from "react-router-dom";
 
 const CreateAuctionPage = () => {
@@ -11,17 +11,23 @@ const CreateAuctionPage = () => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const created = async (auctionData) => {
-        const response = await create(auctionData);
+    const create = async (auctionData) => {
+
+        const response = await createAuction(auctionData);
 
         if (!response) {
             displayError("Сервис временно недоступен");
             return;
         }
 
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
         if (response.status >= 300) {
-            displayError("Ошибка при создании пользователя. Код: " + response.status);
-            console.log(response)
+            displayError("Ошибка при создании аукциона. Код: " + response.status);
             return;
         }
 
@@ -51,9 +57,17 @@ const CreateAuctionPage = () => {
             bgcolor={"#E7E7E7"}
         >
             <ArtistHeader />
-
-          <CreateAuctionForm submitHandler={created} />
-
+            <Grid
+                container
+                item
+                flexDirection={"column"}
+                alignItems={"center"}
+                maxWidth={"1300px"}
+                flexGrow={1}
+                bgcolor={"#FFFFFF"}
+            >
+                <CreateAuctionForm submitHandler={create} />
+            </Grid>
             <Snackbar open={error} autoHideDuration={6000} onClose={closeSnackbar}>
                 <Alert onClose={closeSnackbar} severity="error" sx={{ width: "100%" }}>
                     {errorMessage}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Checkbox, Grid, TextField, Typography, Button,Radio, RadioGroup, FormControlLabel,  Select, MenuItem, FormControl, InputLabel  } from "@mui/material";
+import { Checkbox, Grid, TextField, Typography, Button,Radio, RadioGroup, FormControlLabel,  Select, MenuItem, FormControl  } from "@mui/material";
 import { useFormik } from "formik";
 import validateAuctionData from "../../utils/validateAuctionData";
 import ImageUpload from "../ImageUpload";
@@ -92,7 +92,6 @@ const CreateAuctionForm = ({ submitHandler }) => {
                  <FormControl fullWidth>
                     <Typography variant="body1" style={{ marginRight: "10px" }}>Жанр:</Typography>
                     <Select
-                        labelId="genre-label"
                         id="genre"
                         name="genre"
                         value={formik.values.genre}
@@ -111,7 +110,6 @@ const CreateAuctionForm = ({ submitHandler }) => {
                 <Typography variant="body1" style={{ marginRight: "10px" }}>Материал:</Typography>
                 <FormControl fullWidth>
                     <Select
-                        labelId="material-label"
                         id="material"
                         name="material"
                         value={formik.values.material}
@@ -129,12 +127,11 @@ const CreateAuctionForm = ({ submitHandler }) => {
                 <Typography variant="body1" style={{ marginRight: "10px" }}>Цвет:</Typography>
                 <Grid container direction="row" alignItems="center">
                     <RadioGroup
-                        aria-label="color"
+                        id="color"
                         name="color"
                         value={formik.values.color}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.color && formik.errors.color !== undefined}
                         style={{ display: "flex", flexDirection: "row" }}
                     >
                         <FormControlLabel value="Пастельное" control={<Radio />} label="Пастельное" />
@@ -145,12 +142,11 @@ const CreateAuctionForm = ({ submitHandler }) => {
                 <Typography variant="body1">Продолжительность аукциона:</Typography>
                 <Grid container direction="row" alignItems="center">
                     <RadioGroup
-                        aria-label="duration"
+                        id="duration"
                         name="duration"
                         value={formik.values.duration}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.duration && formik.errors.duration !== undefined}
                         style={{ display: "flex", flexDirection: "row" }}
                     >
                         <FormControlLabel value="1" control={<Radio />} label="1 день" />

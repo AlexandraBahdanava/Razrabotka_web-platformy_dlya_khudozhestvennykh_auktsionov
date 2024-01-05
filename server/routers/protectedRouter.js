@@ -8,7 +8,7 @@ const router = new Router();
 router.post("/artists", artistController.create);
 router.post("/collectors", collectorController.create);
 
-router.post("/auction/create", auctionController.create);
+router.post("/auctions", auctionController.create);
 
 
 module.exports = router;
