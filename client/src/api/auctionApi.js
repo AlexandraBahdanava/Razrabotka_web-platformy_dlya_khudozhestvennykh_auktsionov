@@ -3,6 +3,7 @@ import host from ".";
 const createAuction = async (auctionData) => {
     try {
         const response = await host.post("/api/auctions", auctionData);
+        
         return response;
     } catch (error) {
         handleRequestError(error);

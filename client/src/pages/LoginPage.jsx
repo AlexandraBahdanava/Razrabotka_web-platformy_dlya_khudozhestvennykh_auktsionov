@@ -1,6 +1,6 @@
 import { Grid, TextField, Typography, Button, Alert, Snackbar } from "@mui/material";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { login } from "../api/authApi";
 import PublicHeader from "../components/headers/PublicHeader";
 import { useTheme } from "@emotion/react";

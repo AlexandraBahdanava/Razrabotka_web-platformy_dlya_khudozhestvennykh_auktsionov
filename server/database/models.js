@@ -95,7 +95,7 @@ const AuctionArchive = sequelize.define(
       allowNull: false
     },
     bidding: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.SMALLINT,
       allowNull: false,
       defaultValue: 0
     },
@@ -109,12 +109,13 @@ const AuctionArchive = sequelize.define(
       defaultValue: 0
     },
     tags: {
-      type: DataTypes.ARRAY(DataTypes.TEXT),
+      type: DataTypes.TEXT,
       allowNull: false
     },
     photo: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      defaultValue: "#"
     },
   }, 
   {

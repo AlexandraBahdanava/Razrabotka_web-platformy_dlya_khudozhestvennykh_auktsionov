@@ -1,14 +1,17 @@
 import React from "react";
-import { Grid, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
 import { Icon } from '@iconify/react';
 import SearchBar from '../SearchBar';
+import AssignmentIcon from "@mui/icons-material/Assignment";
+import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
 const ArtistHeader = () => {
     const theme = useTheme();
 
+    const navigate = useNavigate();
     return (
         <Grid
             container
@@ -24,7 +27,7 @@ const ArtistHeader = () => {
             <Stack gap={"93px"} direction={"row"}>
                 <Typography variant="h1" textAlign={"center"}>
                     <Grid container item height={"100%"} alignItems={"center"}>
-                        <Link to={"/auction/create"} style={{ textDecoration: "none", color: "#000000" }}>
+                        <Link to={"/artist"} style={{ textDecoration: "none", color: "#000000" }}>
                         <Icon icon="iconamoon:profile-thin" color="#b3b9c4" width="24" height="24" />
                             Профиль
                         </Link>

@@ -22,8 +22,8 @@ const ArtistInfoForm = ({ authData, errorHandler }) => {
         validate: validateArtistData,
         onSubmit: (values) => {
             const artistData = {
-                ...values,
                 ...authData,
+                ...values,
             };
 
             registerArtist(artistData).then((response) => {

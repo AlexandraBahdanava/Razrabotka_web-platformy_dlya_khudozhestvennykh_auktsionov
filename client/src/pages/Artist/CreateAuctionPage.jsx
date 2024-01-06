@@ -13,6 +13,9 @@ const CreateAuctionPage = () => {
 
     const create = async (auctionData) => {
 
+        if (auctionData.bidding_rate === "") {
+            auctionData.bidding_rate = null;
+        }
         const response = await createAuction(auctionData);
 
         if (!response) {

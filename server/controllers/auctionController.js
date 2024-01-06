@@ -1,5 +1,4 @@
 const { Artist, Auction, Collector, AuctionArchive} = require("../database/models");
-const bcrypt = require("bcrypt");
 
 class AuctionController {
 
@@ -157,16 +156,55 @@ class AuctionController {
         try {
             const auction = { ...req.body };
 
-            const artistId = req.artistId;
+            if (!auction.title) {
+              auction.title = "Без названия";
+          }
+          const artistId = req.artistId;
+          console.log(artistId);
+          console.log(req.body);
 
+            
             const createdAuction = await Auction.create(auction);
     
+            await createdAuction.setArtist(artistId);
+
             return res.status(201).json(createdAuction);
         } catch (err) {
             return res.sendStatus(500);
         }
     }
       
+    async updateDrawing(req, res) {
+      try {
+          const { id } = req.params;
+    
+          if (isNaN(id)) {
+              return res.sendStatus(400);
+          }
+    
+          if (id != req.artistId) {
+              return res.sendStatus(403);
+          }
+    
+          const savePath = path.join(__dirname, "../", "avatars", "artist", id + ".png");
+    
+          const imagePath = path.join(__dirname, "../", "uploads", id + ".png");
+    
+          if (!fs.existsSync(imagePath)) {
+              return res.sendStatus(404);
+          }
+    
+          fs.rename(imagePath, savePath, (err) => {
+              if (err) throw err;
+          });
+    
+          return res.sendStatus(204);
+      } catch (err) {
+          console.log(err);
+          return res.sendStatus(500);
+      }
+    }
+
       // Перемещение аукционов в таблицу архива после окончания
       async  moveAuctionsToArchive() {
         try {
