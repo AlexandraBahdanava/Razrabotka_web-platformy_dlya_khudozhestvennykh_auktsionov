@@ -80,6 +80,8 @@ const LoginPage = () => {
                                 borderBottomColor: theme.palette.primary.main,
                             },
                         }}
+                            id="email"
+                            name="email"
                             fullWidth
                             variant="standard"
                             label="Эл. почта"
@@ -97,6 +99,7 @@ const LoginPage = () => {
                                     borderBottomColor: theme.palette.primary.main,
                                 },
                             }}
+                    
                                 fullWidth
                                 variant="standard"
                                 type="password"

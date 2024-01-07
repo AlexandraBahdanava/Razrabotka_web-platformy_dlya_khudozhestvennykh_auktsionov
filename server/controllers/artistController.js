@@ -50,8 +50,6 @@ async getOne(req, res) {
     console.log(req.params);
     return res.sendStatus(400);
 }
-
-
   try {
       const artist = await Artist.findOne({
           where: { id: id },
@@ -63,7 +61,9 @@ async getOne(req, res) {
             { model: Review },
           ],
       });
-
+      console.log(artist);
+      console.log(artist.Portfolio);
+  
       if (artist == null) {
           return res.sendStatus(404);
       }
@@ -126,17 +126,31 @@ async updateAvatar(req, res) {
           return res.sendStatus(403);
       }
 
-      const savePath = path.join(__dirname, "../", "avatars", "artist", id + ".png");
+      // Предполагаем, что photo содержит путь к изображению вида "/uploads/artist/id.png"
+      const imagePath = path.join(__dirname, "../", "uploads", "artist", id + ".png");
 
-      const imagePath = path.join(__dirname, "../", "uploads", id + ".png");
-
+      // Проверяем наличие файла перед обновлением
       if (!fs.existsSync(imagePath)) {
           return res.sendStatus(404);
       }
 
-      fs.rename(imagePath, savePath, (err) => {
-          if (err) throw err;
-      });
+      // Предполагаем, что photo представляет собой относительный путь к изображению
+      const savePath = path.join(__dirname, "../", "avatars", "artist", id + ".png");
+
+      // Проверяем, существует ли художник с указанным id
+      const existingArtist = await Artist.findByPk(id);
+      if (!existingArtist) {
+          return res.sendStatus(404);
+      }
+
+      // Обновляем поле photo в базе данных
+      if (existingArtist.photo) {
+          // Если поле не пустое, обновляем его
+          await Artist.update({ photo: savePath }, { where: { id: id } });
+      } else {
+          // Если поле пустое, записываем новое значение
+          await Artist.update({ photo: savePath }, { where: { id: id } });
+      }
 
       return res.sendStatus(204);
   } catch (err) {
@@ -144,6 +158,7 @@ async updateAvatar(req, res) {
       return res.sendStatus(500);
   }
 }
+
 
 
       // Получение электронной почты художника по его идентификатору

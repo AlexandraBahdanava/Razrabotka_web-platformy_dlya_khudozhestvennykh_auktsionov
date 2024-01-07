@@ -11,6 +11,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
             city: artistData.city,
             about_artist: artistData.about_artist,
         },
+
         validate: validateArtistEditData,
         onSubmit: async (values) => {
             const updatedArtistData = {
@@ -26,6 +27,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
     });
 
     return (
+        
         <form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
             <Grid
                 container
@@ -37,7 +39,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                     width: { xs: "290px", md: "570px", lg: "768px" },
                     paddingLeft: { xs: "31px", md: "46px", lg: 0 },
                 }}
-            >
+            >        
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                     Данные профиля
                 </Typography>
@@ -104,16 +106,18 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                     ></TextField>
                     </Grid>
                     <Grid container item gap={"15px"}>
-                        <Grid container item maxWidth={"136px"}>
+                    <Grid container item gap={"15px"}>
+                        <Grid container item sx={{ width: "136px" }}>
                             <Button type="submit" variant="contained">
                                 СОХРАНИТЬ
                             </Button>
                         </Grid>
-                        <Grid container item maxWidth={"108px"}>
-                            <Button variant="outlined" onClick={() => cancelHandler()}>
+                        <Grid container item sx={{ width: "136px" }}>
+                            <Button variant="contained" onClick={() => cancelHandler()}>
                                 ОТМЕНА
                             </Button>
                         </Grid>
+                    </Grid>
                     </Grid>
                 </Grid>
             </Grid>

@@ -16,11 +16,22 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = multer({ storage: storage });
+const types = ['image/png', 'image/jpg', 'image/jpeg']
+
+const FileFilter = (req, file, cb) =>{
+    if (types.includes(file.mimeType)){
+        cb(null,true)
+    }
+    else{
+        cb(null,false)
+    }
+}
+const upload = multer({ storage: storage,FileFilter });
 
 const artistController = require("../controllers/artistController");
 const collectorController = require("../controllers/collectorController");
 const auctionController = require('../controllers/auctionController');
+const portfolioController = require('../controllers/portfolioController')
 
 const router = new Router();
 
@@ -29,7 +40,9 @@ router.put("/artists/:id", artistController.update);
 router.get("/artists/:id/avatar", artistController.getAvatar);
 router.post("/artists/:id/avatar", upload.single("image"), artistController.updateAvatar);
 
+router.get("/portfolio/${id}",portfolioController.getPortfolioById);
 router.post("/auctions", auctionController.create);
+router.post("/portfolio", portfolioController.addToPortfolio);
 
 
 module.exports = router;
