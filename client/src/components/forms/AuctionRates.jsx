@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Paper, Grid } from "@mui/material";
-import ArtistHeader from "../../components/headers/ArtistHeader";
 import { useTheme } from "@emotion/react";
-import { getAuctionsByArtist } from "../../api/auctionApi";
+import { getRateByAuction } from "../../api/rateApi";
 import { useParams } from "react-router-dom";
-import Footer from "../../components/Footer";
-import ActiveAuctionsForm from "../../components/forms/ActiveAuctionsForm";
 
-const AuctionPage = () => {
+const AuctionRates = (auction) => {
     const theme = useTheme();
-
-    const { id } = useParams();
-
     const [readonly, setReadonly] = useState(false);
     const [editMode, setEditMode] = useState(false);
 
-    const [auctionData, setAuctionData] = useState([]);
+    const [ratesData, setRatesData] = useState([]);
 
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-
+const prise =
     useEffect(() => {
         const loadData = async () => {
-            const response =  await getAuctionsByArtist(id)
+            const response =  await getRateByAuction(auction.auctionId.id)
 
             if (!response) {
                 displayError("Сервис временно недоступен");
@@ -42,7 +36,7 @@ const AuctionPage = () => {
                 return;
             }
 
-            setAuctionData(response.data);
+            setRatesData(response.data);
         };
 
         loadData();
@@ -61,42 +55,27 @@ const AuctionPage = () => {
         setError(false);
     };
 
-    console.log("Auction data:", auctionData); // Добавьте этот вывод
-
     return (
         <>
-        <ArtistHeader/>
-        <Typography
-        variant="h2"
-        height={"69px"}
-        width={"100%"}
-        display={"flex"}
-        alignItems={"center"}
-        justifyContent="center"
-        textAlign="center"
-        margin={"30px 0"}>
-        Активные аукционы
-        </Typography>
-        
-        {auctionData.length > 0 ? (
+        {ratesData.length > 0 ? (
     <>
+        <Grid
+            container
+            item
+            maxWidth={"700px"}
+            width={"450px"}
+            height={"820px"}
+            flexDirection={"column"}
+            gap={"25px"}
+        >
+             {ratesData.map((item) => (
 
-<Grid
-  container
-  item
-  spacing={2}
-  justifyContent="center"
-  alignItems="center"
-  flexDirection={"row"} // изменено на row
-  flexWrap={"wrap"} // добавлено свойство flexWrap
-  gap={2} // добавлено свойство gap
->
-  {auctionData.map((report) => (
-    <Grid key={report.id} item xs={12} md={6} lg={3}    margin={"0 40px"}>
-      <ActiveAuctionsForm auction={report} />
-    </Grid>
-  ))}
-</Grid>
+                                     <Typography>
+                                     {auction.auctionId.starting_price+item.bet_size}
+                                     </Typography>
+
+                                    ))}
+        </Grid>
     </>
 ) : (
     <Typography
@@ -105,14 +84,13 @@ const AuctionPage = () => {
         display={"flex"}
         alignItems={"center"}
     >
-        Нет активных аукционов
+        Ставок нет
     </Typography>
 )}
 
-    <Footer/>
         </>
       );
       
 };
 
-export default AuctionPage;
+export default AuctionRates;

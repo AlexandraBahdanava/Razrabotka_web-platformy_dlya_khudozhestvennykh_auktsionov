@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
-import { Avatar, Grid, IconButton, Stack, Rating, Typography, Alert, Snackbar, Button } from "@mui/material";
+import { Avatar, Grid, IconButton, Stack, Rating, Typography, Alert, Snackbar, Button, } from "@mui/material";
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import ArtistHeader from './../../components/headers/ArtistHeader';
@@ -151,9 +153,9 @@ const ArtistProfilePage = () => {
             item
             mt={"40px"}
             pb={"46px"}
-
+width={"100%"}
             sx={{
-              paddingLeft: { xs: "1px", md: "33px", lg: "150px" },
+              paddingLeft: { xs: "1px", md: "33px", lg: "30px" },
               
             }}
           >
@@ -163,7 +165,7 @@ const ArtistProfilePage = () => {
               
               alignItems={editMode ? "center" : "flex-start"}
               sx={{
-                paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
+                paddingLeft: { xs: "1px", md: "46px", lg: "30px" },
                 gap: { xs: "5px", md: "50px" },
               }}
             >                 
@@ -179,7 +181,7 @@ const ArtistProfilePage = () => {
                                 marginRight: "20px", /* Отступ между аватаром и именем */
                             }}
                             />
-                              <div >
+                              <Grid padding="30px 0">
                               {/* Имя художника */}
                               <Typography
                                 variant="h2"
@@ -194,16 +196,18 @@ const ArtistProfilePage = () => {
                               >
                                 {`${artistData.country}, ${artistData.city}`}
                               </Typography>
-                            </div>
+                            </Grid>
+                            {localStorage.getItem("role") === "artist" ?(
                                     <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                                         <Typography variant="h1" textAlign={"top"}>
-                                          <Grid container height={"100%"} alignItems={"center"}  border= {"1px solid #b3b9c4"}  marginLeft={"20px"}
+                                          <Grid container height={"100%"} alignItems={"center"}  border= {"1px solid #b3b9c4"}  marginLeft={"20px"} marginTop={"30px"}
                                           borderRadius= {"31px"}  paddingLeft= {"10px"} paddingRight= {"10px"} paddingTop={"10px"} paddingBottom={"10px"}>        
                                               <Icon icon="uil:setting" color="#b3b9c4" width="24" height="24" />
                                               Настройки
                                           </Grid>
                                         </Typography>
                                     </IconButton>
+                            ):(<></>)}
 
                     </Grid>
                     {!editMode ? (
@@ -226,6 +230,7 @@ const ArtistProfilePage = () => {
         
                                     fullWidth // Растягивает на всю ширину контейнера
                                     multiline // Позволяет вводить многострочный текст
+                                    marginRight={"30px"}
                                     
                                 >
                                      {`${artistData.about_artist}`}
@@ -239,7 +244,7 @@ const ArtistProfilePage = () => {
                                  sx={{
                                      maxWidth: "100%",
                                  }}>
-                                <Typography variant="h2" className="section-heading">
+                                <Typography variant="h2" className="section-heading" margin={"30px 0"}>
                                     Портфолио
                                 </Typography>
                                 {showAddPortfolioForm ? (
@@ -251,7 +256,7 @@ const ArtistProfilePage = () => {
                     width={"100%"}
                     justifyContent="center"
                     alignItems="center">
-                        
+                        {localStorage.getItem("role") === "artist" ?(
                     <Button onClick={displayAddPortfolioForm} variant="outlined"
                     sx={{
                          color: "#7A8699" ,
@@ -260,7 +265,8 @@ const ArtistProfilePage = () => {
                         }}
                     >
                         Добавить работу в портфолио
-                    </Button>
+                    </Button>)
+                    :(<></>)};
                     </Grid>
                 )}
                                 {artistData.Portfolios && artistData.Portfolios.length > 0 ? (
@@ -308,7 +314,7 @@ const ArtistProfilePage = () => {
                                           md={4} 
                                           lg={4} 
                                         container
-                                        
+                                        margin={"0 50px"}
                                         padding={"15px"}
                                         gap={"8px"}
                                         style={{ border: "1px solid #667085", borderRadius: "10px" }}>
@@ -321,19 +327,21 @@ const ArtistProfilePage = () => {
                                                     >
                                                         <Avatar                   
                                                             variant="circular"
-                                                            sx={{ width: 60, height: 60 }}
+                                                            sx={{ width: 30, height: 30 }}
 
                                                         />
                                                  
                                                         <Typography
-                                                            variant="h2"
+                                                            variant="h3"
                                                             height={"35px"}
-                                                            style={{ borderBottom: "2px solid #DDC12C" }}
+
                                                             sx={{ fontSize: { xs: "20px", md: "24px" } }}
                                                         >
                                                             {item.Collector.email}
                                                         </Typography>
-                                                        <Rating name="read-only" value={item.rating} readOnly />
+                                                        <Rating name="read-only" value={item.rating} readOnly 
+                                                         icon={<StarIcon style={{ color: '#091E42' }} />} // устанавливаем цвет заполненной звезды
+                                                         emptyIcon={<StarBorderIcon style={{ color: '#091E42' }} />} />
                                                     </Stack>
                                                     <Typography variant="h1" pl={"67px"} width={"100%"} sx={{ paddingLeft: { xs: "0", md: "67px" } }}>
                                                         {item.text}

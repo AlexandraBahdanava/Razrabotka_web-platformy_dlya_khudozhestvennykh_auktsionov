@@ -1,4 +1,4 @@
-const { Artist, Auction, Collector, AuctionArchive} = require("../database/models");
+const { Artist, Auction, Collector, AuctionArchive, Rate} = require("../database/models");
 
 class AuctionController {
 
@@ -213,12 +213,13 @@ class AuctionController {
               {
                 model: Artist,
                 where: { id: artistId },
-              },]
+               
+              },
+           
+          ]
 
           });
-
-            console.log("Имя художника для 4-го результата:", auction);
-  
+          
           return res.json(auction);
         } catch (error) {
           console.error('Error retrieving auctions by artist:', error);

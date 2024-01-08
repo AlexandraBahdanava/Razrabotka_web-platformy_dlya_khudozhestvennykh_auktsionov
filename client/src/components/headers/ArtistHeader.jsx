@@ -67,7 +67,8 @@ const ArtistHeader = () => {
                         localStorage.removeItem("role");
                         window.location.reload();
                     }}
-                    style={{ padding: 0, color: "#000000" }}
+                    style={{ padding: 0, color: "#000000", marginLeft: "40px", marginRight:"30px" }}
+
                 >
                      <Typography variant="h1" textAlign={"center"}>                 
                         <Icon icon="solar:exit-bold" color="#b3b9c4" width="24" height="24" />

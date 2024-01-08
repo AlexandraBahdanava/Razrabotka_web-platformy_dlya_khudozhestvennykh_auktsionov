@@ -21,7 +21,7 @@ const Artist = sequelize.define(
       allowNull: false
     },
     about_artist: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true
     },
     email: {
@@ -229,6 +229,7 @@ const FeaturedArtist = sequelize.define(
    
   },
   {
+    timestamps: false,
     tableName: "Rates", // фактическое имя таблицы в базе данных
   });
 

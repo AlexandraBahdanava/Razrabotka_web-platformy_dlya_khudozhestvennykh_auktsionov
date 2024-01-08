@@ -47,7 +47,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                     alignItems: "center",
                     justifyContent: "center",
                     width: "100%",
-                    paddingLeft: { xs: "31px", md: "46px", lg: "70px" },
+                    paddingLeft: { xs: "31px", md: "46px", lg: "0px" },
                 }}
             >        
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
