@@ -61,12 +61,14 @@ async getOne(req, res) {
             { model: Review },
           ],
       });
-      console.log(artist);
-      console.log(artist.Portfolio);
   
       if (artist == null) {
           return res.sendStatus(404);
       }
+
+     // artist.Portfolios.forEach(portfolioItem => {
+       // console.log(portfolioItem.photo);
+      //});
 
       return res.json(artist);
   } catch (err) {
@@ -75,88 +77,42 @@ async getOne(req, res) {
 }
 
 async update(req, res) {
-  const { id } = req.artistId;
+  const { id } = req.params;
 
-  if (id != req.artistId) {
-      return res.sendStatus(403);
+  if (!/^\d+$/.test(id)) {
+    return res.sendStatus(400);
   }
-
+  console.log(req.params);
+  console.log(req.body);
   const artistData = { ...req.body };
 
-  if (isNaN(id) || parseInt(id) !== artistData.id) {
-      return res.sendStatus(400);
-  }
-
-  const artist = await Artist.findOne({ where: { id: id } });
+  const artist = await Artist.findByPk(id);
 
   if (artist == null) {
-      return res.sendStatus(404);
+    return res.sendStatus(404);
   }
 
   try {
-      await Artist.update(artistData, { where: { id: id } });
+    await Artist.update(artistData, { where: { id: id } });
 
-      const result = await Artist.findOne({
-          where: { id: id },
-          attributes: { exclude: ["password"] },
-          include: [
-            { model: AuctionArchive },
-            { model: Auction },
-            { model: ExhibitedPainting },
-            { model: Portfolio },
-            { model: Review },
-          ],
-      });
+    const result = await Artist.findOne({
+      where: { id: id },
+      attributes: { exclude: ["password"] },
+      include: [
+        { model: AuctionArchive },
+        { model: Auction },
+        { model: ExhibitedPainting },
+        { model: Portfolio },
+        { model: Review },
+      ],
+    });
 
-      return res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (err) {
-      return res.sendStatus(500);
+    console.error(err); // Выводим ошибку в консоль для детализации
+    return res.status(500).json({ error: err.message }); // Отправляем детали ошибки в ответ
   }
-}
-
-async updateAvatar(req, res) {
-  try {
-      const { id } = req.params;
-
-      if (isNaN(id)) {
-          return res.sendStatus(400);
-      }
-
-      if (id != req.artistId) {
-          return res.sendStatus(403);
-      }
-
-      // Предполагаем, что photo содержит путь к изображению вида "/uploads/artist/id.png"
-      const imagePath = path.join(__dirname, "../", "uploads", "artist", id + ".png");
-
-      // Проверяем наличие файла перед обновлением
-      if (!fs.existsSync(imagePath)) {
-          return res.sendStatus(404);
-      }
-
-      // Предполагаем, что photo представляет собой относительный путь к изображению
-      const savePath = path.join(__dirname, "../", "avatars", "artist", id + ".png");
-
-      // Проверяем, существует ли художник с указанным id
-      const existingArtist = await Artist.findByPk(id);
-      if (!existingArtist) {
-          return res.sendStatus(404);
-      }
-
-      // Обновляем поле photo в базе данных
-      if (existingArtist.photo) {
-          // Если поле не пустое, обновляем его
-          await Artist.update({ photo: savePath }, { where: { id: id } });
-      } else {
-          // Если поле пустое, записываем новое значение
-          await Artist.update({ photo: savePath }, { where: { id: id } });
-      }
-
-      return res.sendStatus(204);
-  } catch (err) {
-      console.log(err);
-      return res.sendStatus(500);
-  }
+  
 }
 
 

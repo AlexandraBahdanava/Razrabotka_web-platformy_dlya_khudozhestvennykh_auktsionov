@@ -1,5 +1,6 @@
 import ArtistProfilePage from "../pages/Artist/ArtistProfilePage";
 import CreateAuctionPage from "../pages/Artist/CreateAuctionPage";
+import AuctionPage from "../pages/Artist/AuctionPage";
 
 export const artistRoutes = [
     {
@@ -7,12 +8,8 @@ export const artistRoutes = [
         Component: ArtistProfilePage,
     },
     {
-        path: "/profile",
-        Component: "HomePage",
-    },
-    {
-        path: "/orders/create/:id",
-        Component: "Order Creation Page",
+        path: "/auction",
+        Component: AuctionPage,
     },
     {
         path: "/auction/create",

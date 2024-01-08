@@ -3,7 +3,6 @@ import { Grid } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
 import { Icon } from '@iconify/react';
-import SearchBar from '../SearchBar';
 
 const PublicHeader = () => {
     const theme = useTheme();
@@ -18,7 +17,6 @@ const PublicHeader = () => {
             alignItems={"center"}
         >
             <img src={Logo} alt="Logo" />
-            <SearchBar/> 
         </Grid>
     );
 };

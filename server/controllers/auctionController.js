@@ -173,38 +173,7 @@ class AuctionController {
             return res.sendStatus(500);
         }
     }
-      
-    async updateDrawing(req, res) {
-      try {
-          const { id } = req.params;
     
-          if (isNaN(id)) {
-              return res.sendStatus(400);
-          }
-    
-          if (id != req.artistId) {
-              return res.sendStatus(403);
-          }
-    
-          const savePath = path.join(__dirname, "../", "avatars", "artist", id + ".png");
-    
-          const imagePath = path.join(__dirname, "../", "uploads", id + ".png");
-    
-          if (!fs.existsSync(imagePath)) {
-              return res.sendStatus(404);
-          }
-    
-          fs.rename(imagePath, savePath, (err) => {
-              if (err) throw err;
-          });
-    
-          return res.sendStatus(204);
-      } catch (err) {
-          console.log(err);
-          return res.sendStatus(500);
-      }
-    }
-
       // Перемещение аукционов в таблицу архива после окончания
       async  moveAuctionsToArchive() {
         try {
@@ -235,13 +204,22 @@ class AuctionController {
       }
       
       // Получение аукционов художника
-      async getAuctionsByArtist(artistId) {
+      async getAuctionsByArtist(req,res) {
+        const artistId = req.artistId;
         try {
           const auction = await Auction.findAll({
-            where: { artist_id: artistId },
+            where: { ArtistId: artistId },
+            include: [
+              {
+                model: Artist,
+                where: { id: artistId },
+              },]
+
           });
-      
-          return auction;
+
+            console.log("Имя художника для 4-го результата:", auction);
+  
+          return res.json(auction);
         } catch (error) {
           console.error('Error retrieving auctions by artist:', error);
           throw error;

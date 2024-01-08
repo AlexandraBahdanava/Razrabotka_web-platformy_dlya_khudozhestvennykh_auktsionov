@@ -37,30 +37,3 @@
   }
 }
 
-.scroll-menu {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  transition: top 0.3s ease-in-out;
-}
-
-.scroll-menu.fixed {
-  position: fixed;
-  top: 0;
-  background-color: #ffffff; /* Цвет фона при фиксации */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень при фиксации */
-}
-
-.scroll-menu button {
-  background-color: #ffffff;
-  border: 1px solid #000000;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.scroll-menu button.active {
-  background-color: #dddddd;
-}

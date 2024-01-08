@@ -4,6 +4,7 @@ import PublicHeader from "../components/headers/PublicHeader";
 import ArtistInfoForm from "../components/forms/ArtistInfoForm";
 import AuthDataForm from "../components/forms/AuthDataForm";
 import CollectorInfoForm from "../components/forms//CollectorInfoForm";
+import Footer from "../components/Footer";
 
 const RegistrationPage = () => {
     const [authData, setAuthData] = useState({
@@ -49,6 +50,7 @@ const RegistrationPage = () => {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            <Footer/>
         </Grid>
     );
 };

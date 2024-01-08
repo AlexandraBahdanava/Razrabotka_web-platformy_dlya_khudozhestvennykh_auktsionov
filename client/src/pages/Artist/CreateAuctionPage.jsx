@@ -4,6 +4,7 @@ import ArtistHeader from "../../components/headers/ArtistHeader";
 import CreateAuctionForm from "../../components/forms/CreateAuctionForm";
 import { createAuction } from "../../api/auctionApi";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer";
 
 const CreateAuctionPage = () => {
     const navigate = useNavigate();
@@ -65,7 +66,7 @@ const CreateAuctionPage = () => {
                 item
                 flexDirection={"column"}
                 alignItems={"center"}
-                maxWidth={"1300px"}
+                width={"100%"}
                 flexGrow={1}
                 bgcolor={"#FFFFFF"}
             >
@@ -76,6 +77,7 @@ const CreateAuctionPage = () => {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            <Footer/>
         </Grid>
     );
 };

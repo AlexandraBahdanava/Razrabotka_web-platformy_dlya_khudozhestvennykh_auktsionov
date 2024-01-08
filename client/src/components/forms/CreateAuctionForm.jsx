@@ -25,9 +25,10 @@ const CreateAuctionForm = ({ submitHandler }) => {
             submitHandler(values);
         },
     });
+
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Grid container item maxWidth={"500px"} width={"500px"} gap={"15px"} mt={"50px"}>
+            <Grid container item maxWidth={"700px"} width={"700px"} gap={"15px"} mt={"50px"} marginBottom={"50px"}>
                 <Grid container item height={"69px"} justifyContent={"center"} alignItems={"center"}>
                     <Typography variant="h2" textAlign={"center"}>
                         Создание аукциона
@@ -225,6 +226,19 @@ const CreateAuctionForm = ({ submitHandler }) => {
                         <FormControlLabel value="0" control={<Radio />} label="нет" />
                     </RadioGroup>
                 </Grid>
+                <TextField
+                    id="photo"
+                    name="photo"
+                    fullWidth
+                    variant="outlined"
+                    label="Вставьте ссылку на изображение"
+                    value={formik.values.photo}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.photo && formik.errors.photo !== undefined}
+                    helperText={formik.touched.photo && formik.errors.photo !== undefined ? formik.errors.photo : ""}
+                    required
+                />
                 <Button type="submit" variant="contained" fullWidth>
                     Создать аукцион
                 </Button>

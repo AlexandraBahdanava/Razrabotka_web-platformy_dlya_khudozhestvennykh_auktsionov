@@ -10,6 +10,17 @@ const createAuction = async (auctionData) => {
     }
 };
 
+const getAuctionsByArtist = async (id) => {
+    try {
+        const response = await host.get(`/api/auctions/${id}`); 
+        console.log('Response from getAuctionsByArtist:', response.data);
+      
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
+
 const handleRequestError = (error) => {
     if (error.response) {
         return error.response;
@@ -20,4 +31,4 @@ const handleRequestError = (error) => {
     }
 };
 
-export { createAuction };
+export { createAuction,  getAuctionsByArtist};

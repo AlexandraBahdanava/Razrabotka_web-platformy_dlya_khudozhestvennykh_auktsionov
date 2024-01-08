@@ -213,8 +213,11 @@ const FeaturedArtist = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false
     },
-  }
-  );
+  },
+  {
+    timestamps: false, // отключает автоматическую генерацию createdAt и updatedAt
+    tableName: "Portfolio", // фактическое имя таблицы в базе данных
+  });
 
   const Rate = sequelize.define(
     "Rate",

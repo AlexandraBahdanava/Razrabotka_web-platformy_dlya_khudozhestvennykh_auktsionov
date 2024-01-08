@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
-import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Button, Input } from "@mui/material";
+import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import ArtistHeader from './../../components/headers/ArtistHeader';
@@ -10,7 +10,9 @@ import { useParams } from "react-router-dom";
 import { getArtist, updateArtist, updateAvatar } from '../../api/artistApi';
 import { addPortfolio } from "../../api/portfolioApi";
 import ArtistEditForm from "./../../components/forms/ArtistEditForm";
-import ScrollMenu from "../../components/ScrollMenu";
+import Footer from "../../components/Footer";
+import AddPortfolioForm from "../../components/forms/AddPortfolioForm";
+
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -24,7 +26,7 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-const ArtistEditPage = () => {
+const ArtistProfilePage = () => {
     const theme = useTheme();
 
     const { id } = useParams();
@@ -33,7 +35,7 @@ const ArtistEditPage = () => {
     const [editMode, setEditMode] = useState(false);
 
     const [artistData, setArtistData] = useState({});
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [showAddPortfolioForm, setShowAddPortfolioForm] = useState(false);
 
     const [image, setImage] = useState(undefined);
 
@@ -41,7 +43,7 @@ const ArtistEditPage = () => {
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
-        const loadData = async (id) => {
+        const loadData = async () => {
             const response =  await getArtist(id)
 
             if (!response) {
@@ -68,35 +70,28 @@ const ArtistEditPage = () => {
         loadData();
     }, [id]);
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        setSelectedFile(file);
-      };
-    
-      const handleAddToPortfolio = async () => {
-        if (!selectedFile) {
-            displayError("Ошибка при загрузке файла");
-          return;
-        }
-    
-        const formData = new FormData();
-formData.append("artistId", id); // Добавляем artistId
-formData.append("photo", selectedFile);
+    const createPortfolio = async (portfolioData) => {
 
-try {
-    console.log(formData.append.selectedFile);
-    // Выполнить запрос на добавление в портфолио
-    await addPortfolio(formData);
-    // Обновить данные художника после успешного добавления
-    const updatedResponse = await getArtist(id);
-    setArtistData(updatedResponse.data);
-    // Очистить выбранный файл
-    setSelectedFile(null);
-} catch (error) {
-    console.error("Ошибка при добавлении в портфолио", error);
-    // Обработать ошибку (показать сообщение и т. д.)
-}
-      }
+        const response = await addPortfolio(portfolioData);
+
+        if (!response) {
+            displayError("Сервис временно недоступен");
+            return;
+        }
+
+        if (response.status === 401) {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+        }
+
+        if (response.status >= 300) {
+            displayError("Ошибка при создании аукциона. Код: " + response.status);
+            return;
+        }
+
+       // navigate("/");
+    };
 
     const displayError = (message) => {
         setErrorMessage(message);
@@ -112,9 +107,6 @@ try {
     };
 
     const applyChanges = async (updatedArtistData) => {
-      console.log("Applying changes with data:", updatedArtistData);
-
-      console.log(updatedArtistData);
         const response = await updateArtist(artistData.id, updatedArtistData);
 
         if (!response) {
@@ -133,82 +125,50 @@ try {
             return;
         }
 
-        const imageSuccess = await sendImage();
-
-        if (imageSuccess) {
-            setArtistData(response.data);
-            setEditMode(false);
-            window.location.reload();
-        }
     };
 
-    const sendImage = async () => {
-        if (image === undefined) {
-            return true;
-        }
-
-        const response = await updateAvatar(artistData.id, image);
-
-        if (!response) {
-            displayError("Сервис временно недоступен");
-            return false;
-        }
-
-        if (response.status === 401) {
-            localStorage.removeItem("jwt");
-            localStorage.removeItem("role");
-            window.location.reload();
-        }
-
-        if (response.status >= 300) {
-            displayError("Ошибка при отправке изображения. Код: " + response.status);
-            console.log(response);
-            return false;
-        }
-
-        setImage(undefined);
-
-        return true;
+    const displayAddPortfolioForm = () => {
+        setShowAddPortfolioForm(true);
     };
-
     return (
         <Grid
         container
         item
         flexDirection={"column"}
         alignItems={"flex-start"}
-        maxWidth={"1300px"}
-        flexGrow={1}
+        maxWidth={"100%"}
         bgcolor={"#FFFFFF"}
       >
-          <ArtistHeader/>
+        <ArtistHeader />
+        <Grid
+          container
+          item
+          flexDirection={"column"}
+          alignItems={"flex-start"}
+        >
+          <Grid
+            item
+            mt={"40px"}
+            pb={"46px"}
+            sx={{
+              paddingLeft: { xs: "1px", md: "33px", lg: "150px" },
+              marginTop: { xs: "0", md: "40px" },
+            }}
+          >
             <Grid
-                item
-                flexDirection={"column"}
-                alignItems={"flex-start"}
-                maxWidth={"100%"}
-                flexGrow={1}
-                bgcolor={"#FFFFFF"}
-            >
-                <Grid
-                    item
-                    mt={"40px"}
-                    pb={"46px"}
-                    sx={{
-                        paddingLeft: { xs: "1px", md: "33px", lg: "150px" },
-                        marginTop: { xs: "0", md: "40px" },
-                    }}
-                >
-                    <Grid
-                         container direction="row"
-                        alignItems={editMode ? "center" : "flex-start"}
-                        sx={{ paddingLeft: { xs: "1px", md: "46px", lg: "0px" }, gap: { xs: "5px", md: "50px" } }}
-                    >                 
+              container
+              direction="row"
+              alignItems={editMode ? "center" : "flex-start"}
+              sx={{
+                paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
+                gap: { xs: "5px", md: "50px" },
+              }}
+            >                 
                         <Avatar 
                             src={artistData.id !== undefined
-                                ? `http://localhost:3000/api/artist/${artistData.id}/avatar?jwt=${localStorage.getItem("jwt")}`
-                                : "default-avatar.png" /* Путь к стандартной иконке, если нет аватара */}
-                            alt={artistData.name}
+                                ?artistData.photo
+                                : "" /* Путь к стандартной иконке, если нет аватара */}
+                            
                             variant="circular"
                             sx={{
                                 width: { xs: 80, md: 120 }, /* Размеры круглого аватара */
@@ -216,8 +176,6 @@ try {
                                 marginRight: "20px", /* Отступ между аватаром и именем */
                             }}
                             />
-                        {!editMode ? (
-                          <Grid  container direction="row">
                               <div >
                               {/* Имя художника */}
                               <Typography
@@ -236,37 +194,14 @@ try {
                             </div>
                                     <IconButton style={{ padding: 0, color: "#000000" }} onClick={() => setEditMode(true)}>
                                         <Typography variant="h1" textAlign={"top"}>
-                                          <Grid container height={"100%"} alignItems={"center"}  border= {"1px solid #b3b9c4"}  
-                                          borderRadius= {"31px"} marginLeft= {"100px"} paddingLeft= {"10px"} paddingRight= {"0px"} paddingTop={"10px"} paddingBottom={"10px"}>        
+                                          <Grid container height={"100%"} alignItems={"center"}  border= {"1px solid #b3b9c4"}  marginLeft={"20px"}
+                                          borderRadius= {"31px"}  paddingLeft= {"10px"} paddingRight= {"10px"} paddingTop={"10px"} paddingBottom={"10px"}>        
                                               <Icon icon="uil:setting" color="#b3b9c4" width="24" height="24" />
                                               Настройки
                                           </Grid>
                                         </Typography>
                                     </IconButton>
-                                </Grid>
-                        ) : (
-                            <Button 
-                             component="label"
-                            variant="outlined"
-                            sx={{
-                              padding: "10px",
-                                color: "#000000", // цвет текста
-                                borderRadius: "31px", // закругленные углы
-                                borderColor: "#000000", // цвет обводки
-                                borderWidth: "2px", // толщина обводки
-                                '&:hover': {
-                                    backgroundColor: "rgba(0, 0, 0, 0.1)", // цвет при наведении
-                                },
-                            }}>
-                                {image !== undefined ? image.name : "ВЫБРАТЬ ФАЙЛ"}
-                                <VisuallyHiddenInput
-                                    type="file"
-                                    name="avatar"
-                                    onChange={(e) => setImage(e.target.files[0])}
-                                    accept="image/png"
-                                />
-                            </Button>
-                        )}
+
                     </Grid>
                     {!editMode ? (
                         <>
@@ -274,80 +209,79 @@ try {
                                 container
                                 item
                                 flexDirection={"column"}
+                                justifyContent="center"
+                                alignItems="center"
                                 sx={{
+                                    maxWidth: "100%",
                                     paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
                                     marginTop: { xs: "10px", md: "50px" },
                                 }}
                             >
-                              <ScrollMenu/>
-                                <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"100%"}>
-                                    <TextField
-                                        variant="standard"
-                                        value={artistData.about_artist ?? ""}
-                                        InputProps={{
-                                            readOnly: true,
-                                            sx: {
-                                                fontSize: { xs: "20px", md: "24px" },
-                                                borderColor: theme.palette.primary.main,
-                                                borderWidth: "2px", // толщина обводки
-                                            },
-                                        }}
-                                        sx={{
-                                            "& .MuiInput-underline:before": {
-                                                borderBottomColor: theme.palette.primary.main,
-                                            },
-                                            "& .MuiInput-underline:after": {
-                                                borderBottomColor: theme.palette.primary.main,
-                                            },
-                                        }}
-                                    />
+                                <Grid container item flexDirection={"column"} gap={"25px"} maxWidth={"100%"} marginTop={"20px"} marginBottom={"50px"}>
+                                <Typography
+        
+                                    fullWidth // Растягивает на всю ширину контейнера
+                                    multiline // Позволяет вводить многострочный текст
+                                    
+                                >
+                                     {`${artistData.about_artist}`}
+                                </Typography>
                                 </Grid>
-                                <div id="portfolio" className="scroll-section">
-      <Typography variant="h2" className="section-heading">
-        Портфолио
-      </Typography>
-      {artistData.Portfolio && artistData.Portfolio.length > 0 ? (
-        <Grid
-          container
-          item
-          spacing={2}
-          justifyContent="flex-start"
-          alignItems="flex-start"
-          sx={{ maxWidth: "100%", marginY: theme.spacing(2) }}
-        >
-          {artistData.Portfolios.map((item) => (
-            <Grid key={item.id} item xs={6} md={4} lg={3}>
-              <img
-                src={item.imageUrl}
-                alt={`Портфолио ${item.id}`}
-                style={{ width: "100%", height: "200px", objectFit: "cover" }}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      ) : (
-        <div>
-          <Typography>Здесь пока ничего нет</Typography>
-        </div>
-      )}
-      <Input
-        type="file"
-        onChange={handleFileChange}
-        style={{ display: "none" }}
-        inputProps={{ accept: "image/*" }}
-      />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => document.querySelector("input[type='file']").click()}
-      >
-        Выбрать файл
-      </Button>
-      <Button variant="contained" color="primary" onClick={handleAddToPortfolio}>
-        Добавить в портфолио
-      </Button>
-    </div>
-                            </Grid>
+                                </Grid>
+                                <div id="portfolio" className="scroll-section"
+                                 justifyContent="center"
+                                 alignItems="center"
+                                 sx={{
+                                     maxWidth: "100%",
+                                 }}>
+                                <Typography variant="h2" className="section-heading">
+                                    Портфолио
+                                </Typography>
+                                {showAddPortfolioForm ? (
+                    <AddPortfolioForm submitHandler={createPortfolio}
+                    showAddPortfolioForm={setShowAddPortfolioForm}
+                    cancelHandler={() => setShowAddPortfolioForm(true)} />
+                ) : (
+                    <Grid 
+                    width={"100%"}
+                    justifyContent="center"
+                    alignItems="center">
+                    <Button onClick={displayAddPortfolioForm} variant="outlined"
+                    sx={{
+                         color: "#7A8699" ,
+                         border: "2px solid #000000", // Ширина и цвет обводки
+                         borderRadius: "4px", // Закругление углов (по желанию)
+                        }}
+                    >
+                        Добавить работу в портфолио
+                    </Button>
+                    </Grid>
+                )}
+                                {artistData.Portfolios && artistData.Portfolios.length > 0 ? (
+                                    <Grid
+                                    container
+                                    item
+                                    spacing={2}
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    sx={{ maxWidth: "100%", marginY: theme.spacing(2) }}
+                                    >
+                                    {artistData.Portfolios.map((item) => (
+                                        <Grid key={item.id} item xs={6} md={4} lg={3}>
+                                        <img
+                                            src={item.photo}
+                                            alt={`Портфолио ${item.id}`}
+                                            style={{ width: "100%", height: "400px", objectFit: "cover" }}
+                                        />
+                                        </Grid>
+                                    ))}
+                                    </Grid>
+                                ) : (
+                                    <div>
+                                    <Typography>Здесь пока ничего нет</Typography>
+                                    </div>
+                                )}
+                                </div>
                             {" "}
                         </>
                     ) : (
@@ -364,7 +298,8 @@ try {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            <Footer/>
         </Grid>
     );
 };
-export default ArtistEditPage;
+export default ArtistProfilePage;

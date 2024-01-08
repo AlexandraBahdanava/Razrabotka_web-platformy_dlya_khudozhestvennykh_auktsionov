@@ -1,10 +1,9 @@
 import React from "react";
-import { Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction } from "@mui/material";
+import { Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
 import { Icon } from '@iconify/react';
-import SearchBar from '../SearchBar';
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 
@@ -13,6 +12,9 @@ const ArtistHeader = () => {
 
     const navigate = useNavigate();
     return (
+        <Grid 
+        width={"100%"}
+        paddingLeft={"0"}>
         <Grid
             container
             width={"100%"}
@@ -21,12 +23,16 @@ const ArtistHeader = () => {
             pl={"50px"}
             justifyContent={"space-between"}
             alignItems={"center"}
+            paddingBottom={"0"}
         >
             <img src={Logo} alt="Logo" />
-            <SearchBar/>
-            <Stack gap={"93px"} direction={"row"}>
-                <Typography variant="h1" textAlign={"center"}>
-                    <Grid container item height={"100%"} alignItems={"center"}>
+            <Stack gap={"200px"} 
+            direction={"row"}
+            justifyContent="flex-end" // Выравнивание вправо
+            sx={{ flex: 1 }} // Растягиваем для заполнения доступного пространства
+              >
+                <Typography variant="h1" textAlign={"top"}>
+                    <Grid container item height={"100%"} alignItems={"center"} marginRight= {"100px"}>
                         <Link to={"/artist"} style={{ textDecoration: "none", color: "#000000" }}>
                         <Icon icon="iconamoon:profile-thin" color="#b3b9c4" width="24" height="24" />
                             Профиль
@@ -34,19 +40,9 @@ const ArtistHeader = () => {
                     </Grid>
                 </Typography>
             </Stack>
-            <Stack gap={"50px"} direction={"row"} mr={"50px"}>
-                <Typography variant="h1" textAlign={"center"}>
-                    <Grid container item height={"100%"} alignItems={"center"}>
-                        <Link to={"/orders/create"} style={{ textDecoration: "none", color: "#000000" }}>
-                        <Icon icon="solar:home-2-outline" color="#b3b9c4" width="24" height="24" />
-                            Главная
-                        </Link>
-                    </Grid>
-                </Typography>
-            </Stack>
             <Stack gap={"93px"} direction={"row"}>
                 <Typography variant="h1" textAlign={"center"}>
-                    <Grid container item height={"100%"} alignItems={"center"}>
+                    <Grid container item height={"100%"} alignItems={"center"} marginRight= {"100px"}>
                         <Link to={"/auction"} style={{ textDecoration: "none", color: "#000000" }}>
                         <Icon icon="material-symbols:finance" color="#b3b9c4" width="24" height="24" />
                             Активные аукционы
@@ -56,7 +52,7 @@ const ArtistHeader = () => {
             </Stack>
             <Stack gap={"93px"} direction={"row"}>
                 <Typography variant="h1" textAlign={"center"}>
-                    <Grid container item height={"100%"} alignItems={"center"}>
+                    <Grid container  height={"100%"} alignItems={"center"} marginRight= {"20px"}>
                         <Link to={"/auction/create"} style={{ textDecoration: "none", color: "#000000" }}>
                         <Icon icon="uil:setting" color="#b3b9c4" width="24" height="24" />
                             Создать аукцион
@@ -64,6 +60,8 @@ const ArtistHeader = () => {
                     </Grid>
                 </Typography>
             </Stack>
+            </Grid>
+            <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
         </Grid>
     );
 };

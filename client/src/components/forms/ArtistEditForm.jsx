@@ -2,27 +2,32 @@ import React from "react";
 import { Grid, Typography, TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
 import validateArtistEditData from "../../utils/validateArtistEditData";
+import { useNavigate } from "react-router-dom";
 
 const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             name: artistData.name,
             country: artistData.country,
             city: artistData.city,
             about_artist: artistData.about_artist,
+            photo: artistData.photo,
         },
 
         validate: validateArtistEditData,
         onSubmit: async (values) => {
             const updatedArtistData = {
-                id: artistData.id,
+            
                 name: values.name,
                 country: values.country !== "" ? values.country : null,
                 city: values.city !== "" ? values.city : null,
                 about_artist: values.about_artist !== "" ? values.about_artist : null,
+                photo: values.photo,
             };
 
             applyCallback(updatedArtistData);
+            navigate("/");
         },
     });
 
@@ -35,16 +40,35 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                 flexDirection={"column"}
                 mt={"20px"}
                 gap={"10px"}
+                justifyContent={"center"} 
+                alignItems={"center"}
+                width={"100%"}
                 sx={{
-                    width: { xs: "290px", md: "570px", lg: "768px" },
-                    paddingLeft: { xs: "31px", md: "46px", lg: 0 },
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                    paddingLeft: { xs: "31px", md: "46px", lg: "70px" },
                 }}
             >        
                 <Typography variant="h2" height={"69px"} display={"flex"} alignItems={"center"}>
                     Данные профиля
                 </Typography>
-                <Grid container item maxWidth={"768px"} columnGap={"15px"} rowGap={"20px"}>
-                    <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px" } }}>
+                <Grid container item maxWidth={"100%"} columnGap={"15px"} rowGap={"20px"} justifyContent={"center"} alignItems={"center"}>
+                <Grid container item sx={{ maxWidth: { xs: "259px", md: "246px", lg: "700px" }, alignItems: "center",
+                    justifyContent: "center", }}>
+                <TextField
+                    id="photo"
+                    name="photo"
+                    fullWidth
+                    variant="outlined"
+                    label="Вставьте ссылку на новый аватар"
+                    value={formik.values.photo}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.photo && formik.errors.photo !== undefined}
+                    helperText={formik.touched.photo && formik.errors.photo !== undefined ? formik.errors.photo : ""}
+                    required
+                />
                     <TextField
                         id="name"
                         name="name"
@@ -105,10 +129,12 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                         }
                     ></TextField>
                     </Grid>
-                    <Grid container item gap={"15px"}>
-                    <Grid container item gap={"15px"}>
+
+                    <Grid container item gap={"15px"} justifyContent={"center"} 
+                alignItems={"center"}
+                width={"100%"}>
                         <Grid container item sx={{ width: "136px" }}>
-                            <Button type="submit" variant="contained">
+                            <Button type="submit" variant="contained" >
                                 СОХРАНИТЬ
                             </Button>
                         </Grid>
@@ -118,7 +144,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                             </Button>
                         </Grid>
                     </Grid>
-                    </Grid>
+                    
                 </Grid>
             </Grid>
         </form>

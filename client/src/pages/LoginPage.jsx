@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { login } from "../api/authApi";
 import PublicHeader from "../components/headers/PublicHeader";
 import { useTheme } from "@emotion/react";
+import Footer from "../components/Footer";
 
 const LoginPage = () => {
     const theme = useTheme();
@@ -122,6 +123,7 @@ const LoginPage = () => {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            <Footer/>
         </Grid>
     );
 };

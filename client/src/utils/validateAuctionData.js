@@ -11,9 +11,7 @@ const validateAuctionData = (values) => {
         errors.starting_price = "Некорректное значение для начальной цены";
     }
 
-    if (!values.rate_step) {
-        errors.rate_step = "Обязательное поле";
-    } else if (isNaN(values.rate_step) || parseInt(values.rate_step) < 0 || parseInt(values.rate_step) > 9999) {
+    if (isNaN(values.rate_step) || parseInt(values.rate_step) < 0 || parseInt(values.rate_step) > 9999) {
         errors.rate_step = "Некорректное значение для шага ставки";
     }
     if(values.bidding==1){
