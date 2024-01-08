@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction, Divider } from "@mui/material";
+import { IconButton, Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction, Divider } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
@@ -60,6 +60,20 @@ const ArtistHeader = () => {
                     </Grid>
                 </Typography>
             </Stack>
+            
+            <IconButton
+                    onClick={(e) => {
+                        localStorage.removeItem("jwt");
+                        localStorage.removeItem("role");
+                        window.location.reload();
+                    }}
+                    style={{ padding: 0, color: "#000000" }}
+                >
+                     <Typography variant="h1" textAlign={"center"}>                 
+                        <Icon icon="solar:exit-bold" color="#b3b9c4" width="24" height="24" />
+                           Выйти
+                </Typography>
+                </IconButton>
             </Grid>
             <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
         </Grid>

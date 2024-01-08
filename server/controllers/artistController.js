@@ -1,4 +1,4 @@
-const { Artist,AuctionArchive,Auction,ExhibitedPainting,Portfolio,Review }= require("../database/models");
+const { Artist,AuctionArchive,Auction,ExhibitedPainting,Portfolio,Review, Collector }= require("../database/models");
 const bcrypt = require("bcrypt");
 const fs = require("fs");
 const path = require("path");
@@ -58,7 +58,10 @@ async getOne(req, res) {
             { model: AuctionArchive },
             { model: Auction },
             { model: Portfolio },
-            { model: Review },
+            { model: Review,
+            include:[
+              {model: Collector},
+            ] },
           ],
       });
   

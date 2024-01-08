@@ -2,7 +2,7 @@ import CollectorProfilePage from "../pages/CollectorProfilePage";
 
 export const collectorRoutes = [
     {
-        path: "/profile",
+        path: "/collector",
         Component: CollectorProfilePage,
     },
     {

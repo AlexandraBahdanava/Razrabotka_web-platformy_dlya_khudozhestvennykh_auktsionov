@@ -246,6 +246,7 @@ const FeaturedArtist = sequelize.define(
    
   },
   {
+    timestamps: false, // отключает автоматическую генерацию createdAt и updatedAt
     tableName: "Reviews", // фактическое имя таблицы в базе данных
   });
 

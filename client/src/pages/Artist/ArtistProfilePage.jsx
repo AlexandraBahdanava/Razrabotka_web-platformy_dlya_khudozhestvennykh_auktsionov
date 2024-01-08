@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "@emotion/react";
-import { Avatar, Grid, IconButton, TextField, Typography, Alert, Snackbar, Button } from "@mui/material";
+import { Avatar, Grid, IconButton, Stack, Rating, Typography, Alert, Snackbar, Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import ArtistHeader from './../../components/headers/ArtistHeader';
@@ -145,19 +145,22 @@ const ArtistProfilePage = () => {
           item
           flexDirection={"column"}
           alignItems={"flex-start"}
+          
         >
           <Grid
             item
             mt={"40px"}
             pb={"46px"}
+
             sx={{
               paddingLeft: { xs: "1px", md: "33px", lg: "150px" },
-              marginTop: { xs: "0", md: "40px" },
+              
             }}
           >
             <Grid
               container
               direction="row"
+              
               alignItems={editMode ? "center" : "flex-start"}
               sx={{
                 paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
@@ -211,6 +214,7 @@ const ArtistProfilePage = () => {
                                 flexDirection={"column"}
                                 justifyContent="center"
                                 alignItems="center"
+                                
                                 sx={{
                                     maxWidth: "100%",
                                     paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
@@ -231,6 +235,7 @@ const ArtistProfilePage = () => {
                                 <div id="portfolio" className="scroll-section"
                                  justifyContent="center"
                                  alignItems="center"
+                                 
                                  sx={{
                                      maxWidth: "100%",
                                  }}>
@@ -246,6 +251,7 @@ const ArtistProfilePage = () => {
                     width={"100%"}
                     justifyContent="center"
                     alignItems="center">
+                        
                     <Button onClick={displayAddPortfolioForm} variant="outlined"
                     sx={{
                          color: "#7A8699" ,
@@ -281,8 +287,69 @@ const ArtistProfilePage = () => {
                                     <Typography>Здесь пока ничего нет</Typography>
                                     </div>
                                 )}
+                                <Typography variant="h2" className="section-heading" width={"100%"}  textAlign={"center"} margin={"50px 0"}>
+                                    Отзывы
+                                </Typography>
+                                {artistData.Reviews && artistData.Reviews.length > 0 ? (
+                                    <Grid
+                                    container
+                                    item
+                                    spacing={2}
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    sx={{ maxWidth: "100%", marginY: theme.spacing(2) }}
+                                    >
+                                    {artistData.Reviews.map((item) => (
+                                        
+                                        <Grid 
+                                        key={item.id} 
+                                        item
+                                         xs={6}
+                                          md={4} 
+                                          lg={4} 
+                                        container
+                                        
+                                        padding={"15px"}
+                                        gap={"8px"}
+                                        style={{ border: "1px solid #667085", borderRadius: "10px" }}>
+
+                                        <Stack
+                                                        direction={"row"}
+                                                        justifyContent={"space-between"}
+                                                        flexGrow={1}
+                                                        sx={{ flexDirection: { xs: "column", md: "row" } }}
+                                                    >
+                                                        <Avatar                   
+                                                            variant="circular"
+                                                            sx={{ width: 60, height: 60 }}
+
+                                                        />
+                                                 
+                                                        <Typography
+                                                            variant="h2"
+                                                            height={"35px"}
+                                                            style={{ borderBottom: "2px solid #DDC12C" }}
+                                                            sx={{ fontSize: { xs: "20px", md: "24px" } }}
+                                                        >
+                                                            {item.Collector.email}
+                                                        </Typography>
+                                                        <Rating name="read-only" value={item.rating} readOnly />
+                                                    </Stack>
+                                                    <Typography variant="h1" pl={"67px"} width={"100%"} sx={{ paddingLeft: { xs: "0", md: "67px" } }}>
+                                                        {item.text}
+                                                    </Typography>
+                                                </Grid>
+
+                                    ))}
+                                    </Grid>
+                                ) : (
+                                    <div>
+                                    <Typography>Здесь пока ничего нет</Typography>
+                                    </div>
+                                )}
                                 </div>
                             {" "}
+                            
                         </>
                     ) : (
                         <ArtistEditForm
