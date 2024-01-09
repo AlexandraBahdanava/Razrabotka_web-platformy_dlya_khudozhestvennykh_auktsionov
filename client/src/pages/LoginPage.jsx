@@ -52,6 +52,7 @@ const LoginPage = () => {
     };
 
     return (
+        <>
         <Grid container width={"100%"} height={"100%"}>
             <PublicHeader />
             <Grid container flexDirection={"column"} alignItems={"center"}>
@@ -60,7 +61,7 @@ const LoginPage = () => {
                         container
                         item
                         flexDirection={"column"}
-                        alignItems={"center"}
+                        
                         justifyContent={"space-between"}
                         paddingLeft={"139px"}
                         paddingRight={"139px"}
@@ -123,8 +124,9 @@ const LoginPage = () => {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            </Grid>
             <Footer/>
-        </Grid>
+        </>
     );
 };
 

@@ -38,6 +38,7 @@ const RegistrationPage = () => {
     };
 
     return (
+        <>
         <Grid container width={"100%"} height={"100%"}>
             <PublicHeader />
             <Grid container flexDirection={"column"} alignItems={"center"}>
@@ -50,8 +51,9 @@ const RegistrationPage = () => {
                     {errorMessage}
                 </Alert>
             </Snackbar>
+            </Grid>
             <Footer/>
-        </Grid>
+        </>
     );
 };
 

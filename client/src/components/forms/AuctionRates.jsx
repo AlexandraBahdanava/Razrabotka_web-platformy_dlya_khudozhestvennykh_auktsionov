@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Paper, Grid } from "@mui/material";
+import { Box, Typography, Paper, Grid, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { getRateByAuction } from "../../api/rateApi";
 import { useParams } from "react-router-dom";
@@ -14,7 +14,6 @@ const AuctionRates = (auction) => {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-const prise =
     useEffect(() => {
         const loadData = async () => {
             const response =  await getRateByAuction(auction.auctionId.id)
@@ -56,39 +55,37 @@ const prise =
     };
 
     return (
-        <>
-        {ratesData.length > 0 ? (
-    <>
-        <Grid
-            container
-            item
-            maxWidth={"700px"}
-            width={"450px"}
-            height={"820px"}
-            flexDirection={"column"}
-            gap={"25px"}
-        >
-             {ratesData.map((item) => (
+        
+        <Box>
+      {ratesData.length > 0 ? (
+        ratesData.map((item) => (
+            <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            <Box
+             sx={{display: "flex",
+            justifyContent: "space-between",
+            alignItems: "left",
+        }}
+            >
+            <Avatar></Avatar>
+              <Typography variant="body1">{item.Collector.email}</Typography>
+              </Box>
+            <Typography variant="body1">{`$${item.bet_size}`}</Typography>
+          </Box>
+        ))
+      ) : (
+        <Typography variant="h3" height={"69px"} display={"flex"} alignItems={"center"}>
+          Ставок нет
+        </Typography>
+      )}
+    </Box>
 
-                                     <Typography>
-                                     {auction.auctionId.starting_price+item.bet_size}
-                                     </Typography>
-
-                                    ))}
-        </Grid>
-    </>
-) : (
-    <Typography
-        variant="h3"
-        height={"69px"}
-        display={"flex"}
-        alignItems={"center"}
-    >
-        Ставок нет
-    </Typography>
-)}
-
-        </>
       );
       
 };

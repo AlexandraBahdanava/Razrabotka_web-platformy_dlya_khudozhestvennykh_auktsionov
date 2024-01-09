@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { Box, Typography, Paper, Grid } from "@mui/material";
+import { Box, Typography, Paper, Grid, Divider } from "@mui/material";
 import AuctionRates from "./AuctionRates";
 
 const ActiveAuctionsForm = ({ auction }) => {
@@ -49,6 +49,7 @@ const ActiveAuctionsForm = ({ auction }) => {
     >
         <img src={auction.photo} alt="Auction" style={{objectFit: "cover", width: "450px", height: "380px", borderRadius: "8px" }} />
         <Box mt={2}
+        marginBottom={"15px"}
         >
         <Typography 
         fontSize={"40px"}
@@ -56,6 +57,7 @@ const ActiveAuctionsForm = ({ auction }) => {
         >{remainingTime}
         </Typography>
       </Box>
+      <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
       <Grid>
       <Box
        sx={{
