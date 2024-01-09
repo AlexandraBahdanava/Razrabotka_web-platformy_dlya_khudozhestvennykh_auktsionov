@@ -86,7 +86,7 @@ const {id}=useParams();
         <>
           {auctionData.bidding == 0 ? (
             <>
-              <Box padding={"100px 10 px"}  border={ "1px solid #ccc"} // серые границы
+              <Box width={"100%"} padding={"20px"} border={ "3px solid #091E42"}
           borderRadius={ "20px"}>
                 <Typography
                   fontSize={"14px"}
@@ -109,7 +109,7 @@ const {id}=useParams();
         <>
           {auctionData.auto_renewal == 0 ? (
             <>
-              <Box width={"100%"} padding={"20px"} border={ "3px solid #091E42"} // серые границы
+              <Box width={"100%"} padding={"20px"} border={ "3px solid #091E42"}
           borderRadius={ "20px"}>
                 <Typography
                   fontSize={"14px"}
