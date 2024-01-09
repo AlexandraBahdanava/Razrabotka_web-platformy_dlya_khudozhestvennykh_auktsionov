@@ -43,7 +43,6 @@ const ActiveAuctionsForm = ({ auction }) => {
         display: "flex",
         flexDirection: "column",
         flexWrap: "wrap",
-        height: "820px",
         width:"450px",
       }}
     >
@@ -61,25 +60,46 @@ const ActiveAuctionsForm = ({ auction }) => {
       <Grid>
       <Box
        sx={{
-        padding: "10px 40px",
+        padding: "10px 30px",
+        height:'250px',
       }}
       >
-      <Box>
+      <Box
+       sx={{
+        height:'220px',
+      }}>
         <AuctionRates auctionId={auction}/>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mt: 2,
-        }}
-      >
-       
-        <Typography variant="body1">{auction.Artist.name}</Typography>
-        <Typography variant="body1">{`$${auction.starting_price}`}</Typography>
+      <Typography variant="h1" textAlign={"center"}> Начальная цена:  {`$${auction.starting_price}`}</Typography>
       </Box>
+      <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
+      <>
+      {auction.bidding == 0 ? (
+        <>
+        <Box padding={"10px"}>
+        <Typography fontSize={"14px"} color={"#1D2939"} fontWeight={"bold"} textAlign={"center"}>Возможность биддинга включена: </Typography>
+      <Typography variant="h1" textAlign={"center"}> Нажмите “Купить сейчас”, чтобы стать владельцем этого предмета немедленно</Typography>
       </Box>
+      <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
+      </>
+      ) : (
+       <></>
+      )}
+      </>
+
+      <>
+      {auction.auto_renewal == 0 ? (
+        <>
+        <Box padding={"10px"}>
+        <Typography fontSize={"14px"} color={"#1D2939"} fontWeight={"bold"} textAlign={"center"}>Автопродление аукциона включено: </Typography>
+      <Typography variant="h1" textAlign={"center"}> Ставки за последние 10 минут продлевают аукцион.</Typography>
+      </Box>
+      <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
+      </>
+      ) : (
+       <></>
+      )}
+      </>
       </Grid>
     </Paper>
   );
