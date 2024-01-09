@@ -1,28 +1,22 @@
-import CollectorProfilePage from "../pages/CollectorProfilePage";
+import HomePage from "../pages/Collector/HomePage";
+import ActiveAuctionPage from "../pages/Collector/ActiveAuctionPage";
+import AuctionPage from "../pages/AuctionPage";
 
 export const collectorRoutes = [
     {
         path: "/collector",
-        Component: CollectorProfilePage,
+        Component: HomePage,
     },
     {
-        path: "/orders/:id",
+        path: "/artist/select",
         Component: "Order details page",
     },
     {
-        path: "/my-orders",
-        Component: "My orders page",
+        path: "/auction",
+        Component: ActiveAuctionPage,
     },
     {
-        path: "/my-orders/:id",
-        Component: "Order details page",
-    },
-    {
-        path: "/company/:id",
-        Component: "Company details page",
-    },
-    {
-        path: "/profile",
-        Component: "User profile",
+        path:"/auction/one/:id",
+        Component: AuctionPage,
     },
 ];

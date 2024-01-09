@@ -2,11 +2,11 @@ import React, {useState, useEffect} from "react";
 import { Box, Typography, Paper, Grid, Divider } from "@mui/material";
 import AuctionRates from "./AuctionRates";
 
-const ActiveAuctionsForm = ({ auction }) => {
+const ActiveAuctionsCollectorForm = ({ auction }) => {
 
   const calculateRemainingTime = () => {
-    const createdAt = new Date(auction.createdAt).getTime();
-    const duration = auction.duration * 24 * 60 * 60 * 1000; // Преобразуем дни в миллисекунды
+    const createdAt = new Date(auction.Auction.createdAt).getTime();
+    const duration = auction.Auction.duration * 24 * 60 * 60 * 1000; // Преобразуем дни в миллисекунды
     const currentTime = new Date().getTime();
     const remainingTime = createdAt + duration - currentTime;
 
@@ -30,10 +30,10 @@ const ActiveAuctionsForm = ({ auction }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [auction.createdAt, auction.duration]);
-
+  }, [auction.Auction.createdAt, auction.Auction.duration]);
 
   return (
+
     <Paper
       sx={{
         borderRadius: "16px",
@@ -45,7 +45,7 @@ const ActiveAuctionsForm = ({ auction }) => {
         marginBottom:"40px",
       }}
     >
-        <img src={auction.photo} alt="Auction" style={{objectFit: "cover", width: "450px", height: "380px", borderRadius: "8px" }} />
+        <img src={auction.Auction.photo} alt="Auction" style={{objectFit: "cover", width: "450px", height: "380px", borderRadius: "8px" }} />
         <Box mt={2}
         marginBottom={"15px"}
         >
@@ -57,23 +57,18 @@ const ActiveAuctionsForm = ({ auction }) => {
       </Box>
       <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
       <Grid>
+     
       <Box
        sx={{
-        padding: "10px 30px",
-        height:'250px',
-      }}
-      >
-      <Box
-       sx={{
-        height:'220px',
+        height:'25px',
+        padding: '10px 0'
       }}>
-        <AuctionRates auctionId={auction}/>
-      </Box>
-      <Typography variant="h1" textAlign={"center"}> Начальная цена:  {`$${auction.starting_price}`}</Typography>
+       
+      <Typography variant="h1" textAlign={"center"}> Начальная цена:  {`$${auction.Auction.starting_price}`}</Typography>
       </Box>
       <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
       <>
-      {auction.bidding == 0 ? (
+      {auction.Auction.bidding == 0 ? (
         <>
         <Box padding={"10px"}>
         <Typography fontSize={"14px"} color={"#1D2939"} fontWeight={"bold"} textAlign={"center"}>Возможность биддинга включена: </Typography>
@@ -86,7 +81,7 @@ const ActiveAuctionsForm = ({ auction }) => {
       )}
       </>
       <>
-      {auction.auto_renewal == 0 ? (
+      {auction.Auction.auto_renewal == 0 ? (
         <>
         <Box padding={"10px"}>
         <Typography fontSize={"14px"} color={"#1D2939"} fontWeight={"bold"} textAlign={"center"}>Автопродление аукциона включено: </Typography>
@@ -103,4 +98,4 @@ const ActiveAuctionsForm = ({ auction }) => {
   );
 };
 
-export default ActiveAuctionsForm;
+export default ActiveAuctionsCollectorForm;

@@ -13,6 +13,15 @@ const App = () => {
             },
             text: {
                 main: "#42526D",
+            },
+            button:{
+                backgroundColor: "#1976D2", // Синий цвет
+                color: "#FFFFFF", // Белый цвет текста
+                borderRadius: "16px", // Скругленные углы
+                padding: "10px 20px", // Ваш padding
+                fontSize: "14px", // Ваш размер шрифта
+                border: "none", // Убираем границу
+                cursor: "pointer", // Указатель при наведении
             }
         },
         typography: {

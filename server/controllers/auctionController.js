@@ -2,24 +2,40 @@ const { Artist, Auction, Collector, AuctionArchive, Rate} = require("../database
 
 class AuctionController {
 
-    async  getAuctionByCollectorId(collectorId) {
-        try {
-          const auction = await Auction.findAll({
-            include: [
-              {
-                model: Rate,
-                where: { collector_id: collectorId },
-                required: true,
-              },
-            ],
-          });
+     // Получение аукционов художника
+     async getAuctionByCollectorId(req,res) {
+      const id = req.collectorId;
+      console.log(req.params);
       
-          return auction;
-        } catch (error) {
-          console.error('Error retrieving auctions by collector id:', error);
-          throw error;
-        }
+      if (!/^\d+$/.test(id)) {
+        console.log(req.params);
+        return res.sendStatus(400);
+    }
+
+      try {
+        const auction = await Rate.findAll({
+          where: { CollectorId: id },
+
+          include: [
+            {
+              model: Collector,
+              where: { id: id },
+            },
+            {
+              model: Auction,
+             
+            },
+         
+        ]
+
+        });
+        console.log(auction);
+        return res.json(auction);
+      } catch (error) {
+        console.error('Error retrieving auctions by artist:', error);
+        throw error;
       }
+    }
       
       async  delete(auctionId) {
         const transaction = await sequelize.transaction();
@@ -79,17 +95,6 @@ class AuctionController {
         }
       }
       
-      // Получение всех аукционов
-      async  getAll() {
-        try {
-          const auction = await Auction.findAll();
-      
-          return auction;
-        } catch (error) {
-          console.error('Error retrieving all auctions:', error);
-          throw error;
-        }
-      }
       
       // Получение аукционов по тегу
       async  getAuctionsByTag(tag) {
@@ -203,6 +208,28 @@ class AuctionController {
         }
       }
       
+  // Получение всех аукционов
+  async getAll(req, res) {
+    try {
+      const auctions = await Auction.findAll(
+        {
+          include: [
+            {
+              model: Artist,
+             
+            },
+          ]
+        }
+      );
+  
+      return res.json(auctions);
+    } catch (error) {
+      console.error('Error retrieving all auctions:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+  
+
       // Получение аукционов художника
       async getAuctionsByArtist(req,res) {
         const artistId = req.artistId;
@@ -227,17 +254,52 @@ class AuctionController {
         }
       }
       
-      // Получение аукциона по id
-      async getAuctionById(auctionId) {
+async searchMaterial (req, res) {
         try {
-          const auction = await Auction.findByPk(auctionId);
+          const { material } = req.params;
       
-          return auction;
+          // Search auctions by material
+          const auctions = await Auction.findAll({
+            where: {
+              material: {
+                [Op.iLike]: `%${material}%`, // Case-insensitive search
+              },
+            },
+          });
+      
+          // Respond with the found auctions
+          res.json({ auctions });
         } catch (error) {
-          console.error('Error retrieving auction by id:', error);
-          throw error;
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
         }
       }
-      
+
+      // Получение аукциона по id
+      async getAuctionById(req, res) {
+        const id = req.params.id;
+  if (!/^\d+$/.test(id)) {
+    console.log("да я",req.params.id);
+    return res.sendStatus(400);
+}
+  try {
+      const auction = await Auction.findOne({
+          where: { id: id },
+          include: [
+            { model: Artist ,
+            
+            },
+           
+          ],
+      });
+
+      if (auction == null) {
+          return res.sendStatus(404);
       }
+
+      return res.json(auction);
+  } catch (err) {
+      return res.sendStatus(500);
+  }
+}}
       module.exports = new AuctionController();

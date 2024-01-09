@@ -21,6 +21,50 @@ const getAuctionsByArtist = async (id) => {
     }
 };
 
+const getAuction = async (id) => {
+    try {
+        const response = await host.get(`/api/auction/one/${id}`); 
+        console.log('Response from getAuction:', response.data);
+      
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
+
+const getAuctionsByCollector = async (id) => {
+    try {
+        const response = await host.get(`/api/auctions/active/${id}`); 
+        console.log('Response from getAuctionsByArtist:', response.data);
+      
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
+
+const getAuctions = async (id) => {
+    try {
+        const response = await host.get(`/api/auctions/all`); 
+        console.log('Response from getAuctionsByArtist:', response.data);
+      
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
+
+const searchByMaterial = async (material) => {
+    try {
+        const response = await host.get(`/api/auctions/material`, material); 
+        console.log('Response from getAuctionsByArtist:', response.data);
+      
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
+
 const handleRequestError = (error) => {
     if (error.response) {
         return error.response;
@@ -31,4 +75,4 @@ const handleRequestError = (error) => {
     }
 };
 
-export { createAuction,  getAuctionsByArtist};
+export { createAuction,  getAuctionsByArtist, searchByMaterial, getAuctions, getAuctionsByCollector, getAuction};

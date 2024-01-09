@@ -10,6 +10,15 @@ const getRateByAuction = async (id) => {
     }
 };
 
+const createRate = async (auctionId, amount,id) => {
+    try {
+        const response = await host.post(`/api/rate/${id}`, {auctionId, amount});
+        
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
 const handleRequestError = (error) => {
     if (error.response) {
         return error.response;
@@ -20,4 +29,4 @@ const handleRequestError = (error) => {
     }
 };
 
-export { getRateByAuction};
+export { getRateByAuction, createRate};
