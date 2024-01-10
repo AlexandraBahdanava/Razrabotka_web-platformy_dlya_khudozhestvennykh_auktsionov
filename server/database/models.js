@@ -143,69 +143,6 @@ const AuctionArchive = sequelize.define(
     tableName: "Collectors", // фактическое имя таблицы в базе данных
   });
   
-  const ExhibitedPainting = sequelize.define(
-    "ExhibitedPainting",
-    {
-    photo: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    title: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      defaultValue: "Без названия"
-    },
-   
-  },
-  {
-    tableName: "ExhibitedPaintings", // фактическое имя таблицы в базе данных
-  });
-
-  const Exhibition = sequelize.define(
-    "Exhibition",
-    {
-    title: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    start_date: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    expiration_date: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    additional: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    }
-  },
-  {
-    tableName: "Exhibitions", // фактическое имя таблицы в базе данных
-  });
-
-  
-const FeaturedArtist = sequelize.define(
-    "FeaturedArtist",
-    {
-    collector_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
-    artist_id: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    }
-  },
-  {
-    tableName: "FeaturedArtists", // фактическое имя таблицы в базе данных
-  });
-
   const Portfolio = sequelize.define(
     "Portfolio",
     {
@@ -251,22 +188,12 @@ const FeaturedArtist = sequelize.define(
     tableName: "Reviews", // фактическое имя таблицы в базе данных
   });
 
-  Artist.belongsToMany(Collector, { through: FeaturedArtist});
-  Artist.belongsToMany(Exhibition, {through: ExhibitedPainting});
-  Collector.belongsToMany(Artist, { through: FeaturedArtist});
-  Exhibition.belongsToMany(Artist, {through: ExhibitedPainting});
 
   AuctionArchive.belongsTo(Artist);
   Artist.hasMany(AuctionArchive);
 
   Auction.belongsTo(Artist);
   Artist.hasMany(Auction);
-
-  ExhibitedPainting.belongsTo(Artist);
-  Artist.hasMany(ExhibitedPainting);
-
-  FeaturedArtist.belongsTo(Artist);
-  Artist.hasMany(FeaturedArtist);
 
   Portfolio.belongsTo(Artist);
   Artist.hasMany(Portfolio);
@@ -277,26 +204,17 @@ const FeaturedArtist = sequelize.define(
   Rate.belongsTo(Auction);
   Auction.hasMany(Rate);
 
-  FeaturedArtist.belongsTo(Collector);
-  Collector.hasMany(FeaturedArtist);
-
   Rate.belongsTo(Collector);
   Collector.hasMany(Rate);
 
   Review.belongsTo(Collector);
   Collector.hasMany(Review);
-  
-  ExhibitedPainting.belongsTo(Exhibition);
-  Exhibition.hasMany(ExhibitedPainting);
 
   module.exports = {
     Artist,
     AuctionArchive,
     Auction,
     Collector,
-    ExhibitedPainting,
-    Exhibition,
-    FeaturedArtist,
     Portfolio,
     Rate,
     Review,
