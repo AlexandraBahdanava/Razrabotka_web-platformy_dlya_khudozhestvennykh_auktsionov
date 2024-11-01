@@ -1,13 +1,10 @@
 import LoginPage from "../pages/LoginPage";
 import RegistrationPage from "../pages/RegistrationPage";
+import HomePage from "../pages/HomePage";
 
-export const publicRoutes = [
+export const publicRoutes = [  
     {
-        path: "/login",
-        Component: LoginPage,
-    },
-    {
-        path: "/register",
-        Component: RegistrationPage,
-    },
+        path: "/home",
+        Component: HomePage,
+    }
 ];
