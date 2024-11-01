@@ -1,6 +1,6 @@
 import React from "react";
-import { IconButton, Grid, Stack, Typography, useMediaQuery, SpeedDial, SpeedDialAction, Divider } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { IconButton, Grid, Stack, Typography, useMediaQuery, Divider } from "@mui/material";
+import { Link } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
 import { Icon } from '@iconify/react';
@@ -8,7 +8,6 @@ import { Icon } from '@iconify/react';
 const ArtistHeader = () => {
     const theme = useTheme();
 
-    const navigate = useNavigate();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   return (

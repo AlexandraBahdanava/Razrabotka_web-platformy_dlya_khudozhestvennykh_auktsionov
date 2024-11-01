@@ -1,9 +1,12 @@
-import { Grid } from "@mui/material";
+import { Grid, Divider } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PublicHeader from "../components/headers/PublicHeader";
 import ArtistHeader from "../components/headers/ArtistHeader";
 import CollectorHeader from "../components/headers/CollectorHeader";
 import Footer from "../components/Footer";
+import AuctionRegistration from "../components/homePage/AuctionRegistration";
+import LoginDialog from "../components/dialogs/LoginDialog";
+import RegistrationDialog from "../components/dialogs/RegistrationDialog";
 
 const HomePage = () => {
     const [role, setRole] = useState(localStorage.getItem("role"));
@@ -28,14 +31,54 @@ const HomePage = () => {
         return <PublicHeader />;
     };
 
+    const renderAuctionRegistration = () => {
+        if (!role) {
+            return <Grid>
+            <AuctionRegistration
+            isAuthenticated={isAuthenticated}
+            openLogin={openLogin}
+            openRegister={openRegister}
+            />
+             <LoginDialog isOpen={isLoginOpen} onClose={handleLoginClose} onRegisterClick={handleRegisterOpen} />
+             <RegistrationDialog isOpen={isRegisterOpen} onClose={handleRegisterClose} onLoginClick={handleLoginOpen} />
+        </Grid>
+        }
+    };
+
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Состояние авторизации
+    const [isLoginOpen, setLoginOpen] = useState(false);
+    const [isRegisterOpen, setRegisterOpen] = useState(false);
+
+    const openLogin = () => setLoginOpen(true);
+    const openRegister = () => setRegisterOpen(true);
+
+    const handleLoginOpen = () => {
+        setRegisterOpen(false); // Закрываем форму регистрации
+        setLoginOpen(true); // Открываем форму входа
+    };
+
+    const handleRegisterOpen = () => {
+        setLoginOpen(false); // Закрытие формы входа
+        setRegisterOpen(true); // Открытие формы регистрации
+    };
+
+    const handleLoginClose = () => {
+        setLoginOpen(false);
+    };
+
+    const handleRegisterClose = () => {
+        setRegisterOpen(false);
+    };
+
+
     return (
         <>
-            <Grid container style={{ width: "100%", height: "100%" }}>
-                {renderHeader()}
-                <Grid container flexDirection="column" alignItems="center">
-                    {/* Место для основного контента */}
-                </Grid>
+            <Grid container>
+            {renderHeader()}
+            <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
+            {renderAuctionRegistration()}
                 <Footer />
+       
             </Grid>
         </>
     );

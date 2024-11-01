@@ -1,6 +1,6 @@
 // components/LoginDialog.js
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogActions, Button, TextField, Typography, IconButton, Grid, Snackbar, Alert } from "@mui/material";
+import { Dialog, DialogContent, Button, TextField, Typography, IconButton, Grid, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { login } from "../../api/authApi";
@@ -14,7 +14,6 @@ const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
         if (reason === "clickaway") return;
         setError(false);
     };
-
     const submit = async () => {
         const response = await login(loginData);
         if (!response) {
@@ -52,7 +51,7 @@ const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
                     Еще нет аккаунта?{" "}
                     <Button
                         onClick={onRegisterClick} // Используем переданную функцию для открытия формы регистрации
-                        sx={{ color: "#002e60", textTransform: "none", fontWeight: "bold", padding: 0 }}
+                        sx={{ color: "#091E42", textTransform: "none", fontWeight: "bold", padding: 0 }}
                     >
                         Зарегистрироваться
                     </Button>
@@ -92,7 +91,7 @@ const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
                     <Button variant="outlined"  onClick={handleCancel} sx={{ borderColor: "#dcdcdc", color: "#333", "&:hover": { borderColor: "#007aff", backgroundColor: "#f6f8fa" } }}>
                         Отмена
                     </Button>
-                    <Button variant="contained" color="primary" onClick={submit} sx={{ color: "#fff", backgroundColor: "#002e60", "&:hover": { backgroundColor: "#0054a6" } }}>
+                    <Button variant="contained" color="primary" onClick={submit} sx={{ color: "#fff", backgroundColor: "#091E42", "&:hover": { backgroundColor: "#0054a6" } }}>
                         Войти
                     </Button>
                 </Grid>

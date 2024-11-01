@@ -1,17 +1,16 @@
 // components/PublicHeader.js
 import React, { useState } from "react";
-import { IconButton, Grid, Stack, Typography, useMediaQuery, Divider, Dialog, DialogContent, DialogActions, Button, TextField } from "@mui/material";
+import { IconButton, Grid, Stack, Typography, useMediaQuery} from "@mui/material";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
 import { Icon } from '@iconify/react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoginDialog from "../dialogs/LoginDialog"; // Убедитесь, что путь правильный
 import RegistrationDialog from "../dialogs/RegistrationDialog"; // Добавляем импорт для формы регистрации
 
 const PublicHeader = () => {
     
     const theme = useTheme();
-    const navigate = useNavigate();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
     const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -67,16 +66,16 @@ const PublicHeader = () => {
            {isSmallScreen ? (
     <IconButton>
         <Grid container item height={"100%"} alignItems={"center"} marginRight={"50px"}>
-            <Link to={"/home"} style={{ textDecoration: "none", color: "#000000", display: "flex", alignItems: "center" }}>
-                <Icon icon="maki:home" color="#b3b9c4" width="24" height="24" />
+            <Link to={"/home"} style={{ textDecoration: "none", color: "#42526D", display: "flex", alignItems: "center" }}>
+                <Icon icon="maki:home" color="#42526D" width="24" height="24" />
             </Link>
         </Grid>
     </IconButton>
 ) : (
     <Typography textAlign={"top"}>
         <Grid container item height={"100%"} alignItems={"center"} marginRight={"100px"}>
-            <Link to={"/home"} style={{ textDecoration: "none", color: "#000000", fontSize: "20px", display: "flex", alignItems: "center" }}>
-                <Icon icon="maki:home" color="#b3b9c4" width="24" height="24" />
+            <Link to={"/home"} style={{ textDecoration: "none", color: "#42526D", fontSize: "20px", display: "flex", alignItems: "center" }}>
+                <Icon icon="maki:home" color="#42526D" width="24" height="24" />
                 <span style={{ marginLeft: "8px" }}>Главная</span> {/* Отступ для текста */}
             </Link>
         </Grid>
@@ -84,13 +83,13 @@ const PublicHeader = () => {
 )}
                 <IconButton
                 onClick={handleLoginOpen}  // открытие формы входа
-                style={{ padding: 0, color: "#000000" }}
+                style={{ padding: 0, color: "#42526D" }}
                 >
                     {isSmallScreen ? (
                     <Icon icon="maki:entrance-alt1" color="#b3b9c4" width="24" height="24" />
                     ) : (
-                    <Typography style={{ textDecoration: "none", color: "#000000", fontSize:"20px", display: "flex", alignItems: "center"}} textAlign="center">
-                    <Icon icon="maki:entrance-alt1" color="#b3b9c4" width="24" height="24" />
+                    <Typography style={{ textDecoration: "none", color: "#42526D", fontSize:"20px", display: "flex", alignItems: "center"}} textAlign="center">
+                    <Icon icon="maki:entrance-alt1" color="#42526D" width="24" height="24" />
                     <span style={{ marginLeft: "8px" }}>Войти</span> {/* Отступ для текста */}
                     </Typography>
                     )}

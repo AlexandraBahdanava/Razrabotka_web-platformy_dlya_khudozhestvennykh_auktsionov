@@ -1,11 +1,9 @@
 // components/RegistrationDialog.js
 import React, { useState } from "react";
 import { Dialog, DialogContent, Button, TextField, Typography, IconButton, Grid, Tabs, Tab } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { useTheme } from "@emotion/react";
+import CloseIcon from "@mui/icons-material/Close"
 
 const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
-    const theme = useTheme();
     const [role, setRole] = useState("collector");
     const [formData, setFormData] = useState({
         surname: "",
@@ -55,7 +53,7 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
                     Уже есть аккаунт?{" "}
                     <Button
                         onClick={onLoginClick} // Переход к форме входа
-                        sx={{ color: "#002e60", textTransform: "none", fontWeight: "bold", padding: 0 }}
+                        sx={{ color: "#091E42", textTransform: "none", fontWeight: "bold", padding: 0 }}
                     >
                         Войти
                     </Button>
@@ -145,7 +143,7 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
                 <TextField fullWidth variant="outlined" label="Email" name="email" type="email" value={formData.email} onChange={handleInputChange} sx={{ marginBottom: "16px" }} />
                 <TextField fullWidth variant="outlined" label="Придумайте пароль" name="password" type="password" value={formData.password} onChange={handleInputChange} sx={{ marginBottom: "16px" }} />
 
-                <Button variant="contained" component="label" fullWidth sx={{ backgroundColor: "#002e60", color: "#fff", marginBottom: "24px" }}>
+                <Button variant="contained" component="label" fullWidth sx={{ backgroundColor: "#091E42", color: "#fff", marginBottom: "24px" }}>
                     Загрузите аватар
                     <input hidden accept="image/*" type="file" onChange={handleAvatarChange} />
                 </Button>
@@ -154,7 +152,7 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
                     <Button variant="outlined" onClick={handleCancel} sx={{ borderColor: "#dcdcdc", color: "#333" }}>
                         Отмена
                     </Button>
-                    <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ color: "#fff", backgroundColor: "#002e60" }}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ color: "#fff", backgroundColor: "#091E42" }}>
                         Создать
                     </Button>
                 </Grid>
