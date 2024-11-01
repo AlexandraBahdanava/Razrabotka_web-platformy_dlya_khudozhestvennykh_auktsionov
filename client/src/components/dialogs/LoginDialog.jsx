@@ -4,6 +4,7 @@ import { Dialog, DialogContent, Button, TextField, Typography, IconButton, Grid,
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { login } from "../../api/authApi";
+import Tooltip from "@mui/material/Tooltip";
 
 const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
     const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -63,35 +64,90 @@ const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
                     variant="outlined"
                     label="Введите email"
                     type="email"
-                    InputProps={{ endAdornment: <InfoIcon sx={{ color: "#b3b9c4" }} /> }}
+                    InputProps={{
+                        endAdornment: (
+                            <Tooltip title="Введите электронную почту, привязанную к вашему аккаунту."
+                            PopperProps={{
+                                modifiers: [
+                                    {
+                                        name: "offset",
+                                        options: {
+                                            offset: [0, 8], // Смещение подсказки, если нужно
+                                        },
+                                    },
+                                ],
+                            }}
+                            componentsProps={{
+                                tooltip: {
+                                    sx: {
+                                        backgroundColor: "#ffffff", // Белый фон
+                                        color: "#42526D",           // Цвет текста
+                                        padding: "10px",            // Внутренние отступы
+                                        fontSize: "0.875rem",       // Размер шрифта
+                                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                                    },
+                                },
+                            }}
+                        >
+                            <InfoIcon sx={{ color: "#b3b9c4" }} />
+                            </Tooltip>
+                        ),
+                    }}
                     value={loginData.email}
                     onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
                 />
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Введите пароль"
-                    type="password"
-                    InputProps={{ endAdornment: <InfoIcon sx={{ color: "#b3b9c4" }} /> }}
-                    value={loginData.password}
-                    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    sx={{
-                        marginBottom: "24px",
-                        "& .MuiOutlinedInput-root": {
-                            "& fieldset": { borderColor: "#b3b9c4" },
-                            "&:hover fieldset": { borderColor: "#007aff" },
-                            "&.Mui-focused fieldset": { borderColor: "#b3b9c4" },
-                            "&.Mui-focused": {
-                                backgroundColor: "transparent", // Убираем белый фон
-                            },
+              <TextField
+    fullWidth
+    variant="outlined"
+    label="Введите пароль"
+    type="password"
+    InputProps={{
+        endAdornment: (
+            <Tooltip title="Введите пароль от вашего аккаунта."PopperProps={{
+                modifiers: [
+                    {
+                        name: "offset",
+                        options: {
+                            offset: [0, 8], // Смещение подсказки, если нужно
                         },
-                    }}
-                />
+                    },
+                ],
+            }}
+            componentsProps={{
+                tooltip: {
+                    sx: {
+                        backgroundColor: "#ffffff", // Белый фон
+                        color: "#42526D",           // Цвет текста
+                        padding: "10px",            // Внутренние отступы
+                        fontSize: "0.875rem",       // Размер шрифта
+                        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                    },
+                },
+            }}
+        >
+            <InfoIcon sx={{ color: "#b3b9c4" }} />
+            </Tooltip>
+        ),
+    }}
+    value={loginData.password}
+    onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+    sx={{
+        marginBottom: "24px",
+        "& .MuiOutlinedInput-root": {
+            "& fieldset": { borderColor: "#b3b9c4" },
+            "&:hover fieldset": { borderColor: "#007aff" },
+            "&.Mui-focused fieldset": { borderColor: "#b3b9c4" },
+            "&.Mui-focused": {
+                backgroundColor: "transparent",
+            },
+        },
+    }}
+/>
                 <Grid container justifyContent="space-between">
                     <Button variant="outlined"  onClick={handleCancel} sx={{ borderColor: "#dcdcdc", color: "#333", "&:hover": { borderColor: "#007aff", backgroundColor: "#f6f8fa" } }}>
                         Отмена
                     </Button>
-                    <Button variant="contained" color="primary" onClick={submit} sx={{ color: "#fff", backgroundColor: "#091E42", "&:hover": { backgroundColor: "#0054a6" } }}>
+                    <Button variant="contained" color="primary" onClick={submit} sx={{ color: "#fff", backgroundColor: "#091E42"}}>
                         Войти
                     </Button>
                 </Grid>
