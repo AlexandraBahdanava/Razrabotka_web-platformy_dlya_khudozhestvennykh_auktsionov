@@ -1,87 +1,55 @@
-import { Grid, Divider } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import PublicHeader from "../components/headers/PublicHeader";
-import ArtistHeader from "../components/headers/ArtistHeader";
-import CollectorHeader from "../components/headers/CollectorHeader";
-import Footer from "../components/Footer";
-import AuctionRegistration from "../components/homePage/AuctionRegistration";
-import LoginDialog from "../components/dialogs/LoginDialog";
-import RegistrationDialog from "../components/dialogs/RegistrationDialog";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { publicRoutes } from "./publicRoutes";
+import { artistRoutes } from "./artistRoutes";
+import { collectorRoutes } from "./collectorRoutes";
+import { COLLECTOR_PROFILE_ROUTE, LOGIN_ROUTE, ARTIST_PROFILE_ROUTE } from "../utils/consts";
 
-const HomePage = () => {
-    const [role, setRole] = useState(localStorage.getItem("role"));
+const AppRouter = () => {
+    const [jwt, setJwt] = useState(localStorage.getItem("jwt"));
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const handleRoleChange = () => {
-            setRole(localStorage.getItem("role"));
+        const handleStorageChange = () => {
+            setJwt(localStorage.getItem("jwt"));
+            navigate("/");
         };
 
-        window.addEventListener("storage", handleRoleChange);
-        return () => window.removeEventListener("storage", handleRoleChange);
-    }, []);
+        window.addEventListener("storage", handleStorageChange);
+    }, [navigate]);
 
-    const renderHeader = () => {
-        if (!role) {
-            return <PublicHeader />;
-        } else if (role === "artist") {
-            return <ArtistHeader />;
-        } else if (role === "collector") {
-            return <CollectorHeader />;
-        }
-        return <PublicHeader />;
-    };
+    if (jwt && localStorage.getItem("role") === "artist") {
+        return (
+            <Routes>
+                {artistRoutes.map(({ path, Component }) => (
+                    <Route key={path} path={path} element={<Component />} exact />
+                ))}
+                <Route key="*" path="*" element={<Navigate to={ARTIST_PROFILE_ROUTE} />} />
+            </Routes>
+        );
+    }
 
-    const renderAuctionRegistration = () => {
-        if (!role) {
-            return <Grid>
-            <AuctionRegistration
-            isAuthenticated={isAuthenticated}
-            openLogin={openLogin}
-            openRegister={openRegister}
-            />
-             <LoginDialog isOpen={isLoginOpen} onClose={handleLoginClose} onRegisterClick={handleRegisterOpen} />
-             <RegistrationDialog isOpen={isRegisterOpen} onClose={handleRegisterClose} onLoginClick={handleLoginOpen} />
-        </Grid>
-        }
-    };
+    if (jwt && localStorage.getItem("role") === "collector") {
+        return (
+            <Routes>
+                {collectorRoutes.map(({ path, Component }) => (
+                    <Route key={path} path={path} element={<Component />} exact />
+                ))}
+                <Route key="*" path="*" element={<Navigate to={COLLECTOR_PROFILE_ROUTE} />} />
+            </Routes>
+        );
+    }
 
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Состояние авторизации
-    const [isLoginOpen, setLoginOpen] = useState(false);
-    const [isRegisterOpen, setRegisterOpen] = useState(false);
-
-    const openLogin = () => setLoginOpen(true);
-    const openRegister = () => setRegisterOpen(true);
-
-    const handleLoginOpen = () => {
-        setRegisterOpen(false); // Закрываем форму регистрации
-        setLoginOpen(true); // Открываем форму входа
-    };
-
-    const handleRegisterOpen = () => {
-        setLoginOpen(false); // Закрытие формы входа
-        setRegisterOpen(true); // Открытие формы регистрации
-    };
-
-    const handleLoginClose = () => {
-        setLoginOpen(false);
-    };
-
-    const handleRegisterClose = () => {
-        setRegisterOpen(false);
-    };
-
-
-    return (
-        <>
-            <Grid container>
-            {renderHeader()}
-            <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
-            {renderAuctionRegistration()}
-                <Footer />
-       
-            </Grid>
-        </>
-    );
+    if (!jwt) {
+        return (
+            <Routes>
+                {publicRoutes.map(({ path, Component }) => (
+                    <Route key={path} path={path} element={<Component />} exact />
+                ))}
+                <Route key="*" path="*" element={<Navigate to={LOGIN_ROUTE} />} />
+            </Routes>
+        );
+    }
 };
 
-export default HomePage;
+export default AppRouter;

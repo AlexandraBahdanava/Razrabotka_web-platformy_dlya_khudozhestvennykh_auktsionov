@@ -1,4 +1,4 @@
-import HomePage from "../pages/Collector/HomePage";
+import HomePage from "../pages/HomePage";
 import ActiveAuctionPage from "../pages/Collector/ActiveAuctionPage";
 import AuctionPage from "../pages/AuctionPage";
 

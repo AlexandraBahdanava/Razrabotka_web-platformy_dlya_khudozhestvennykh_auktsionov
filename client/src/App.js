@@ -3,7 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import "moment/locale/en-gb";
-import AppRouter from "./router/AppRouter";
+import AppRouter from "./router/AppRouter.jsx";
 
 const App = () => {
     const theme = createTheme({
