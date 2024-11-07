@@ -15,7 +15,6 @@ import SearchBar from "./SearchBar";
 
 const ArtistHeader = () => {
   const theme = useTheme();
-
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
@@ -40,194 +39,99 @@ const ArtistHeader = () => {
         {/* Поисковая строка */}
         <Grid
           item
-          sx={{ flexGrow: 1, maxWidth: isSmallScreen ? "30%" : "60%", mx: 2 }}
+          sx={{ flexGrow: 1, maxWidth: "600px", mx: 2 }}
         >
-          <SearchBar /> {/* Задаем высоту для уменьшения поля */}
+          <SearchBar />
         </Grid>
-        <Stack
-          gap={"200px"}
-          direction={"row"}
-          justifyContent="flex-end"
-          sx={{ flex: 1 }}
-        >
-          {isSmallScreen ? (
-            <IconButton>
-              <Grid
-                container
-                item
-                height={"100%"}
-                alignItems={"center"}
-                marginRight={"50px"}
-              >
-                <Link
-                  to={"/artist"}
-                  style={{ textDecoration: "none", color: "#000000" }}
-                >
-                  <Icon
-                    icon="iconamoon:profile-thin"
-                    color="#b3b9c4"
-                    width="24"
-                    height="24"
-                  />
-                </Link>
-              </Grid>
-            </IconButton>
-          ) : (
-            <Typography variant="h1" textAlign={"top"}>
-              <Grid
-                container
-                item
-                height={"100%"}
-                alignItems={"center"}
-                marginRight={"100px"}
-              >
-                <Link
-                  to={"/artist"}
-                  style={{ textDecoration: "none", color: "#000000" }}
-                >
-                  <Icon
-                    icon="iconamoon:profile-thin"
-                    color="#b3b9c4"
-                    width="24"
-                    height="24"
-                  />
-                  Профиль
-                </Link>
-              </Grid>
-            </Typography>
-          )}
-        </Stack>
-        <Stack gap={"93px"} direction={"row"}>
-          {isSmallScreen ? (
-            <Grid
-              container
-              item
-              height={"100%"}
-              alignItems={"center"}
-              marginRight={"50px"}
-            >
-              <Link
-                to={"/auction"}
-                style={{ textDecoration: "none", color: "#000000" }}
-              >
-                <Icon
-                  icon="material-symbols:finance"
-                  color="#b3b9c4"
-                  width="24"
-                  height="24"
-                />
-              </Link>
-            </Grid>
-          ) : (
-            <Typography variant="h1" textAlign={"center"}>
-              <Grid
-                container
-                item
-                height={"100%"}
-                alignItems={"center"}
-                marginRight={"100px"}
-              >
-                <Link
-                  to={"/auction"}
-                  style={{ textDecoration: "none", color: "#000000" }}
-                >
-                  <Icon
-                    icon="material-symbols:finance"
-                    color="#b3b9c4"
-                    width="24"
-                    height="24"
-                  />
-                  Активные аукционы
-                </Link>
-              </Grid>
-            </Typography>
-          )}
-        </Stack>
-        <Stack gap={"93px"} direction={"row"}>
-          {isSmallScreen ? (
-            <Grid
-              container
-              height={"100%"}
-              alignItems={"center"}
-              marginRight={"20px"}
-            >
-              <Link
-                to={"/auction/create"}
-                style={{ textDecoration: "none", color: "#000000" }}
-              >
-                <Icon
-                  icon="uil:setting"
-                  color="#b3b9c4"
-                  width="24"
-                  height="24"
-                />
-              </Link>
-            </Grid>
-          ) : (
-            <Typography variant="h1" textAlign={"center"}>
-              <Grid
-                container
-                height={"100%"}
-                alignItems={"center"}
-                marginRight={"20px"}
-              >
-                <Link
-                  to={"/auction/create"}
-                  style={{ textDecoration: "none", color: "#000000" }}
-                >
-                  <Icon
-                    icon="uil:setting"
-                    color="#b3b9c4"
-                    width="24"
-                    height="24"
-                  />
-                  Создать аукцион
-                </Link>
-              </Grid>
-            </Typography>
-          )}
-        </Stack>
 
-        <IconButton
-          onClick={(e) => {
-            localStorage.removeItem("jwt");
-            localStorage.removeItem("role");
-            window.location.reload();
-          }}
-          style={{
-            padding: 0,
-            color: "#000000",
-            marginLeft: "40px",
-            marginRight: "30px",
-          }}
-        >
-          {isSmallScreen ? (
-            <Icon
-              icon="solar:exit-bold"
-              color="#b3b9c4"
-              width="24"
-              height="24"
-            />
-          ) : (
-            <Typography variant="h1" textAlign={"center"}>
-              <Icon
-                icon="solar:exit-bold"
-                color="#b3b9c4"
-                width="24"
-                height="24"
-              />
-              Выйти
-            </Typography>
-          )}
-        </IconButton>
+        {/* Кнопки с равными отступами */}
+        <Stack direction="row" spacing={5} alignItems="center" justifyContent="flex-end">
+          {/* Кнопка Главная */}
+          <Link
+            to="/home"
+            style={{
+              textDecoration: "none",
+              color: "#42526D",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Icon icon="maki:home" color="#42526D" width="18" height="18" />
+            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Главная</span>}
+          </Link>
+
+          {/* Кнопка Профиль */}
+          <Link
+            to="/artist"
+            style={{
+              textDecoration: "none",
+              color: "#42526D",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Icon icon="solar:user-bold"  color="#42526D" width="20" height="20" strokeWidth={3} />
+            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Профиль</span>}
+          </Link>
+
+          {/* Кнопка Активные аукционы */}
+          <Link
+            to="/auction"
+            style={{
+              textDecoration: "none",
+              color: "#42526D",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Icon icon="material-symbols:finance" color="#42526D" width="18" height="18" />
+            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Активные аукционы</span>}
+          </Link>
+
+          {/* Кнопка Создать аукцион */}
+          <Link
+            to="/auction/create"
+            style={{
+              textDecoration: "none",
+              color: "#42526D",
+              fontSize: "14px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Icon icon="uil:setting" color="#42526D" width="18" height="18" />
+            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Создать аукцион</span>}
+          </Link>
+
+          {/* Кнопка Выйти */}
+          <IconButton
+            onClick={(e) => {
+              localStorage.removeItem("jwt");
+              localStorage.removeItem("role");
+              window.location.reload();
+            }}
+            style={{
+              padding: 0,
+              color: "#000000",
+            }}
+          >
+            <Icon icon="solar:exit-bold" color="#42526D" width="18" height="18" />
+            {!isSmallScreen && (
+              <Typography style={{ color: "#42526D", fontSize: "14px", marginLeft: "8px" }}>
+                Выйти
+              </Typography>
+            )}
+          </IconButton>
+        </Stack>
       </Grid>
 
       <Divider
         sx={{
           width: "100%",
           backgroundColor: "#b3b9c4",
-          paddingBottom: "0px",
-          marginBottom: "0px",
         }}
       />
     </Grid>

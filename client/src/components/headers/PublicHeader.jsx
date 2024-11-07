@@ -62,7 +62,7 @@ const PublicHeader = () => {
         {/* Поисковая строка */}
         <Grid
           item
-          sx={{ flexGrow: 1, maxWidth: isSmallScreen ? "30%" : "60%", mx: 2 }}
+          sx={{ flexGrow: 1, maxWidth: "600px", mx: 2 }}
         >
           <SearchBar /> {/* Задаем высоту для уменьшения поля */}
         </Grid>
@@ -95,8 +95,8 @@ const PublicHeader = () => {
                     <Icon
                       icon="maki:home"
                       color="#42526D"
-                      width="20"
-                      height="20"
+                      width="18"
+                      height="18"
                     />
                   </Link>
                 </Grid>
@@ -109,7 +109,7 @@ const PublicHeader = () => {
                     style={{
                       textDecoration: "none",
                       color: "#42526D",
-                      fontSize: "18px",
+                      fontSize: "14px",
                       display: "flex",
                       alignItems: "center",
                     }}
@@ -117,8 +117,8 @@ const PublicHeader = () => {
                     <Icon
                       icon="maki:home"
                       color="#42526D"
-                      width="20"
-                      height="20"
+                      width="18"
+                      height="18"
                     />
                     <span style={{ marginLeft: "8px" }}>Главная</span>{" "}
                     {/* Отступ для текста */}
@@ -134,15 +134,15 @@ const PublicHeader = () => {
                 <Icon
                   icon="maki:entrance-alt1"
                   color="#b3b9c4"
-                  width="20"
-                  height="20"
+                  width="18"
+                  height="18"
                 />
               ) : (
                 <Typography
                   style={{
                     textDecoration: "none",
                     color: "#42526D",
-                    fontSize: "18px",
+                    fontSize: "14px",
                     display: "flex",
                     alignItems: "center",
                   }}
@@ -151,8 +151,8 @@ const PublicHeader = () => {
                   <Icon
                     icon="maki:entrance-alt1"
                     color="#42526D"
-                    width="20"
-                    height="20"
+                    width="18"
+                    height="18"
                   />
                   <span style={{ marginLeft: "8px" }}>Войти</span>{" "}
                   {/* Отступ для текста */}

@@ -77,8 +77,7 @@ const HomePage = () => {
             {renderHeader()}
             <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
             {renderAuctionRegistration()}
-            <Footer />
-       
+            <Footer /> 
             </Grid>
         </>
     );

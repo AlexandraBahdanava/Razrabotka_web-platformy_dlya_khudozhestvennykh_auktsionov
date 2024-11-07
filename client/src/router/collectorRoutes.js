@@ -1,22 +1,19 @@
 import HomePage from "../pages/HomePage";
 import ActiveAuctionPage from "../pages/Collector/ActiveAuctionPage";
-import AuctionPage from "../pages/AuctionPage";
+import FeaturedArtistsPage from "../pages/Collector/FeaturedArtistsPage";
 
 export const collectorRoutes = [
     {
-        path: "/collector",
-        Component: HomePage,
+        path: "/favorites",
+        Component: FeaturedArtistsPage,
     },
     {
-        path: "/artist/select",
-        Component: "Order details page",
+        path: "/home",
+        Component: HomePage,
     },
     {
         path: "/auction",
         Component: ActiveAuctionPage,
     },
-    {
-        path:"/auction/one/:id",
-        Component: AuctionPage,
-    },
+   
 ];

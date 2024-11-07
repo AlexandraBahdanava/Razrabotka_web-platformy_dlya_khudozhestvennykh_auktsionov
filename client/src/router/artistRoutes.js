@@ -5,6 +5,10 @@ import HomePage from "../pages/HomePage";
 
 export const artistRoutes = [
     {
+        path: "/home",
+        Component: HomePage,
+    },
+    {
         path: "/artist",
         Component: ArtistProfilePage,
     },
