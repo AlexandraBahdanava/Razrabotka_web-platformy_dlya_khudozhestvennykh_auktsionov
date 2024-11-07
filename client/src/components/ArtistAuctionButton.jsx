@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button, Grid } from "@mui/material";
 
-
 const ArtistAuctionButton = () => {
   const [activeButton, setActiveButton] = useState("active"); // "active" или "archive"
 

@@ -1,14 +1,22 @@
 import React from "react";
-import { IconButton, Grid, Stack, Typography, useMediaQuery, Divider } from "@mui/material";
+import {
+  IconButton,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+  Divider,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
+import SearchBar from "./SearchBar";
 
 const CollectorHeader = () => {
-    const theme = useTheme();
+  const theme = useTheme();
 
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
     <Grid width={"100%"} paddingLeft={"0"}>
@@ -21,76 +29,165 @@ const CollectorHeader = () => {
         justifyContent={"space-between"}
         alignItems={"center"}
         paddingBottom={"0"}
+        paddingLeft={"50px"}
+        paddingRight={"50px"}
       >
-        <img src={Logo} alt="Logo" />
+        {/* Логотип слева */}
+        <Grid item>
+          <img src={Logo} alt="Logo" width="100px" />
+        </Grid>
+
+        {/* Поисковая строка */}
+        <Grid
+          item
+          sx={{ flexGrow: 1, maxWidth: isSmallScreen ? "30%" : "60%", mx: 2 }}
+        >
+          <SearchBar /> {/* Задаем высоту для уменьшения поля */}
+        </Grid>
         <Stack
           gap={"200px"}
           direction={"row"}
           justifyContent="flex-end"
           sx={{ flex: 1 }}
         >
-            {isSmallScreen ? (
-                 <IconButton>
-                 <Grid container item height={"100%"} alignItems={"center"} marginRight= {"50px"}>
-                        <Link to={"/collector"} style={{ textDecoration: "none", color: "#000000" }}>
-                        <Icon icon="iconamoon:profile-thin" color="#b3b9c4" width="24" height="24" />
-                        </Link>
-                    </Grid>
-               </IconButton>
-             ) : (
-                <Typography variant="h1" textAlign={"top"}>
-                    <Grid container item height={"100%"} alignItems={"center"} marginRight= {"100px"}>
-                        <Link to={"/collector"} style={{ textDecoration: "none", color: "#000000" }}>
-                        <Icon icon="iconamoon:profile-thin" color="#b3b9c4" width="24" height="24" />
-                           Главная
-                        </Link>
-                    </Grid>
-                </Typography>
-             )}
-            </Stack>
-            <Stack gap={"93px"} direction={"row"}>
-            {isSmallScreen ? (
-                      <Grid container item height={"100%"} alignItems={"center"} marginRight= {"50px"}>
-                      <Link to={"/auction"} style={{ textDecoration: "none", color: "#000000" }}>
-                      <Icon icon="material-symbols:finance" color="#b3b9c4" width="24" height="24" />
-                      </Link>
-                  </Grid>
-            ):(
-                <Typography variant="h1" textAlign={"center"}>
-                    <Grid container item height={"100%"} alignItems={"center"} marginRight= {"100px"}>
-                        <Link to={"/auction"} style={{ textDecoration: "none", color: "#000000" }}>
-                        <Icon icon="material-symbols:finance" color="#b3b9c4" width="24" height="24" />
-                            Активные аукционы
-                        </Link>
-                    </Grid>
-                </Typography>
-            )}
-            </Stack>
-            
-            <IconButton
-                    onClick={(e) => {
-                        localStorage.removeItem("jwt");
-                        localStorage.removeItem("role");
-                        window.location.reload();
-                    }}
-                    style={{ padding: 0, color: "#000000", marginLeft: "40px", marginRight:"30px" }}
-
+          {isSmallScreen ? (
+            <IconButton>
+              <Grid
+                container
+                item
+                height={"100%"}
+                alignItems={"center"}
+                marginRight={"50px"}
+              >
+                <Link
+                  to={"/collector"}
+                  style={{ textDecoration: "none", color: "#000000" }}
                 >
-                      {isSmallScreen ? (
-                          <Icon icon="solar:exit-bold" color="#b3b9c4" width="24" height="24" />
-                      ):(
-                     <Typography variant="h1" textAlign={"center"}>                 
-                        <Icon icon="solar:exit-bold" color="#b3b9c4" width="24" height="24" />
-                           Выйти
-                </Typography>
-                      )}
-                </IconButton>
-             
+                  <Icon
+                    icon="iconamoon:profile-thin"
+                    color="#b3b9c4"
+                    width="24"
+                    height="24"
+                  />
+                </Link>
+              </Grid>
+            </IconButton>
+          ) : (
+            <Typography variant="h1" textAlign={"top"}>
+              <Grid
+                container
+                item
+                height={"100%"}
+                alignItems={"center"}
+                marginRight={"100px"}
+              >
+                <Link
+                  to={"/collector"}
+                  style={{ textDecoration: "none", color: "#000000" }}
+                >
+                  <Icon
+                    icon="iconamoon:profile-thin"
+                    color="#b3b9c4"
+                    width="24"
+                    height="24"
+                  />
+                  Главная
+                </Link>
+              </Grid>
+            </Typography>
+          )}
+        </Stack>
+        <Stack gap={"93px"} direction={"row"}>
+          {isSmallScreen ? (
+            <Grid
+              container
+              item
+              height={"100%"}
+              alignItems={"center"}
+              marginRight={"50px"}
+            >
+              <Link
+                to={"/auction"}
+                style={{ textDecoration: "none", color: "#000000" }}
+              >
+                <Icon
+                  icon="material-symbols:finance"
+                  color="#b3b9c4"
+                  width="24"
+                  height="24"
+                />
+              </Link>
             </Grid>
-             
-            <Divider sx={{ width: '100%', backgroundColor: '#b3b9c4', paddingBottom: '0px', marginBottom:'0px'}} />
-        </Grid>
-    );
+          ) : (
+            <Typography variant="h1" textAlign={"center"}>
+              <Grid
+                container
+                item
+                height={"100%"}
+                alignItems={"center"}
+                marginRight={"100px"}
+              >
+                <Link
+                  to={"/auction"}
+                  style={{ textDecoration: "none", color: "#000000" }}
+                >
+                  <Icon
+                    icon="material-symbols:finance"
+                    color="#b3b9c4"
+                    width="24"
+                    height="24"
+                  />
+                  Активные аукционы
+                </Link>
+              </Grid>
+            </Typography>
+          )}
+        </Stack>
+
+        <IconButton
+          onClick={(e) => {
+            localStorage.removeItem("jwt");
+            localStorage.removeItem("role");
+            window.location.reload();
+          }}
+          style={{
+            padding: 0,
+            color: "#000000",
+            marginLeft: "40px",
+            marginRight: "30px",
+          }}
+        >
+          {isSmallScreen ? (
+            <Icon
+              icon="solar:exit-bold"
+              color="#b3b9c4"
+              width="24"
+              height="24"
+            />
+          ) : (
+            <Typography variant="h1" textAlign={"center"}>
+              <Icon
+                icon="solar:exit-bold"
+                color="#b3b9c4"
+                width="24"
+                height="24"
+              />
+              Выйти
+            </Typography>
+          )}
+        </IconButton>
+      </Grid>
+
+      <Divider
+        sx={{
+          width: "100%",
+          backgroundColor: "#b3b9c4",
+          paddingBottom: "0px",
+          marginBottom: "0px",
+        }}
+      />
+    </Grid>
+  );
 };
 
 export default CollectorHeader;

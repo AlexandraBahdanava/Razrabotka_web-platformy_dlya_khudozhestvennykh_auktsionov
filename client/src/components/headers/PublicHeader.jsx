@@ -1,111 +1,181 @@
 // components/PublicHeader.js
 import React, { useState } from "react";
-import { IconButton, Grid, Stack, Typography, useMediaQuery} from "@mui/material";
+import {
+  IconButton,
+  Grid,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
-import { Icon } from '@iconify/react';
+import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
-import LoginDialog from "../dialogs/LoginDialog"; // Убедитесь, что путь правильный
-import RegistrationDialog from "../dialogs/RegistrationDialog"; // Добавляем импорт для формы регистрации
+import LoginDialog from "../dialogs/LoginDialog";
+import RegistrationDialog from "../dialogs/RegistrationDialog";
+import SearchBar from "./SearchBar";
 
 const PublicHeader = () => {
-    
-    const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
-    const handleLoginOpen = () => {
-        setIsRegisterOpen(false); // Закрываем форму регистрации
-        setIsLoginOpen(true); // Открываем форму входа
-    };
+  const handleLoginOpen = () => {
+    setIsRegisterOpen(false); // Закрываем форму регистрации
+    setIsLoginOpen(true); // Открываем форму входа
+  };
 
-    const handleRegisterOpen = () => {
-        setIsLoginOpen(false); // Закрытие формы входа
-        setIsRegisterOpen(true); // Открытие формы регистрации
-    };
+  const handleRegisterOpen = () => {
+    setIsLoginOpen(false); // Закрытие формы входа
+    setIsRegisterOpen(true); // Открытие формы регистрации
+  };
 
-    const handleLoginClose = () => {
-        setIsLoginOpen(false);
-    };
+  const handleLoginClose = () => {
+    setIsLoginOpen(false);
+  };
 
-    const handleRegisterClose = () => {
-        setIsRegisterOpen(false);
-    };
+  const handleRegisterClose = () => {
+    setIsRegisterOpen(false);
+  };
 
-
-    return (
-        <Grid 
+  return (
+    <Grid width={"100%"} paddingLeft={"0"}>
+      <Grid
+        container
         width={"100%"}
-        paddingLeft={"0"}>
+        height={"78px"}
+        bgcolor={theme.palette.primary.main}
+        pl={"50px"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        paddingBottom={"0"}
+        paddingLeft={"50px"}
+        paddingRight={"50px"}
+      >
+        {/* Логотип слева */}
+        <Grid item>
+          <img src={Logo} alt="Logo" width="100px" />
+        </Grid>
+
+        {/* Поисковая строка */}
         <Grid
-            container
-            width={"100%"}
-            height={"78px"}
-            bgcolor={theme.palette.primary.main}
-            pl={"50px"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-            paddingBottom={"0"}
-            paddingLeft={"50px"}
-            paddingRight={"50px"}
+          item
+          sx={{ flexGrow: 1, maxWidth: isSmallScreen ? "30%" : "60%", mx: 2 }}
         >
-           {/* Логотип слева */}
-           <Grid item>
-                    <img src={Logo} alt="Logo" width="100px" />
-                </Grid>
+          <SearchBar /> {/* Задаем высоту для уменьшения поля */}
+        </Grid>
 
-                {/* Блок с кнопками справа */}
-                <Grid item width="50%" display="flex" justifyContent="flex-end">
-                    <Stack
-                        direction="row"
-                        spacing={isSmallScreen ? 2 : 4}
-                        alignItems="center"
-                    >
-           {isSmallScreen ? (
-    <IconButton>
-        <Grid container item height={"100%"} alignItems={"center"} marginRight={"50px"}>
-            <Link to={"/home"} style={{ textDecoration: "none", color: "#42526D", display: "flex", alignItems: "center" }}>
-                <Icon icon="maki:home" color="#42526D" width="24" height="24" />
-            </Link>
-        </Grid>
-    </IconButton>
-) : (
-    <Typography textAlign={"top"}>
-        <Grid container item height={"100%"} alignItems={"center"} marginRight={"100px"}>
-            <Link to={"/home"} style={{ textDecoration: "none", color: "#42526D", fontSize: "20px", display: "flex", alignItems: "center" }}>
-                <Icon icon="maki:home" color="#42526D" width="24" height="24" />
-                <span style={{ marginLeft: "8px" }}>Главная</span> {/* Отступ для текста */}
-            </Link>
-        </Grid>
-    </Typography>
-)}
-                <IconButton
-                onClick={handleLoginOpen}  // открытие формы входа
-                style={{ padding: 0, color: "#42526D" }}
+        {/* Блок с кнопками справа */}
+        <Grid item display="flex" justifyContent="flex-end" alignItems="center">
+          <Stack
+            direction="row"
+            spacing={isSmallScreen ? 2 : 4}
+            alignItems="center"
+          >
+            {isSmallScreen ? (
+              <IconButton>
+                <Grid
+                  container
+                  item
+                  height={"100%"}
+                  alignItems={"center"}
+                  marginRight={"50px"}
                 >
-                    {isSmallScreen ? (
-                    <Icon icon="maki:entrance-alt1" color="#b3b9c4" width="24" height="24" />
-                    ) : (
-                    <Typography style={{ textDecoration: "none", color: "#42526D", fontSize:"20px", display: "flex", alignItems: "center"}} textAlign="center">
-                    <Icon icon="maki:entrance-alt1" color="#42526D" width="24" height="24" />
-                    <span style={{ marginLeft: "8px" }}>Войти</span> {/* Отступ для текста */}
-                    </Typography>
-                    )}
-                </IconButton>
-            </Stack>
-</Grid>
-       
+                  <Link
+                    to={"/home"}
+                    style={{
+                      textDecoration: "none",
+                      color: "#42526D",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Icon
+                      icon="maki:home"
+                      color="#42526D"
+                      width="20"
+                      height="20"
+                    />
+                  </Link>
+                </Grid>
+              </IconButton>
+            ) : (
+              <Typography textAlign={"top"}>
+                <Grid container item height={"100%"} alignItems={"center"} marginRight={"20px"}>
+                  <Link
+                    to={"/home"}
+                    style={{
+                      textDecoration: "none",
+                      color: "#42526D",
+                      fontSize: "18px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Icon
+                      icon="maki:home"
+                      color="#42526D"
+                      width="20"
+                      height="20"
+                    />
+                    <span style={{ marginLeft: "8px" }}>Главная</span>{" "}
+                    {/* Отступ для текста */}
+                  </Link>
+                </Grid>
+              </Typography>
+            )}
+            <IconButton
+              onClick={handleLoginOpen} // открытие формы входа
+              style={{ padding: 0, color: "#42526D" }}
+            >
+              {isSmallScreen ? (
+                <Icon
+                  icon="maki:entrance-alt1"
+                  color="#b3b9c4"
+                  width="20"
+                  height="20"
+                />
+              ) : (
+                <Typography
+                  style={{
+                    textDecoration: "none",
+                    color: "#42526D",
+                    fontSize: "18px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  textAlign="center"
+                >
+                  <Icon
+                    icon="maki:entrance-alt1"
+                    color="#42526D"
+                    width="20"
+                    height="20"
+                  />
+                  <span style={{ marginLeft: "8px" }}>Войти</span>{" "}
+                  {/* Отступ для текста */}
+                </Typography>
+              )}
+            </IconButton>
+          </Stack>
         </Grid>
-         
-          {/* Вызов компонентов форм */}
-          <LoginDialog isOpen={isLoginOpen} onClose={handleLoginClose} onRegisterClick={handleRegisterOpen} />
-            <RegistrationDialog isOpen={isRegisterOpen} onClose={handleRegisterClose} onLoginClick={handleLoginOpen} />
-       
-        </Grid>
-    );
+      </Grid>
 
+      {/* Вызов компонентов форм */}
+      <LoginDialog
+        isOpen={isLoginOpen}
+        onClose={handleLoginClose}
+        onRegisterClick={handleRegisterOpen}
+      />
+      <RegistrationDialog
+        isOpen={isRegisterOpen}
+        onClose={handleRegisterClose}
+        onLoginClick={handleLoginOpen}
+      />
+    </Grid>
+  );
 };
 
 export default PublicHeader;
