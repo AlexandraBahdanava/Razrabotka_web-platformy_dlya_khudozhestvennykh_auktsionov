@@ -1,12 +1,17 @@
 const { DataTypes, INTEGER } = require("sequelize");
 const sequelize = require("./index");
 
+
 const Artist = sequelize.define(
     "Artist",
     {
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    surname: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     country: {
       type: DataTypes.STRING,
@@ -16,16 +21,20 @@ const Artist = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false
     },
-    photo: {
+    avatar: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    about_artist: {
+    bio: {
       type: DataTypes.TEXT,
       allowNull: true
     },
     email: {
       type: DataTypes.TEXT,
+      allowNull: false
+    },
+    login: {
+      type: DataTypes.STRING,
       allowNull: false
     },
     password: {
@@ -126,9 +135,17 @@ const AuctionArchive = sequelize.define(
   const Collector = sequelize.define(
     "Collector",
     {
-    phone: {
+    name: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    surname: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    login: {
+      type: DataTypes.TEXT,
+      allowNull: false
     },
     email: {
       type: DataTypes.TEXT,
