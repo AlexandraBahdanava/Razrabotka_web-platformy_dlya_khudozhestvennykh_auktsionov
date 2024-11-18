@@ -23,7 +23,8 @@ const Artist = sequelize.define(
     },
     avatar: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+       defaultValue: "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/2f\/No-photo-m.png"
     },
     bio: {
       type: DataTypes.TEXT,

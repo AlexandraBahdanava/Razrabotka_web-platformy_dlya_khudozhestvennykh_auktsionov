@@ -9,8 +9,18 @@ class ArtistController {
     try {
         const artist = { ...req.body };
 
-        if ((await Artist.findOne({ where: { email: artist.email } })) !== null) {
-            return res.status(400).json({ error: "Email is taken" });
+        if (
+          (await Artist.findOne({ where: { email: artist.email } })) !== null ||
+          (await Collector.findOne({ where: { email: artist.email } })) !== null
+        ) {
+          return res.status(400).json({ error: "Email is already taken" });
+        }
+
+        if (
+          (await Artist.findOne({ where: { login: artist.login } })) !== null ||
+          (await Collector.findOne({ where: { login: artist.login } })) !== null
+        ) {
+          return res.status(400).json({ error: "Login is already taken" });
         }
 
         artist.password = await bcrypt.hash(artist.password, 10);
@@ -18,9 +28,12 @@ class ArtistController {
         const createdArtist = await Artist.create(artist);
 
         return res.status(201).json(createdArtist);
-    } catch (err) {
-        return res.sendStatus(500);
+    }  catch (err) {
+      console.error("Ошибка при создании артиста:", err); // Логируем ошибку
+      return res.status(500).json({ message: "Ошибка сервера", error: err.message });
+    
     }
+    
 }
 
 async getAvatar(req, res) {

@@ -44,23 +44,6 @@ class AuthorizationDataController {
         }
     }
 
-    async checkEmail(req, res) {
-        try {
-            const { email } = { ...req.body };
-
-            const artist = await Artist.findOne({ where: { email: email } });
-            const collector = await Collector.findOne({ where: { email: email } });
-
-            if (!artist && !collector) {
-                return res.status(200).json({ available: true });
-            }
-
-            return res.status(200).json({ available: false });
-        } catch (error) {
-            res.status(500).json({ error: "Email check failed" });
-        }
-    }
-      
 }
 
 module.exports = new AuthorizationDataController();

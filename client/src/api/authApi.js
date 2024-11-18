@@ -11,7 +11,16 @@ const login = async (loginData) => {
 
 const checkEmail = async (email) => {
     try {
-        const response = await host.post("/auth/register", { email });
+        const response = await host.post("/auth/register/checkEmail", { email });
+        return response;
+    } catch (error) {
+        handleRequestError(error);
+    }
+};
+
+const checkLogin = async (login) => {
+    try {
+        const response = await host.post("/auth/register/checkLogin", { login });
         return response;
     } catch (error) {
         handleRequestError(error);
@@ -46,4 +55,4 @@ const handleRequestError = (error) => {
     }
 };
 
-export { login, checkEmail, registerArtist, registerCollector };
+export { login, checkEmail, checkLogin, registerArtist, registerCollector };

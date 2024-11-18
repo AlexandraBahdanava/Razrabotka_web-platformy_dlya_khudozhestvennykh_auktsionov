@@ -15,9 +15,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import Tooltip from "@mui/material/Tooltip";
+import { registerArtist, registerCollector } from "../../api/authApi";
 
 const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
   const [role, setRole] = useState("collector");
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [formData, setFormData] = useState({
     surname: "",
     name: "",
@@ -39,17 +42,38 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAvatarChange = (e) => {
-    setFormData({ ...formData, avatar: e.target.files[0] });
+  const displayError = (message) => {
+    setErrorMessage(message);
+    setError(true);
   };
 
-  const handleSubmit = () => {
-    // Логика отправки формы
-    console.log(formData);
-  };
+  const onFinish = async () => {
+    const userData = { role, ...formData };
+
+    try {
+        let response;
+        if (role === "artist") {
+            response = await registerArtist(userData);
+        } else if (role === "collector") {
+            response = await registerCollector(userData);
+        }
+
+        if (response && response.status === 201) {
+            setErrorMessage("Регистрация успешно завершена!");
+           
+        } else {
+            const errorMessage = response?.data?.error || "Ошибка регистрации!";
+            displayError(errorMessage);
+        }
+    } catch (error) {
+        console.error("Ошибка при регистрации:", error);
+        const serverError = error.response?.data?.error || "Ошибка при регистрации, попробуйте снова.";
+        displayError(serverError);
+    }
+};
+
 
   const handleCancel = () => {
-    // Очищаем поля формы
     setFormData({
       surname: "",
       name: "",
@@ -530,24 +554,16 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
         >
           Поля, помеченные "*" обязательны для заполнения
         </Typography>
-        <Button
-          variant="contained"
-          component="label"
-          fullWidth
-          sx={{
-            backgroundColor: "#091E42",
-            color: "#fff",
-            marginBottom: "24px",
-          }}
-        >
-          Загрузить аватар
-          <input
-            hidden
-            accept="image/*"
-            type="file"
-            onChange={handleAvatarChange}
-          />
-        </Button>
+
+        {error && (
+          <Typography
+            variant="body2"
+            color="error"
+            sx={{ marginBottom: "16px" }}
+          >
+            {errorMessage}
+          </Typography>
+        )}
 
         <Grid container justifyContent="space-between">
           <Button
@@ -560,7 +576,7 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           <Button
             variant="contained"
             color="primary"
-            onClick={handleSubmit}
+            onClick={onFinish}
             sx={{ color: "#fff", backgroundColor: "#091E42" }}
           >
             Создать
