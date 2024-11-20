@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Paper, Grid, Divider } from "@mui/material";
 import AuctionRates from "./AuctionRates";
+import { useNavigate } from "react-router-dom";
 
 const ActiveAuctionsForm = ({ auction }) => {
   const calculateRemainingTime = () => {
@@ -26,6 +27,7 @@ const ActiveAuctionsForm = ({ auction }) => {
   };
 
   const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -46,6 +48,7 @@ const ActiveAuctionsForm = ({ auction }) => {
         width: "450px",
         marginBottom: "40px",
       }}
+      onClick={() => navigate(`/auction/one/${auction.id}`)}
     >
       <img
         src={auction.photo}

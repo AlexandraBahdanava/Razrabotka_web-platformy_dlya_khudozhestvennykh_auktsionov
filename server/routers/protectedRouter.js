@@ -21,7 +21,6 @@ router.post("/auctions", auctionController.create);
 router.get("/auctions/:id", auctionController.getAuctionsByArtist);
 router.get("auctions/material", auctionController.searchMaterial);
 router.get(`/auctions/active/:id`, auctionController.getAuctionByCollectorId);
-router.get(`/auction/one/:id`, auctionController.getAuctionById);
 
 router.post("/rate/:id", rateController.create);
 router.get("/rates/:id", rateController.getRatesByAuction); 

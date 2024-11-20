@@ -10,5 +10,6 @@ router.post("/login", authController.login);
 router.post("/register/artist", artistController.create);
 router.post("/register/collector", collectorController.create);
 router.get("/auctions/all", auctionController.getAll);
+router.get(`/auction/one/:id`, auctionController.getAuctionById);
 
 module.exports = router;

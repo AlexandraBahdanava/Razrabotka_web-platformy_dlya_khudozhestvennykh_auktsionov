@@ -21,7 +21,7 @@ const getAuctionsByArtist = async (id) => {
 
 const getAuction = async (id) => {
   try {
-    const response = await host.get(`/api/auction/one/${id}`);
+    const response = await host.get(`/auth/auction/one/${id}`);
     console.log("Response from getAuction:", response.data);
 
     return response;
