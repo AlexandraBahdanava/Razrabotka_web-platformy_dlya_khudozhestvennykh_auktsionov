@@ -281,26 +281,32 @@ const CreateAuctionForm = ({ submitHandler }) => {
           )}
         </Grid>
 
-        <Typography variant="body1">Цена биддинга:</Typography>
-        <TextField
-          id="bidding_rate"
-          name="bidding_rate"
-          fullWidth
-          variant="outlined"
-          label="Введите сумму"
-          value={formik.values.bidding_rate}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={
-            formik.touched.bidding_rate &&
-            formik.errors.bidding_rate !== undefined
-          }
-          helperText={
-            formik.touched.bidding_rate && formik.errors.bidding_rate
-              ? formik.errors.bidding_rate
-              : ""
-          }
-        />
+        {/* Поле для ввода цены биддинга появится только при значении "да" */}
+        {formik.values.bidding === "1" && (
+          <>
+            <Typography variant="body1">Цена биддинга:</Typography>
+            <TextField
+              id="bidding_rate"
+              name="bidding_rate"
+              fullWidth
+              variant="outlined"
+              label="Введите сумму"
+              value={formik.values.bidding_rate}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.bidding_rate &&
+                formik.errors.bidding_rate !== undefined
+              }
+              helperText={
+                formik.touched.bidding_rate && formik.errors.bidding_rate
+                  ? formik.errors.bidding_rate
+                  : ""
+              }
+            />
+          </>
+        )}
+
         <Typography variant="body1">Автопродление аукциона:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
