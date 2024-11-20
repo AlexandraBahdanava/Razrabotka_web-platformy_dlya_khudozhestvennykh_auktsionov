@@ -17,16 +17,13 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import { registerArtist, registerCollector } from "../../api/authApi";
 
-const RegistrationDialog = ({
-  isOpen,
-  onClose,
-  onLoginClick,
-}) => {
+const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
   const [validationErrors, setValidationErrors] = useState({});
 
   const [role, setRole] = useState("collector");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   const [formData, setFormData] = useState({
     surname: "",
     name: "",
@@ -78,9 +75,36 @@ const RegistrationDialog = ({
     }
   };
 
-  const isFormValid = 
-  Object.values(validationErrors).every((error) => error === "") && // Все ошибки пусты
-  Object.values(formData).every((value) => value.trim() !== "");    // Все поля заполнены
+  const isFormValid = (() => {
+    const { bio, name, surname, email, login, password, ...otherFields } =
+      formData;
+
+    if (role === "artist") {
+      // Проверяем все поля, кроме bio
+      return (
+        [
+          name,
+          surname,
+          email,
+          login,
+          password,
+          ...Object.values(otherFields),
+        ].every((value) => value.trim() !== "") &&
+        Object.entries(validationErrors).every(
+          ([key, error]) => key !== "bio" && error === ""
+        )
+      );
+    } else if (role === "collector") {
+      // Проверяем только обязательные поля
+      const requiredFields = ["name", "surname", "email", "login", "password"];
+      return (
+        requiredFields.every((key) => formData[key].trim() !== "") &&
+        requiredFields.every((key) => validationErrors[key] === "")
+      );
+    }
+
+    return false;
+  })();
 
   const handleCancel = () => {
     setFormData({
@@ -285,138 +309,139 @@ const RegistrationDialog = ({
         ) : (
           <>
             <TextField
-  fullWidth
-  variant="outlined"
-  label="Страна*"
-  name="country"
-  error={!!validationErrors.country}
-  helperText={validationErrors.country || " "}
-  InputProps={{
-    endAdornment: (
-      <Tooltip
-        title="Введите страну, где вы проживаете."
-        PopperProps={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8], // Смещение подсказки, если нужно
-              },
-            },
-          ],
-        }}
-        componentsProps={{
-          tooltip: {
-            sx: {
-              backgroundColor: "#ffffff", // Белый фон
-              color: "#42526D", // Цвет текста
-              padding: "10px", // Внутренние отступы
-              fontSize: "0.875rem", // Размер шрифта
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
-            },
-          },
-        }}
-      >
-        <InfoIcon sx={{ color: "#b3b9c4" }} />
-      </Tooltip>
-    ),
-  }}
-  value={formData.country}
-  onChange={(e) => {
-    const { value } = e.target;
+              fullWidth
+              variant="outlined"
+              label="Страна*"
+              name="country"
+              error={!!validationErrors.country}
+              helperText={validationErrors.country || " "}
+              InputProps={{
+                endAdornment: (
+                  <Tooltip
+                    title="Введите страну, где вы проживаете."
+                    PopperProps={{
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 8], // Смещение подсказки, если нужно
+                          },
+                        },
+                      ],
+                    }}
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: "#ffffff", // Белый фон
+                          color: "#42526D", // Цвет текста
+                          padding: "10px", // Внутренние отступы
+                          fontSize: "0.875rem", // Размер шрифта
+                          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                        },
+                      },
+                    }}
+                  >
+                    <InfoIcon sx={{ color: "#b3b9c4" }} />
+                  </Tooltip>
+                ),
+              }}
+              value={formData.country}
+              onChange={(e) => {
+                const { value } = e.target;
 
-    // Пример встроенной валидации
-    if (!value.trim()) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        country: "Страна не может быть пустой",
-      }));
-    } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        country: "Страна может содержать только буквы, пробелы и дефисы",
-      }));
-    } else {
-      setValidationErrors((prev) => ({
-        ...prev,
-        country: "", // Сбрасываем ошибку, если валидация успешна
-      }));
-    }
+                // Пример встроенной валидации
+                if (!value.trim()) {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    country: "Страна не может быть пустой",
+                  }));
+                } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    country:
+                      "Страна может содержать только буквы, пробелы и дефисы",
+                  }));
+                } else {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    country: "", // Сбрасываем ошибку, если валидация успешна
+                  }));
+                }
 
-    setFormData((prev) => ({
-      ...prev,
-      country: value,
-    }));
-  }}
-  sx={{ marginBottom: "16px" }}
-/>
+                setFormData((prev) => ({
+                  ...prev,
+                  country: value,
+                }));
+              }}
+              sx={{ marginBottom: "16px" }}
+            />
 
-<TextField
-  fullWidth
-  variant="outlined"
-  label="Город*"
-  name="city"
-  error={!!validationErrors.city}
-  helperText={validationErrors.city || " "}
-  InputProps={{
-    endAdornment: (
-      <Tooltip
-        title="Введите город, в котором вы проживаете."
-        PopperProps={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8], // Смещение подсказки, если нужно
-              },
-            },
-          ],
-        }}
-        componentsProps={{
-          tooltip: {
-            sx: {
-              backgroundColor: "#ffffff", // Белый фон
-              color: "#42526D", // Цвет текста
-              padding: "10px", // Внутренние отступы
-              fontSize: "0.875rem", // Размер шрифта
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
-            },
-          },
-        }}
-      >
-        <InfoIcon sx={{ color: "#b3b9c4" }} />
-      </Tooltip>
-    ),
-  }}
-  value={formData.city}
-  onChange={(e) => {
-    const { value } = e.target;
+            <TextField
+              fullWidth
+              variant="outlined"
+              label="Город*"
+              name="city"
+              error={!!validationErrors.city}
+              helperText={validationErrors.city || " "}
+              InputProps={{
+                endAdornment: (
+                  <Tooltip
+                    title="Введите город, в котором вы проживаете."
+                    PopperProps={{
+                      modifiers: [
+                        {
+                          name: "offset",
+                          options: {
+                            offset: [0, 8], // Смещение подсказки, если нужно
+                          },
+                        },
+                      ],
+                    }}
+                    componentsProps={{
+                      tooltip: {
+                        sx: {
+                          backgroundColor: "#ffffff", // Белый фон
+                          color: "#42526D", // Цвет текста
+                          padding: "10px", // Внутренние отступы
+                          fontSize: "0.875rem", // Размер шрифта
+                          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                        },
+                      },
+                    }}
+                  >
+                    <InfoIcon sx={{ color: "#b3b9c4" }} />
+                  </Tooltip>
+                ),
+              }}
+              value={formData.city}
+              onChange={(e) => {
+                const { value } = e.target;
 
-    // Валидация города
-    if (!value.trim()) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        city: "Город не может быть пустым",
-      }));
-    } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        city: "Город может содержать только буквы, пробелы и дефисы",
-      }));
-    } else {
-      setValidationErrors((prev) => ({
-        ...prev,
-        city: "", // Сбрасываем ошибку, если валидация успешна
-      }));
-    }
+                // Валидация города
+                if (!value.trim()) {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    city: "Город не может быть пустым",
+                  }));
+                } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    city: "Город может содержать только буквы, пробелы и дефисы",
+                  }));
+                } else {
+                  setValidationErrors((prev) => ({
+                    ...prev,
+                    city: "", // Сбрасываем ошибку, если валидация успешна
+                  }));
+                }
 
-    setFormData((prev) => ({
-      ...prev,
-      city: value,
-    }));
-  }}
-  sx={{ marginBottom: "16px" }}
-/>
+                setFormData((prev) => ({
+                  ...prev,
+                  city: value,
+                }));
+              }}
+              sx={{ marginBottom: "16px" }}
+            />
 
             <TextField
               fullWidth
@@ -464,219 +489,209 @@ const RegistrationDialog = ({
 
         {/* Поля для ввода логина, email и пароля */}
         <TextField
-  fullWidth
-  variant="outlined"
-  label="Логин*"
-  name="login"
-  error={!!validationErrors.login}
-  helperText={validationErrors.login || " "}
-  InputProps={{
-    endAdornment: (
-      <Tooltip
-        title="Придумайте уникальный логин. Логин должен состоять не более чем из 20 символов, а также содержать только цифры от 0 до 9 и латинские буквы."
-        PopperProps={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8], // Смещение подсказки, если нужно
-              },
-            },
-          ],
-        }}
-        componentsProps={{
-          tooltip: {
-            sx: {
-              backgroundColor: "#ffffff", // Белый фон
-              color: "#42526D", // Цвет текста
-              padding: "10px", // Внутренние отступы
-              fontSize: "0.875rem", // Размер шрифта
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
-            },
-          },
-        }}
-      >
-        <InfoIcon sx={{ color: "#b3b9c4" }} />
-      </Tooltip>
-    ),
-  }}
-  value={formData.login}
-  onChange={(e) => {
-    const { value } = e.target;
+          fullWidth
+          variant="outlined"
+          label="Логин*"
+          name="login"
+          error={!!validationErrors.login}
+          helperText={validationErrors.login || " "}
+          InputProps={{
+            endAdornment: (
+              <Tooltip
+                title="Придумайте уникальный логин. Логин должен состоять не более чем из 20 символов, а также содержать только цифры от 0 до 9 и латинские буквы."
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, 8], // Смещение подсказки, если нужно
+                      },
+                    },
+                  ],
+                }}
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      backgroundColor: "#ffffff", // Белый фон
+                      color: "#42526D", // Цвет текста
+                      padding: "10px", // Внутренние отступы
+                      fontSize: "0.875rem", // Размер шрифта
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                    },
+                  },
+                }}
+              >
+                <InfoIcon sx={{ color: "#b3b9c4" }} />
+              </Tooltip>
+            ),
+          }}
+          value={formData.login}
+          onChange={(e) => {
+            const { value } = e.target;
 
-    // Валидация логина
-    if (!value.trim()) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        login: "Логин не может быть пустым",
-      }));
-    } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        login: "Логин может содержать только латинские буквы и цифры",
-      }));
-    } else if (value.length > 20) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        login: "Логин не может быть длиннее 20 символов",
-      }));
-    } else {
-      setValidationErrors((prev) => ({
-        ...prev,
-        login: "", // Сбрасываем ошибку, если валидация успешна
-      }));
-    }
+            // Валидация логина
+            if (!value.trim()) {
+              setValidationErrors((prev) => ({
+                ...prev,
+                login: "Логин не может быть пустым",
+              }));
+            } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
+              setValidationErrors((prev) => ({
+                ...prev,
+                login: "Логин может содержать только латинские буквы и цифры",
+              }));
+            } else if (value.length > 20) {
+              setValidationErrors((prev) => ({
+                ...prev,
+                login: "Логин не может быть длиннее 20 символов",
+              }));
+            } else {
+              setValidationErrors((prev) => ({
+                ...prev,
+                login: "", // Сбрасываем ошибку, если валидация успешна
+              }));
+            }
 
-    setFormData((prev) => ({
-      ...prev,
-      login: value,
-    }));
-  }}
-  sx={{ marginBottom: "16px" }}
-/>
+            setFormData((prev) => ({
+              ...prev,
+              login: value,
+            }));
+          }}
+          sx={{ marginBottom: "16px" }}
+        />
 
-<TextField
-  fullWidth
-  variant="outlined"
-  label="Email*"
-  name="email"
-  type="email"
-  error={!!validationErrors.email}
-  helperText={validationErrors.email || " "}
-  InputProps={{
-    endAdornment: (
-      <Tooltip
-        title="Введите свой адрес электронной почты (он должен использоваться на платформе впервые)."
-        PopperProps={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8], // Смещение подсказки, если нужно
-              },
-            },
-          ],
-        }}
-        componentsProps={{
-          tooltip: {
-            sx: {
-              backgroundColor: "#ffffff", // Белый фон
-              color: "#42526D", // Цвет текста
-              padding: "10px", // Внутренние отступы
-              fontSize: "0.875rem", // Размер шрифта
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
-            },
-          },
-        }}
-      >
-        <InfoIcon sx={{ color: "#b3b9c4" }} />
-      </Tooltip>
-    ),
-  }}
-  value={formData.email}
-  onChange={(e) => {
-    const { value } = e.target;
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Email*"
+          name="email"
+          type="email"
+          error={!!validationErrors.email}
+          helperText={validationErrors.email || " "}
+          InputProps={{
+            endAdornment: (
+              <Tooltip
+                title="Введите свой адрес электронной почты (он должен использоваться на платформе впервые)."
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, 8], // Смещение подсказки, если нужно
+                      },
+                    },
+                  ],
+                }}
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      backgroundColor: "#ffffff", // Белый фон
+                      color: "#42526D", // Цвет текста
+                      padding: "10px", // Внутренние отступы
+                      fontSize: "0.875rem", // Размер шрифта
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                    },
+                  },
+                }}
+              >
+                <InfoIcon sx={{ color: "#b3b9c4" }} />
+              </Tooltip>
+            ),
+          }}
+          value={formData.email}
+          onChange={(e) => {
+            const { value } = e.target;
 
-    // Валидация email
-    if (!value.trim()) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        email: "Email не может быть пустым",
-      }));
-    } else if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) // Регулярное выражение для проверки email
-    ) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        email: "Введите корректный адрес электронной почты",
-      }));
-    } else {
-      setValidationErrors((prev) => ({
-        ...prev,
-        email: "", // Сбрасываем ошибку, если валидация успешна
-      }));
-    }
+            // Валидация email
+            if (!value.trim()) {
+              setValidationErrors((prev) => ({
+                ...prev,
+                email: "Email не может быть пустым",
+              }));
+            } else if (
+              !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) // Регулярное выражение для проверки email
+            ) {
+              setValidationErrors((prev) => ({
+                ...prev,
+                email: "Введите корректный адрес электронной почты",
+              }));
+            } else {
+              setValidationErrors((prev) => ({
+                ...prev,
+                email: "", // Сбрасываем ошибку, если валидация успешна
+              }));
+            }
 
-    setFormData((prev) => ({
-      ...prev,
-      email: value,
-    }));
-  }}
-  sx={{ marginBottom: "16px" }}
-/>
+            setFormData((prev) => ({
+              ...prev,
+              email: value,
+            }));
+          }}
+          sx={{ marginBottom: "16px" }}
+        />
 
-<TextField
-  fullWidth
-  variant="outlined"
-  label="Пароль*"
-  name="password"
-  type="password"
-  error={!!validationErrors.password}
-  helperText={validationErrors.password || " "}
-  InputProps={{
-    endAdornment: (
-      <Tooltip
-        title="Придумайте уникальный пароль. Пароль должен состоять не более чем из 20 символов, а также содержать цифры от 0 до 9 и латинские буквы. Запомните свой пароль!"
-        PopperProps={{
-          modifiers: [
-            {
-              name: "offset",
-              options: {
-                offset: [0, 8], // Смещение подсказки, если нужно
-              },
-            },
-          ],
-        }}
-        componentsProps={{
-          tooltip: {
-            sx: {
-              backgroundColor: "#ffffff", // Белый фон
-              color: "#42526D", // Цвет текста
-              padding: "10px", // Внутренние отступы
-              fontSize: "0.875rem", // Размер шрифта
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
-            },
-          },
-        }}
-      >
-        <InfoIcon sx={{ color: "#b3b9c4" }} />
-      </Tooltip>
-    ),
-  }}
-  value={formData.password}
-  onChange={(e) => {
-    const { value } = e.target;
+        <TextField
+          fullWidth
+          variant="outlined"
+          label="Пароль*"
+          name="password"
+          type="password"
+          error={!!validationErrors.password}
+          helperText={validationErrors.password || " "}
+          InputProps={{
+            endAdornment: (
+              <Tooltip
+                title="Придумайте уникальный пароль. Пароль должен состоять не более чем из 20 символов, а также содержать цифры от 0 до 9 и латинские буквы. Запомните свой пароль!"
+                PopperProps={{
+                  modifiers: [
+                    {
+                      name: "offset",
+                      options: {
+                        offset: [0, 8], // Смещение подсказки, если нужно
+                      },
+                    },
+                  ],
+                }}
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      backgroundColor: "#ffffff", // Белый фон
+                      color: "#42526D", // Цвет текста
+                      padding: "10px", // Внутренние отступы
+                      fontSize: "0.875rem", // Размер шрифта
+                      boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)", // Тень
+                    },
+                  },
+                }}
+              >
+                <InfoIcon sx={{ color: "#b3b9c4" }} />
+              </Tooltip>
+            ),
+          }}
+          value={formData.password}
+          onChange={(e) => {
+            const value = e.target.value;
 
-    // Валидация пароля
-    if (!value.trim()) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        password: "Пароль не может быть пустым",
-      }));
-    } else if (value.length > 20) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        password: "Пароль не может быть длиннее 20 символов",
-      }));
-    } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
-      setValidationErrors((prev) => ({
-        ...prev,
-        password: "Пароль может содержать только латинские буквы и цифры",
-      }));
-    } else {
-      setValidationErrors((prev) => ({
-        ...prev,
-        password: "", // Сбрасываем ошибку, если валидация успешна
-      }));
-    }
+            // Валидация внутри компонента
+            let error = "";
+            if (!value.trim()) {
+              error = "Пароль не может быть пустым";
+            } else if (value.length > 20) {
+              error = "Пароль не может быть длиннее 20 символов";
+            } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
+              error = "Пароль может содержать только латинские буквы и цифры";
+            }
 
-    setFormData((prev) => ({
-      ...prev,
-      password: value,
-    }));
-  }}
-  sx={{ marginBottom: "16px" }}
-/>
+            setValidationErrors((prev) => ({
+              ...prev,
+              password: error,
+            }));
+            setFormData((prev) => ({
+              ...prev,
+              password: value,
+            }));
+          }}
+        />
 
         <Typography
           variant="body2"
@@ -712,8 +727,8 @@ const RegistrationDialog = ({
           <Button
             variant="contained"
             color="primary"
+            disabled={!isFormValid} // Кнопка активна только если форма валидна
             onClick={onFinish}
-            
             sx={{ color: "#fff", backgroundColor: "#091E42" }}
           >
             Создать
