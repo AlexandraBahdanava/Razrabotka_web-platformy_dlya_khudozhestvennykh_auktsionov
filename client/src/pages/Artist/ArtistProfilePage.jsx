@@ -14,6 +14,8 @@ import {
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import ArtistHeader from "./../../components/headers/ArtistHeader";
+import PublicHeader from "../../components/headers/PublicHeader";
+import CollectorHeader from "../../components/headers/CollectorHeader";
 import { Icon } from "@iconify/react";
 import { useParams } from "react-router-dom";
 import { getArtist, updateArtist } from "../../api/artistApi";
@@ -26,6 +28,16 @@ const ArtistProfilePage = () => {
   const theme = useTheme();
 
   const { id } = useParams();
+  const [role, setRole] = useState(localStorage.getItem("role"));
+
+  useEffect(() => {
+    const handleRoleChange = () => {
+        setRole(localStorage.getItem("role"));
+    };
+
+    window.addEventListener("storage", handleRoleChange);
+    return () => window.removeEventListener("storage", handleRoleChange);
+}, []);
 
   const [readonly, setReadonly] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -122,6 +134,17 @@ const ArtistProfilePage = () => {
   const displayAddPortfolioForm = () => {
     setShowAddPortfolioForm(true);
   };
+
+  const renderHeader = () => {
+    if (!role) {
+        return <PublicHeader />;
+    } else if (role === "artist") {
+        return <ArtistHeader />;
+    } else if (role === "collector") {
+        return <CollectorHeader />;
+    }
+    return <PublicHeader />;
+};
   return (
     <Grid
       container
@@ -131,7 +154,7 @@ const ArtistProfilePage = () => {
       maxWidth={"100%"}
       bgcolor={"#FFFFFF"}
     >
-      <ArtistHeader />
+      {renderHeader()}
       <Grid container item flexDirection={"column"} alignItems={"flex-start"}>
         <Grid
           item

@@ -6,6 +6,7 @@ import {
   Stack,
   Typography,
   useMediaQuery,
+  Divider,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import Logo from "./Logo.png";
@@ -60,10 +61,7 @@ const PublicHeader = () => {
         </Grid>
 
         {/* Поисковая строка */}
-        <Grid
-          item
-          sx={{ flexGrow: 1, maxWidth: "600px", mx: 2 }}
-        >
+        <Grid item sx={{ flexGrow: 1, maxWidth: "600px", mx: 2 }}>
           <SearchBar /> {/* Задаем высоту для уменьшения поля */}
         </Grid>
 
@@ -103,7 +101,13 @@ const PublicHeader = () => {
               </IconButton>
             ) : (
               <Typography textAlign={"top"}>
-                <Grid container item height={"100%"} alignItems={"center"} marginRight={"20px"}>
+                <Grid
+                  container
+                  item
+                  height={"100%"}
+                  alignItems={"center"}
+                  marginRight={"20px"}
+                >
                   <Link
                     to={"/home"}
                     style={{
@@ -173,6 +177,14 @@ const PublicHeader = () => {
         isOpen={isRegisterOpen}
         onClose={handleRegisterClose}
         onLoginClick={handleLoginOpen}
+      />
+      <Divider
+        sx={{
+          width: "100%",
+          backgroundColor: "#b3b9c4",
+          paddingBottom: "0px",
+          marginBottom: "0px",
+        }}
       />
     </Grid>
   );

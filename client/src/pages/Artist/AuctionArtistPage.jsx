@@ -61,8 +61,6 @@ const AuctionPage = () => {
         setError(false);
     };
 
-    console.log("Auction data:", auctionData); // Добавьте этот вывод
-
     return (
         <>
         <ArtistHeader/>

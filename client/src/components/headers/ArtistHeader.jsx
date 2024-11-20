@@ -37,15 +37,17 @@ const ArtistHeader = () => {
         </Grid>
 
         {/* Поисковая строка */}
-        <Grid
-          item
-          sx={{ flexGrow: 1, maxWidth: "600px", mx: 2 }}
-        >
+        <Grid item sx={{ flexGrow: 1, maxWidth: "600px", mx: 2 }}>
           <SearchBar />
         </Grid>
 
         {/* Кнопки с равными отступами */}
-        <Stack direction="row" spacing={5} alignItems="center" justifyContent="flex-end">
+        <Stack
+          direction="row"
+          spacing={5}
+          alignItems="center"
+          justifyContent="flex-end"
+        >
           {/* Кнопка Главная */}
           <Link
             to="/home"
@@ -58,7 +60,9 @@ const ArtistHeader = () => {
             }}
           >
             <Icon icon="maki:home" color="#42526D" width="18" height="18" />
-            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Главная</span>}
+            {!isSmallScreen && (
+              <span style={{ marginLeft: "8px" }}>Главная</span>
+            )}
           </Link>
 
           {/* Кнопка Профиль */}
@@ -72,8 +76,16 @@ const ArtistHeader = () => {
               alignItems: "center",
             }}
           >
-            <Icon icon="solar:user-bold"  color="#42526D" width="20" height="20" strokeWidth={3} />
-            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Профиль</span>}
+            <Icon
+              icon="solar:user-bold"
+              color="#42526D"
+              width="20"
+              height="20"
+              strokeWidth={3}
+            />
+            {!isSmallScreen && (
+              <span style={{ marginLeft: "8px" }}>Профиль</span>
+            )}
           </Link>
 
           {/* Кнопка Активные аукционы */}
@@ -87,8 +99,15 @@ const ArtistHeader = () => {
               alignItems: "center",
             }}
           >
-            <Icon icon="material-symbols:finance" color="#42526D" width="18" height="18" />
-            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Активные аукционы</span>}
+            <Icon
+              icon="material-symbols:finance"
+              color="#42526D"
+              width="18"
+              height="18"
+            />
+            {!isSmallScreen && (
+              <span style={{ marginLeft: "8px" }}>Активные аукционы</span>
+            )}
           </Link>
 
           {/* Кнопка Создать аукцион */}
@@ -103,7 +122,9 @@ const ArtistHeader = () => {
             }}
           >
             <Icon icon="uil:setting" color="#42526D" width="18" height="18" />
-            {!isSmallScreen && <span style={{ marginLeft: "8px" }}>Создать аукцион</span>}
+            {!isSmallScreen && (
+              <span style={{ marginLeft: "8px" }}>Создать аукцион</span>
+            )}
           </Link>
 
           {/* Кнопка Выйти */}
@@ -118,9 +139,20 @@ const ArtistHeader = () => {
               color: "#000000",
             }}
           >
-            <Icon icon="solar:exit-bold" color="#42526D" width="18" height="18" />
+            <Icon
+              icon="solar:exit-bold"
+              color="#42526D"
+              width="18"
+              height="18"
+            />
             {!isSmallScreen && (
-              <Typography style={{ color: "#42526D", fontSize: "14px", marginLeft: "8px" }}>
+              <Typography
+                style={{
+                  color: "#42526D",
+                  fontSize: "14px",
+                  marginLeft: "8px",
+                }}
+              >
                 Выйти
               </Typography>
             )}
