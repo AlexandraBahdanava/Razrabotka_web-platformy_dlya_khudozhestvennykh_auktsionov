@@ -12,7 +12,7 @@ const getArtist = async (id) => {
 
 const updateArtist = async (id, artistData) => {
     try {
-        const response = await host.put(`/api/artists/${id}`, artistData);
+        const response = await host.put(`/api/artist/update/${id}`, artistData);
 
         return response;
     } catch (error) {
@@ -25,7 +25,7 @@ const updateAvatar = async (id, image) => {
         let formData = new FormData();
         formData.append("image", image);
 
-        const response = await host.post(`/api/artists/${id}/avatar`, formData, {
+        const response = await host.post(`/api/artist/update/${id}/avatar`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },

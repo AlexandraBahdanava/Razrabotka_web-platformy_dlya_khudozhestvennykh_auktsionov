@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
   const navigate = useNavigate();
+
+  // Создаем форму с валидацией
   const formik = useFormik({
     initialValues: {
       name: artistData.name,
@@ -15,8 +17,8 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
       avatar: artistData.avatar,
     },
 
-    validate: validateArtistEditData,
     onSubmit: async (values) => {
+      
       const updatedArtistData = {
         name: values.name,
         country: values.country !== "" ? values.country : null,
@@ -24,11 +26,18 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
         bio: values.bio !== "" ? values.bio : null,
         avatar: values.avatar,
       };
-
-      applyCallback(updatedArtistData);
+    
+        applyCallback(updatedArtistData);
+      // Переходим на главную страницу
       navigate("/");
     },
   });
+
+  // Логирование каждого изменения в input полях
+  const handleChangeWithLogging = (e) => {
+    console.log(`Changed ${e.target.name}:`, e.target.value);
+    formik.handleChange(e);
+  };
 
   return (
     <form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
@@ -81,11 +90,9 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
               variant="outlined"
               label="Вставьте ссылку на новый аватар"
               value={formik.values.avatar}
-              onChange={formik.handleChange}
+              onChange={handleChangeWithLogging}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.avatar && formik.errors.avatar !== undefined
-              }
+              error={formik.touched.avatar && formik.errors.avatar !== undefined}
               helperText={
                 formik.touched.avatar && formik.errors.avatar !== undefined
                   ? formik.errors.avatar
@@ -100,7 +107,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
               variant="outlined"
               label="Имя"
               value={formik.values.name ?? ""}
-              onChange={formik.handleChange}
+              onChange={handleChangeWithLogging}
               onBlur={formik.handleBlur}
               error={formik.touched.name && formik.errors.name !== undefined}
               helperText={
@@ -117,11 +124,9 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
               variant="outlined"
               label="Страна"
               value={formik.values.country ?? ""}
-              onChange={formik.handleChange}
+              onChange={handleChangeWithLogging}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.country && formik.errors.country !== undefined
-              }
+              error={formik.touched.country && formik.errors.country !== undefined}
               helperText={
                 formik.touched.country && formik.errors.country !== undefined
                   ? formik.errors.country
@@ -136,7 +141,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
               variant="outlined"
               label="Город"
               value={formik.values.city ?? ""}
-              onChange={formik.handleChange}
+              onChange={handleChangeWithLogging}
               onBlur={formik.handleBlur}
               error={formik.touched.city && formik.errors.city !== undefined}
               helperText={
@@ -155,7 +160,7 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
               rows={4}
               label="О художнике"
               value={formik.values.bio ?? ""}
-              onChange={formik.handleChange}
+              onChange={handleChangeWithLogging}
               onBlur={formik.handleBlur}
               error={formik.touched.bio && formik.errors.bio !== undefined}
               helperText={

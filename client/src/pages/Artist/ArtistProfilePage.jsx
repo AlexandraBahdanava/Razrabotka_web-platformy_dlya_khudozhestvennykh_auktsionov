@@ -33,7 +33,6 @@ const ArtistProfilePage = () => {
   const [artistData, setArtistData] = useState({});
   const [showAddPortfolioForm, setShowAddPortfolioForm] = useState(false);
 
-
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -155,7 +154,7 @@ const ArtistProfilePage = () => {
             <Avatar
               src={
                 artistData.id !== undefined
-                  ? artistData.photo
+                  ? artistData.avatar
                   : "" /* Путь к стандартной иконке, если нет аватара */
               }
               variant="circular"
@@ -216,36 +215,38 @@ const ArtistProfilePage = () => {
           </Grid>
           {!editMode ? (
             <>
-              <Grid
-                container
-                item
-                flexDirection={"column"}
-                justifyContent="center"
-                alignItems="center"
-                sx={{
-                  maxWidth: "100%",
-                  paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
-                  marginTop: { xs: "10px", md: "50px" },
-                }}
-              >
+              {artistData.about_artist && (
                 <Grid
                   container
                   item
                   flexDirection={"column"}
-                  gap={"25px"}
-                  maxWidth={"100%"}
-                  marginTop={"20px"}
-                  marginBottom={"50px"}
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    maxWidth: "100%",
+                    paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
+                    marginTop: { xs: "10px", md: "50px" },
+                  }}
                 >
-                  <Typography
-                    fullWidth // Растягивает на всю ширину контейнера
-                    multiline // Позволяет вводить многострочный текст
-                    marginRight={"30px"}
+                  <Grid
+                    container
+                    item
+                    flexDirection={"column"}
+                    gap={"25px"}
+                    maxWidth={"100%"}
+                    marginTop={"20px"}
+                    marginBottom={"50px"}
                   >
-                    {`${artistData.about_artist}`}
-                  </Typography>
+                    <Typography
+                      fullWidth // Растягивает на всю ширину контейнера
+                      multiline // Позволяет вводить многострочный текст
+                      marginRight={"30px"}
+                    >
+                      {artistData.about_artist}
+                    </Typography>
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
               <div
                 id="portfolio"
                 className="scroll-section"
@@ -289,7 +290,6 @@ const ArtistProfilePage = () => {
                     ) : (
                       <></>
                     )}
-                    
                   </Grid>
                 )}
                 {artistData.Portfolios && artistData.Portfolios.length > 0 ? (
