@@ -18,7 +18,6 @@ router.get("/artist/update/:id/avatar", artistController.updateAvatar);
 router.get("/portfolio/:id",portfolioController.getPortfolioById);
 
 router.post("/auctions", auctionController.create);
-router.get("/auctions/all", auctionController.getAll);
 router.get("/auctions/:id", auctionController.getAuctionsByArtist);
 router.get("auctions/material", auctionController.searchMaterial);
 router.get(`/auctions/active/:id`, auctionController.getAuctionByCollectorId);

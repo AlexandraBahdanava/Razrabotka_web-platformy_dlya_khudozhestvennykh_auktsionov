@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import AuctionRegistration from "../components/homePage/AuctionRegistration";
 import LoginDialog from "../components/dialogs/LoginDialog";
 import RegistrationDialog from "../components/dialogs/RegistrationDialog";
+import AllAuctions from "../components/AllAuctions";
 
 const HomePage = () => {
   const [role, setRole] = useState(localStorage.getItem("role"));
@@ -86,7 +87,7 @@ const HomePage = () => {
         {renderHeader()}
        
         {renderAuctionRegistration()}
-
+        <AllAuctions />
         <Footer />
       </Grid>
     </>
