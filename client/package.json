@@ -11,6 +11,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/react-select": "^5.0.0",
     "axios": "^1.6.3",
     "cors": "^2.8.5",
     "formik": "^2.4.5",
@@ -21,7 +22,9 @@
     "react-input-mask": "^2.0.4",
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "react-select-country-list": "^2.2.3",
+    "web-vitals": "^2.1.4",
+    "yup": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

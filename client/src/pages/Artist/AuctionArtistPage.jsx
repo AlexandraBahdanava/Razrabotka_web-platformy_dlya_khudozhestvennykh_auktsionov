@@ -86,7 +86,7 @@ const AuctionPage = () => {
   item
   spacing={2}
   justifyContent="center"
-  alignItems="center"
+  alignItems="flex-start"
   flexDirection={"row"} // изменено на row
   flexWrap={"wrap"} // добавлено свойство flexWrap
   gap={2} // добавлено свойство gap

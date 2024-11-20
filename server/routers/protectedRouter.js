@@ -12,8 +12,8 @@ const rateController = require("../controllers/rateController");
 const router = new Router();
 
 router.get("/artist/:id", artistController.getOne);
-router.put("/artists/:id", artistController.update);
-router.get("/artists/:id/avatar", artistController.getAvatar);
+router.put("/artist/update/:id", artistController.update);
+router.get("/artist/update/:id/avatar", artistController.updateAvatar);
 
 router.get("/portfolio/:id",portfolioController.getPortfolioById);
 

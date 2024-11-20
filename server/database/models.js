@@ -124,8 +124,7 @@ const AuctionArchive = sequelize.define(
     },
     photo: {
       type: DataTypes.TEXT,
-      allowNull: false,
-      defaultValue: "#"
+      allowNull: false
     },
   }, 
   {
@@ -155,7 +154,12 @@ const AuctionArchive = sequelize.define(
     password: {
       type: DataTypes.TEXT,
       allowNull: false
-    }
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: false,
+       defaultValue: "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/2f\/No-photo-m.png"
+    },
   },
   {
     tableName: "Collectors", // фактическое имя таблицы в базе данных

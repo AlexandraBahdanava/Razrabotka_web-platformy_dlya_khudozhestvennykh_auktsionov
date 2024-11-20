@@ -8,7 +8,7 @@ async  addToPortfolio(req, res) {
 
       const artistId = req.artistId;
       console.log(artistId);
-      console.log("как упоительны в россии вечера",portfolio);
+      console.log(portfolio);
 
         const createdPortfolio = await Portfolio.create(portfolio);
 

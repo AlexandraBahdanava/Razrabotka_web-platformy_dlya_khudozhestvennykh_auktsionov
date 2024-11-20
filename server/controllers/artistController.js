@@ -36,7 +36,7 @@ class ArtistController {
     
 }
 
-async getAvatar(req, res) {
+async updateAvatar(req, res) {
   try {
       const id  = req.artistId;
       if (isNaN(id)) {
