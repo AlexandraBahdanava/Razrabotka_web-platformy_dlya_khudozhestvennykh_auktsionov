@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getAuction } from "../api/auctionApi";
 import { Box, Typography, Grid } from "@mui/material";
 import CollectorHeader from "../components/headers/CollectorHeader";
@@ -7,11 +7,28 @@ import ArtistHeader from "../components/headers/ArtistHeader";
 import PublicHeader from "../components/headers/PublicHeader";
 import Footer from "../components/Footer";
 import BidButton from "../components/forms/BidButton";
+import AuctionRates from "../components/forms/AuctionRates";
+import { jwtDecode } from "jwt-decode";
 
 const AuctionPage = () => {
   const { id } = useParams();
   const [auctionData, setAuctionData] = useState({});
   const [role, setRole] = useState(localStorage.getItem("role"));
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    // Извлечение userId из JWT
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const id = decodedToken.collectorId || decodedToken.artistId; // Предположим, id может быть одним из этих
+        setUserId(id);
+      } catch (error) {
+        console.error("Ошибка декодирования токена:", error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,6 +104,12 @@ const AuctionPage = () => {
             }}
           />
         </Grid>
+        <AuctionRates
+          auctionId={auctionData.id}
+          startingPrice={auctionData.starting_price}
+          rateStep={auctionData.rate_step}
+        />
+
         <Box
           sx={{
             margin: "auto",
@@ -129,11 +152,15 @@ const AuctionPage = () => {
             </Typography>
           </Box>
         )}
-        <BidButton
-          auctionId={auctionData.id}
-          onBidSuccess={handleBidSuccess}
-          onBidError={handleBidError}
-        />
+        {role === "collector" && userId && (
+          <BidButton
+            auctionId={auctionData.id}
+            collectorId={userId}
+            betSize={auctionData.rate_step}
+            onBidSuccess={handleBidSuccess}
+            onBidError={handleBidError}
+          />
+        )}
       </Grid>
       <Footer />
     </>

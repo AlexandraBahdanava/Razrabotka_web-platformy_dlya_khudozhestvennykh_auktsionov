@@ -3,28 +3,20 @@ import { Button, Grid } from "@mui/material";
 import { createRate } from "../../api/rateApi"; // Предполагается, что этот метод реализован
 import { useParams } from "react-router-dom";
 
-const BidButton = ({ auctionId, fixedBidAmount,  onBidSuccess, onBidError }) => {
-  const { id } = useParams();
-
+const BidButton = ({ auctionId, collectorId, betSize, onBidSuccess, onBidError }) => {
   const handleBid = async () => {
     try {
-      // Формируем данные для отправки
-      const bidData = {
-        auctionId, // ID текущего аукциона
-        id, // ID коллекционера
-        bidAmount: fixedBidAmount, // Фиксированная ставка
+      const rateData = {
+        bet_size: betSize, // Размер ставки
+        collectorId,       // ID коллекционера
+        auctionId,         // ID аукциона
       };
+      console.log({ auctionId, collectorId, betSize });
 
-      // Вызываем API для добавления ставки
-      await createRate(bidData);
-
-      // Уведомляем об успехе
-      if (onBidSuccess) onBidSuccess();
-      alert("Ставка успешно добавлена!");
+      const response = await createRate(rateData); // Вызов API для создания ставки
+      onBidSuccess(response); // Обработчик успешного выполнения
     } catch (error) {
-      console.error("Ошибка при добавлении ставки:", error);
-      if (onBidError) onBidError(error);
-      alert("Ошибка при добавлении ставки.");
+      onBidError(error); // Обработчик ошибок
     }
   };
 
@@ -46,7 +38,7 @@ const BidButton = ({ auctionId, fixedBidAmount,  onBidSuccess, onBidError }) => 
           padding: "20px",
         }}
       >
-        Сделать ставку
+        Сделать ставку ({betSize}$)
       </Button>
     </Grid>
   );

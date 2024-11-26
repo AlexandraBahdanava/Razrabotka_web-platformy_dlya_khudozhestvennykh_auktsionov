@@ -2,34 +2,28 @@ const { Rate, Collector } = require("../database/models");
 
 class rateController {
   // Метод для создания ставки
+
   async createRate(req, res) {
-    const { collectorId, auctionId, amount } = req.body;
-
-    // Проверка входных данных
-    if (!collectorId || !auctionId || !amount) {
-      return res.status(400).json({ message: "Не все данные переданы." });
-    }
-
     try {
-      // Создание новой ставки
-      const rate = await Rate.create({
-        collectorId,
-        auctionId,
-        amount,
-        createdAt: new Date(),
+      const { bet_size, collectorId, auctionId } = req.body;
+  
+      if (!bet_size || !collectorId || !auctionId) {
+        return res.status(400).json({ error: "Все поля обязательны" });
+      }
+  
+      const newRate = await Rate.create({
+        bet_size,
+        CollectorId: collectorId, // Убедитесь, что это поле соответствует модели
+        AuctionId: auctionId,
       });
-
-      return res.status(201).json({
-        message: "Ставка успешно создана.",
-        rateId: rate.id,
-      });
+  
+      return res.status(201).json(newRate);
     } catch (error) {
-      console.error("Ошибка при создании ставки:", error);
-      return res.status(500).json({
-        message: "Ошибка сервера при создании ставки.",
-      });
+      console.error(error);
+      return res.status(500).json({ error: "Ошибка сервера" });
     }
   }
+  
 
   async getRatesByAuction(req, res) {
     const id = req.params.id;

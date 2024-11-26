@@ -25,7 +25,7 @@ router.get("/auctions/:id", auctionController.getAuctionsByArtist);
 router.get("/auctions/material", auctionController.searchMaterial); // Исправлено
 router.get("/auctions/active/:id", auctionController.getAuctionByCollectorId); // Исправлено
 
-router.post("/rate/create", rateController.create);
+router.post("/rate/create", rateController.createRate);
 router.get("/rates/:id", rateController.getRatesByAuction); 
 router.post("/portfolio", portfolioController.addToPortfolio);
 

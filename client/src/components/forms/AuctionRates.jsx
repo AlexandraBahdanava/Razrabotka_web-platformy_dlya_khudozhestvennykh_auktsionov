@@ -1,92 +1,79 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Paper, Grid, Avatar } from "@mui/material";
-import { useTheme } from "@emotion/react";
+import { Box, Typography, Avatar } from "@mui/material";
 import { getRateByAuction } from "../../api/rateApi";
 
-const AuctionRates = (auction) => {
-    const theme = useTheme();
-    const [readonly, setReadonly] = useState(false);
-    const [editMode, setEditMode] = useState(false);
+const AuctionRates = ({ auctionId, startingPrice, rateStep }) => {
+  const [ratesData, setRatesData] = useState([]);
 
-    const [ratesData, setRatesData] = useState([]);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const response = await getRateByAuction(auctionId);
 
-    const [error, setError] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-
-    useEffect(() => {
-        const loadData = async () => {
-            const response =  await getRateByAuction(auction.auctionId.id)
-
-            if (!response) {
-                displayError("Сервис временно недоступен");
-                return;
-            }
-
-            if (response.status === 401) {
-                localStorage.removeItem("jwt");
-                localStorage.removeItem("role");
-                window.location.reload();
-            }
-
-            if (response.status >= 300) {
-                displayError("Ошибка при загрузке профиля. Код: " + response.status);
-                console.log(response);
-                return;
-            }
-
-            setRatesData(response.data);
-        };
-
-        loadData();
-    }, []);
-
-    const displayError = (message) => {
-        setErrorMessage(message);
-        setError(true);
-    };
-
-    const closeSnackbar = (event, reason) => {
-        if (reason === "clickaway") {
-            return;
+        if (!response || response.status >= 300) {
+          console.error("Ошибка при загрузке ставок:", response?.status);
+          return;
         }
 
-        setError(false);
+        setRatesData(response.data);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных ставок:", error);
+      }
     };
 
-    return (
-        
-        <Box>
+    loadData();
+  }, [auctionId]);
+
+  return (
+    <Box>
       {ratesData.length > 0 ? (
-        ratesData.map((item) => (
-            <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mt: 2,
-            }}
-          >
-            <Box
-             sx={{display: "flex",
-            justifyContent: "space-between",
-            alignItems: "left",
-        }}
-            >
-            <Avatar></Avatar>
-              <Typography variant="body1">{item.Collector.email}</Typography>
+        // Отображаем последние 4 ставки
+        ratesData
+          .slice(-4)
+          .map((item, index) => {
+            // Рассчитываем сумму ставки
+            const betAmount = startingPrice + rateStep * index;
+
+            return (
+              <Box
+                key={item.id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mt: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar src={item.Collector.avatar} alt="Avatar" />
+                  <Typography
+                    variant="body1"
+                    sx={{ ml: 2 }}
+                  >
+                    {item.Collector.login}
+                  </Typography>
+                </Box>
+                <Typography variant="body1">{`$${betAmount}`}</Typography>
               </Box>
-            <Typography variant="body1">{`$${item.bet_size}`}</Typography>
-          </Box>
-        ))
+            );
+          })
       ) : (
-        <Typography variant="h3" height={"69px"} display={"flex"} alignItems={"center"}>
+        <Typography
+          variant="h3"
+          height={"69px"}
+          display={"flex"}
+          alignItems={"center"}
+        >
           Ставок нет
         </Typography>
       )}
     </Box>
-
-      );
-      
+  );
 };
 
 export default AuctionRates;
