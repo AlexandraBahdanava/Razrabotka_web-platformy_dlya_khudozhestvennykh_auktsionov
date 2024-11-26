@@ -1,5 +1,4 @@
 import {
-  Checkbox,
   Grid,
   TextField,
   Typography,
@@ -13,8 +12,9 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import validateAuctionData from "../../utils/validateAuctionData";
-import React, { useState } from "react";
+import React from "react";
 import * as Yup from "yup";
+import ImageUploader from "../buttons/ImageUploaderButton";
 
 const CreateAuctionForm = ({ submitHandler }) => {
   const formik = useFormik({
@@ -76,7 +76,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           </Typography>
         </Grid>
         <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Заголовок:
+          Заголовок*:
         </Typography>
         <TextField
           id="title"
@@ -95,7 +95,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
         />
         <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Теги:
+          Теги*:
         </Typography>
         <TextField
           id="tags"
@@ -141,7 +141,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
         />
         <FormControl fullWidth>
           <Typography variant="body1" style={{ marginRight: "10px" }}>
-            Жанр:
+            Жанр*:
           </Typography>
           <Select
             id="genre"
@@ -160,7 +160,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           </Select>
         </FormControl>
         <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Материал:
+          Материал*:
         </Typography>
         <FormControl fullWidth>
           <Select
@@ -181,7 +181,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           </Select>
         </FormControl>
         <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Цвет:
+          Цвет*:
         </Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
@@ -205,7 +205,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
             <FormControlLabel value="Яркое" control={<Radio />} label="Яркое" />
           </RadioGroup>
         </Grid>
-        <Typography variant="body1">Продолжительность аукциона:</Typography>
+        <Typography variant="body1">Продолжительность аукциона*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="duration"
@@ -221,7 +221,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
             <FormControlLabel value="12" control={<Radio />} label="12 дней" />
           </RadioGroup>
         </Grid>
-        <Typography variant="body1">Начальная цена:</Typography>
+        <Typography variant="body1">Начальная цена*:</Typography>
         <TextField
           id="starting_price"
           name="starting_price"
@@ -243,7 +243,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
           required
         />
-        <Typography variant="body1">Шаг ставки:</Typography>
+        <Typography variant="body1">Шаг ставки*:</Typography>
         <TextField
           id="rate_step"
           name="rate_step"
@@ -263,7 +263,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
           required
         />
-        <Typography variant="body1">Возможность биддинга:</Typography>
+        <Typography variant="body1">Возможность биддинга*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="bidding"
@@ -277,37 +277,38 @@ const CreateAuctionForm = ({ submitHandler }) => {
             <FormControlLabel value="0" control={<Radio />} label="нет" />
           </RadioGroup>
           {formik.touched.bidding && formik.errors.bidding && (
-            <Typography color="error">{formik.errors.bidding}</Typography>
+            <Typography variant="body2" color="error">
+              {formik.errors.bidding}
+            </Typography>
           )}
         </Grid>
-
-        {/* Поле для ввода цены биддинга появится только при значении "да" */}
         {formik.values.bidding === "1" && (
-          <>
-            <Typography variant="body1">Цена биддинга:</Typography>
-            <TextField
-              id="bidding_rate"
-              name="bidding_rate"
-              fullWidth
-              variant="outlined"
-              label="Введите сумму"
-              value={formik.values.bidding_rate}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.bidding_rate &&
-                formik.errors.bidding_rate !== undefined
-              }
-              helperText={
-                formik.touched.bidding_rate && formik.errors.bidding_rate
-                  ? formik.errors.bidding_rate
-                  : ""
-              }
-            />
-          </>
+          <Typography variant="body1">Сумма биддинга*:</Typography>
         )}
-
-        <Typography variant="body1">Автопродление аукциона:</Typography>
+        {formik.values.bidding === "1" && (
+          <TextField
+            id="bidding_rate"
+            name="bidding_rate"
+            fullWidth
+            variant="outlined"
+            label="Введите сумму"
+            value={formik.values.bidding_rate}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.bidding_rate &&
+              formik.errors.bidding_rate !== undefined
+            }
+            helperText={
+              formik.touched.bidding_rate &&
+              formik.errors.bidding_rate !== undefined
+                ? formik.errors.bidding_rate
+                : ""
+            }
+            required
+          />
+        )}
+        <Typography variant="body1">Автопродление*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="auto_renewal"
@@ -321,26 +322,22 @@ const CreateAuctionForm = ({ submitHandler }) => {
             <FormControlLabel value="0" control={<Radio />} label="нет" />
           </RadioGroup>
         </Grid>
-        <TextField
-          id="photo"
-          name="photo"
-          fullWidth
-          variant="outlined"
-          label="Вставьте ссылку на изображение"
-          value={formik.values.photo}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.photo && formik.errors.photo !== undefined}
-          helperText={
-            formik.touched.photo && formik.errors.photo !== undefined
-              ? formik.errors.photo
-              : ""
-          }
-          required
+
+        <ImageUploader
+          maxImages={1}
+          onSaveImage={(imagePath) => formik.setFieldValue("photo", imagePath)}
         />
-        <Button type="submit" variant="contained" fullWidth>
-          Создать аукцион
-        </Button>
+
+        <Grid
+          container
+          item
+          justifyContent={"center"}
+          style={{ marginTop: "20px", width:"100%" }}
+        >
+          <Button type="submit" variant="contained" color="primary" style={{ width:"100%" }}>
+            Сохранить аукцион
+          </Button>
+        </Grid>
       </Grid>
     </form>
   );

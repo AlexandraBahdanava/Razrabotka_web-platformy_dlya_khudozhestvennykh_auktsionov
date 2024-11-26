@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, Paper, Grid, Avatar } from "@mui/material";
 import { useTheme } from "@emotion/react";
 import { getRateByAuction } from "../../api/rateApi";
-import { useParams } from "react-router-dom";
 
 const AuctionRates = (auction) => {
     const theme = useTheme();

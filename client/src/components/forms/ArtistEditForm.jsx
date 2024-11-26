@@ -1,7 +1,6 @@
 import React from "react";
 import { Grid, Typography, TextField, Button } from "@mui/material";
 import { useFormik } from "formik";
-import validateArtistEditData from "../../utils/validateEditData";
 import { useNavigate } from "react-router-dom";
 
 const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {

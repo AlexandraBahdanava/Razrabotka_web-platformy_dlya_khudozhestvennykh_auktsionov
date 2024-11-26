@@ -1,44 +1,50 @@
-import React, { useState } from "react";
-import { Button, Grid, TextField } from "@mui/material";
-import { createRate } from "../../api/rateApi";
+import React from "react";
+import { Button, Grid } from "@mui/material";
+import { createRate } from "../../api/rateApi"; // Предполагается, что этот метод реализован
 import { useParams } from "react-router-dom";
 
-const BidButton = ({ auctionId, onBidSuccess, onBidError }) => {
-  const [bidAmount, setBidAmount] = useState("");
-const {id}=useParams();
+const BidButton = ({ auctionId, fixedBidAmount,  onBidSuccess, onBidError }) => {
+  const { id } = useParams();
+
   const handleBid = async () => {
     try {
-      const response = await createRate(auctionId, parseFloat(bidAmount), id);
+      // Формируем данные для отправки
+      const bidData = {
+        auctionId, // ID текущего аукциона
+        id, // ID коллекционера
+        bidAmount: fixedBidAmount, // Фиксированная ставка
+      };
 
-      if (response.status === 200) {
-        // Обновление данных или выполнение других действий при успешной ставке
-        onBidSuccess();
-      } else {
-        // Обработка ошибок при неудачной ставке
-        onBidError(response.data.message);
-      }
+      // Вызываем API для добавления ставки
+      await createRate(bidData);
+
+      // Уведомляем об успехе
+      if (onBidSuccess) onBidSuccess();
+      alert("Ставка успешно добавлена!");
     } catch (error) {
-      console.error("Error making bid:", error);
-      onBidError("Internal Server Error");
+      console.error("Ошибка при добавлении ставки:", error);
+      if (onBidError) onBidError(error);
+      alert("Ошибка при добавлении ставки.");
     }
   };
 
   return (
     <Grid
-    bgcolor={"#091E42"}
-    color={"#FFFFFF"}
-    borderRadius={"20px"}
-    margin={"30px"}
-    alignContent={"center"}
-    textAlign={"center"}
-    width={"100%"}
-    padding={"20px"}
+      margin={"30px"}
+      width={"100%"}
+      borderRadius={"34px"}
+      alignContent={"center"}
+      textAlign={"center"}
+      bgcolor={"#091E42"}
     >
-        <Button
+      <Button
         variant="2"
         onClick={handleBid}
-        style={{ borderRadius: "16px", color: "white" }}
-        
+        style={{
+          color: "#FFFFFF",
+          width: "100% ",
+          padding: "20px",
+        }}
       >
         Сделать ставку
       </Button>

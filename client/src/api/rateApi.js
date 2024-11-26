@@ -10,15 +10,15 @@ const getRateByAuction = async (id) => {
     }
 };
 
-const createRate = async (auctionId, amount,id) => {
+const createRate = async (rateData) => {
     try {
-        const response = await host.post(`/api/rate/${id}`, {auctionId, amount});
-        
-        return response;
+      const response = await host.post("/api/rate/create", rateData);
+      return response.data;
     } catch (error) {
         handleRequestError(error);
     }
-};
+  };
+
 const handleRequestError = (error) => {
     if (error.response) {
         return error.response;

@@ -37,6 +37,9 @@ const ActiveAuctionsForm = ({ auction }) => {
     return () => clearInterval(timer);
   }, [auction.createdAt, auction.duration]);
 
+  const baseURL = "http://localhost:3000"; // URL сервера
+  const fullImageUrl = `${baseURL}${auction.photo}`;
+  
   return (
     <Paper
       sx={{
@@ -51,7 +54,7 @@ const ActiveAuctionsForm = ({ auction }) => {
       onClick={() => navigate(`/auction/one/${auction.id}`)}
     >
       <img
-        src={auction.photo}
+        src={fullImageUrl}
         alt="Auction"
         style={{
           objectFit: "cover",

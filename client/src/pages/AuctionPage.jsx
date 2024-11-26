@@ -56,6 +56,8 @@ const AuctionPage = () => {
     return <div>Loading...</div>;
   }
 
+  const baseURL = "http://localhost:3000"; // URL сервера
+  const fullImageUrl = `${baseURL}${auctionData.photo}`;
   return (
     <>
       {renderHeader()}
@@ -75,7 +77,7 @@ const AuctionPage = () => {
       >
         <Grid margin={"40px"}>
           <img
-            src={auctionData.photo || "https://via.placeholder.com/800"}
+            src={fullImageUrl || "https://via.placeholder.com/800"}
             alt="Auction"
             style={{
               objectFit: "cover",

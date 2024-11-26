@@ -158,26 +158,42 @@ class AuctionController {
   }
 
   // Создание аукциона
-  async create(req, res) {
-    try {
-      const auction = { ...req.body };
+async create(req, res) {
+  try {
+    // Получаем данные из тела запроса
+    const auction = { ...req.body };
 
-      if (!auction.title) {
-        auction.title = "Без названия";
-      }
-      const artistId = req.artistId;
-      console.log(artistId);
-      console.log(req.body);
-
-      const createdAuction = await Auction.create(auction);
-
-      await createdAuction.setArtist(artistId);
-
-      return res.status(201).json(createdAuction);
-    } catch (err) {
-      return res.sendStatus(500);
+    // Если название аукциона не передано, присваиваем значение по умолчанию
+    if (!auction.title) {
+      auction.title = "Без названия";
     }
+
+    // Получаем ID артиста, который привязан к аукциону
+    const artistId = req.artistId;
+    console.log(artistId);
+    console.log(req.body);
+
+    // Если файл с изображением был загружен
+    if (req.file) {
+      // Сформируем путь к изображению (папка avatars, имя файла из req.file.filename)
+      const imagePath = path.join('avatars', req.file.filename);
+      auction.image = imagePath; // Добавляем путь к изображению в объект аукциона
+    }
+
+    // Создаем новый аукцион в базе данных
+    const createdAuction = await Auction.create(auction);
+
+    // Устанавливаем связь с артистом (предполагается, что аукцион связан с артистом через метод setArtist)
+    await createdAuction.setArtist(artistId);
+
+    // Отправляем успешный ответ с созданным аукционом
+    return res.status(201).json(createdAuction);
+  } catch (err) {
+    console.error(err);
+    return res.sendStatus(500);
   }
+}
+
 
   // Перемещение аукционов в таблицу архива после окончания
   async moveAuctionsToArchive() {

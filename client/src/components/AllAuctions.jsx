@@ -19,7 +19,11 @@ const displayError = (message) => {
 // Компонент для вычисления и отображения текущей цены
 const CurrentPrice = ({ startingPrice, bids }) => {
   const totalPrice = bids.reduce((sum, bid) => sum + bid.amount, startingPrice);
-  return <Typography sx={{ fontSize: "16px" }}>{`$${totalPrice.toFixed(2)}`}</Typography>;
+  return (
+    <Typography sx={{ fontSize: "16px" }}>{`$${totalPrice.toFixed(
+      2
+    )}`}</Typography>
+  );
 };
 
 // Функция для вычисления оставшегося времени
@@ -114,6 +118,8 @@ const AllAuctions = () => {
 
   const totalPages = Math.ceil(auctionData.length / auctionsPerPage);
 
+  const baseURL = "http://localhost:3000"; // URL сервера
+
   return (
     <Box sx={{ padding: "16px" }}>
       {displayedAuctions.length > 0 ? (
@@ -124,79 +130,82 @@ const AllAuctions = () => {
             justifyContent="flex-start"
             sx={{ padding: "16px" }}
           >
-            {displayedAuctions.map((auction) => (
-              <Grid
-                key={auction.id}
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                xl={2.4}
-                onClick={() => navigate(`/auction/one/${auction.id}`)}
-                sx={{ cursor: "pointer" }}
-              >
-                <Paper
-                  sx={{
-                    borderRadius: "16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    position: "relative",
-                    p: 0,
-                    width: "260px",
-                    height: "260px",
-                  }}
+            {displayedAuctions.map((auction) => {
+              const fullImageUrl = `${baseURL}${auction.photo}`;
+              return (
+                <Grid
+                  key={auction.id}
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  xl={2.4}
+                  onClick={() => navigate(`/auction/one/${auction.id}`)}
+                  sx={{ cursor: "pointer" }}
                 >
-                  {/* Таймер обратного отсчета */}
-                  <Box
+                  <Paper
                     sx={{
-                      position: "absolute",
-                      backgroundColor: theme.palette.success.main,
-                      color: "#fff",
-                      padding: "4px 8px",
-                      borderRadius: "8px",
-                      fontSize: "12px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    <CountdownTimer
-                      createdAt={auction.createdAt}
-                      duration={auction.duration}
-                    />
-                  </Box>
-
-                  {/* Изображение аукциона */}
-                  <img
-                    src={auction.photo}
-                    alt="Auction"
-                    style={{
-                      objectFit: "cover",
-                      width: "260px",
-                      height: "220px",
-                      borderRadius: "8px",
-                    }}
-                  />
-
-                  {/* Данные об авторе и цене */}
-                  <Box
-                    sx={{
+                      borderRadius: "16px",
                       display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "5px 10px",
+                      flexDirection: "column",
+                      position: "relative",
+                      p: 0,
+                      width: "260px",
+                      height: "260px",
                     }}
                   >
-                    <Typography sx={{ fontWeight: 600 }}>
-                      {auction.Artist?.login}
-                    </Typography>
-                    <CurrentPrice
-                      startingPrice={auction.starting_price}
-                      bids={auction.bids || []}
+                    {/* Таймер обратного отсчета */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        backgroundColor: theme.palette.success.main,
+                        color: "#fff",
+                        padding: "4px 8px",
+                        borderRadius: "8px",
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <CountdownTimer
+                        createdAt={auction.createdAt}
+                        duration={auction.duration}
+                      />
+                    </Box>
+
+                    {/* Изображение аукциона */}
+                    <img
+                      src={fullImageUrl}
+                      alt="Auction"
+                      style={{
+                        objectFit: "cover",
+                        width: "260px",
+                        height: "220px",
+                        borderRadius: "8px",
+                      }}
                     />
-                  </Box>
-                </Paper>
-              </Grid>
-            ))}
+
+                    {/* Данные об авторе и цене */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        padding: "5px 10px",
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 600 }}>
+                        {auction.Artist?.login}
+                      </Typography>
+                      <CurrentPrice
+                        startingPrice={auction.starting_price}
+                        bids={auction.bids || []}
+                      />
+                    </Box>
+                  </Paper>
+                </Grid>
+              );
+            })}
           </Grid>
 
           {/* Панель постраничного переключения */}

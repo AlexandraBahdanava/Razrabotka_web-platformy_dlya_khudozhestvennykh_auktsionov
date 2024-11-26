@@ -2,83 +2,113 @@ const {
   Artist,
   AuctionArchive,
   Auction,
-  ExhibitedPainting,
   Portfolio,
   Review,
   Collector,
 } = require("../database/models");
 const bcrypt = require("bcrypt");
-const fs = require("fs");
+const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = path.join(__dirname, "../avatars/artist");
+    cb(null, dir);
+  },
+  filename: (req, file, cb) => {
+    const id = req.artistId; // Используем artistId из токена
+    cb(null, `${id}.png`);
+  },
+});
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ["image/png", "image/jpeg"];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error("Invalid file type"), false);
+    }
+    cb(null, true);
+  },
+});
+
+
+
+// Контроллер артиста
 class ArtistController {
   async create(req, res) {
     try {
       const artist = { ...req.body };
 
-      if (
-        (await Artist.findOne({ where: { email: artist.email } })) !== null ||
-        (await Collector.findOne({ where: { email: artist.email } })) !== null
-      ) {
-        return res.status(400).json({ error: "Email is already taken" });
+      // Проверяем уникальность email и login
+      const existingUser = await Artist.findOne({
+        where: {
+          [Op.or]: [{ email: artist.email }, { login: artist.login }],
+        },
+      });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ error: "Email or login is already taken" });
       }
 
-      if (
-        (await Artist.findOne({ where: { login: artist.login } })) !== null ||
-        (await Collector.findOne({ where: { login: artist.login } })) !== null
-      ) {
-        return res.status(400).json({ error: "Login is already taken" });
-      }
-
+      // Хешируем пароль
       artist.password = await bcrypt.hash(artist.password, 10);
 
       const createdArtist = await Artist.create(artist);
 
       return res.status(201).json(createdArtist);
     } catch (err) {
-      console.error("Ошибка при создании артиста:", err); // Логируем ошибку
+      console.error("Error in create:", err);
       return res
         .status(500)
-        .json({ message: "Ошибка сервера", error: err.message });
+        .json({ error: "Server error", details: err.message });
     }
   }
 
-  async updateAvatar(req, res) {
+  async createImage (req, res) {
     try {
-      const id = req.artistId;
-      if (isNaN(id)) {
-        return res.sendStatus(400);
+      const artistId = req.artistId; // Получаем artistId из токена
+      if (!artistId) {
+        return res.status(400).json({ error: "Invalid artist ID" });
       }
-
-      const imagePath = path.join(
-        __dirname,
-        "../",
-        "avatars",
-        "artist",
-        id + ".png"
-      );
-
-      if (!fs.existsSync(imagePath)) {
-        return res.sendStatus(204);
+  
+      if (!req.file) {
+        return res.status(400).json({ error: "No file provided" });
       }
-
-      return res.sendFile(imagePath);
+  
+      const artist = await Artist.findByPk(artistId, { attributes: ["login"] });
+      if (!artist) {
+        return res.status(404).json({ error: "Artist not found" });
+      }
+  
+      const artistLogin = artist.login;
+      const originalName = path.parse(req.file.originalname).name;
+      const fileExtension = path.extname(req.file.originalname);
+      const newFileName = `${artistLogin}_${originalName}${fileExtension}`;
+      const imagePath = path.join(__dirname, "../avatars/artist", newFileName);
+  
+      fs.renameSync(req.file.path, imagePath);
+  
+      return res.status(201).json({
+        message: "Image uploaded successfully",
+        path: `/avatars/artist/${newFileName}`,
+      });
     } catch (err) {
-      console.log(err);
-      return res.sendStatus(500);
+      console.error(err);
+      return res.status(500).json({ error: "Server error", details: err.message });
     }
-  }
-
+  };
+  
   async getOne(req, res) {
     const id = req.artistId;
 
     if (!/^\d+$/.test(id)) {
-      console.log(req.params);
-      return res.sendStatus(400);
+      return res.status(400).json({ error: "Invalid ID format" });
     }
     try {
       const artist = await Artist.findOne({
-        where: { id: id },
+        where: { id },
         attributes: { exclude: ["password"] },
         include: [
           { model: AuctionArchive },
@@ -88,43 +118,42 @@ class ArtistController {
         ],
       });
 
-      if (artist == null) {
-        return res.sendStatus(404);
+      if (!artist) {
+        return res.status(404).json({ error: "Artist not found" });
       }
-
-      // artist.Portfolios.forEach(portfolioItem => {
-      // console.log(portfolioItem.photo);
-      //});
 
       return res.json(artist);
     } catch (err) {
-      return res.sendStatus(500);
+      console.error("Error in getOne:", err);
+      return res.status(500).json({ error: "Server error" });
     }
   }
 
   async update(req, res) {
     const { id } = req.params;
 
-    // Проверка на правильность id
     if (!/^\d+$/.test(id)) {
-      console.error(`Invalid id format: ${id}`);
-      return res.sendStatus(400);
+      return res.status(400).json({ error: "Invalid ID format" });
     }
 
-    const artistData = { ...req.body };
-
-    // Поиск артиста по ID
-    const artist = await Artist.findByPk(id);
-    if (artist == null) {
-      console.error(`Artist with id ${id} not found`);
-      return res.sendStatus(404);
+    const allowedFields = ["name", "email", "bio", "password"];
+    const artistData = {};
+    for (const field of allowedFields) {
+      if (req.body[field] !== undefined) {
+        artistData[field] = req.body[field];
+      }
     }
 
     try {
-      await Artist.update(artistData, { where: { id: id } });
+      const artist = await Artist.findByPk(id);
+      if (!artist) {
+        return res.status(404).json({ error: "Artist not found" });
+      }
 
-      const result = await Artist.findOne({
-        where: { id: id },
+      await Artist.update(artistData, { where: { id } });
+
+      const updatedArtist = await Artist.findOne({
+        where: { id },
         attributes: { exclude: ["password"] },
         include: [
           { model: AuctionArchive },
@@ -134,10 +163,10 @@ class ArtistController {
         ],
       });
 
-      // Отправляем обновленные данные обратно
-      return res.status(200).json(result);
+      return res.json(updatedArtist);
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      console.error("Error in update:", err);
+      return res.status(500).json({ error: "Server error" });
     }
   }
 
@@ -176,3 +205,6 @@ class ArtistController {
 }
 
 module.exports = new ArtistController();
+module.exports.upload = upload;
+
+
