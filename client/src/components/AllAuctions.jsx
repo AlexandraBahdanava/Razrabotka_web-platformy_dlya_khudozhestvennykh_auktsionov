@@ -8,52 +8,62 @@ import {
   Pagination,
 } from "@mui/material";
 import { useTheme } from "@emotion/react";
-import { getAuctions } from "../api/auctionApi";
+import { getAuctions } from "../api/auctionApi"; // Подключаем метод
 import { useNavigate } from "react-router-dom";
+import { getRateByAuction } from "../api/rateApi";
 
 const displayError = (message) => {
-  console.error(message); // Можно заменить на всплывающее сообщение или другой метод
-  alert(message); // Отобразит всплывающее сообщение
+  console.error(message);
+  alert(message); // Всплывающее сообщение об ошибке
 };
 
-// Компонент для вычисления и отображения текущей цены
-const CurrentPrice = ({ startingPrice, bids }) => {
-  const totalPrice = bids.reduce((sum, bid) => sum + bid.amount, startingPrice);
+const CurrentPrice = ({ startingPrice, bids, rate_step }) => {
+  const totalPrice = (Array.isArray(bids) ? bids : []).reduce(
+    (sum, bid) => sum + (bid.bet_size || 0),
+    0
+  );
+
+  // Добавляем начальную цену только в конце, если она еще не была учтена
+  const finalPrice = startingPrice + totalPrice- rate_step;
+
   return (
-    <Typography sx={{ fontSize: "16px" }}>{`$${totalPrice.toFixed(
-      2
-    )}`}</Typography>
+    <Typography sx={{ fontSize: "16px" }}>
+      {`$${finalPrice.toFixed(2)}`}
+    </Typography>
   );
 };
 
-// Функция для вычисления оставшегося времени
-const calculateRemainingTime = (createdAt, duration) => {
-  const createdAtTime = new Date(createdAt).getTime();
-  const durationMs = duration * 24 * 60 * 60 * 1000; // Преобразуем дни в миллисекунды
-  const currentTime = new Date().getTime();
-  const remainingTime = createdAtTime + durationMs - currentTime;
 
-  if (remainingTime > 0) {
-    const days = Math.floor(remainingTime / (24 * 60 * 60 * 1000));
-    const hours = Math.floor(
-      (remainingTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
-    );
-    const minutes = Math.floor(
-      (remainingTime % (60 * 60 * 1000)) / (60 * 1000)
-    );
-    const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
 
-    return `${String(days).padStart(2, "0")}:${String(hours).padStart(
-      2,
-      "0"
-    )}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-  } else {
-    return "Expired";
-  }
-};
-
-// Таймер обратного отсчета
 const CountdownTimer = ({ createdAt, duration }) => {
+  const calculateRemainingTime = (createdAt, duration) => {
+    const createdAtTime = new Date(createdAt).getTime();
+    const durationMs = duration * 24 * 60 * 60 * 1000;
+    const currentTime = new Date().getTime();
+    const remainingTime = createdAtTime + durationMs - currentTime;
+
+    if (remainingTime > 0) {
+      const days = Math.floor(remainingTime / (24 * 60 * 60 * 1000));
+      const hours = Math.floor(
+        (remainingTime % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000)
+      );
+      const minutes = Math.floor(
+        (remainingTime % (60 * 60 * 1000)) / (60 * 1000)
+      );
+      const seconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+
+      return `${String(days).padStart(2, "0")}:${String(hours).padStart(
+        2,
+        "0"
+      )}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+        2,
+        "0"
+      )}`;
+    } else {
+      return "Expired";
+    }
+  };
+
   const [remainingTime, setRemainingTime] = useState(
     calculateRemainingTime(createdAt, duration)
   );
@@ -73,9 +83,10 @@ const AllAuctions = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [auctionData, setAuctionData] = useState([]);
-  const [displayedAuctions, setDisplayedAuctions] = useState([]); // Аукционы для текущего отображения
-  const [currentPage, setCurrentPage] = useState(1); // Текущая страница
-  const [lastLoadedPage, setLastLoadedPage] = useState(1); // Последняя загруженная страница
+  const [auctionBids, setAuctionBids] = useState({}); // Храним ставки для каждого аукциона
+  const [displayedAuctions, setDisplayedAuctions] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastLoadedPage, setLastLoadedPage] = useState(1);
   const auctionsPerPage = 30;
 
   useEffect(() => {
@@ -89,8 +100,19 @@ const AllAuctions = () => {
           displayError(errorMessage);
           return;
         }
-        setAuctionData(response.data || []);
-        setDisplayedAuctions(response.data.slice(0, auctionsPerPage));
+        const auctions = response.data || [];
+        setAuctionData(auctions);
+        setDisplayedAuctions(auctions.slice(0, auctionsPerPage));
+
+        // Загрузим ставки для каждого аукциона
+        const bidsData = {};
+        for (const auction of auctions) {
+          const bidsResponse = await getRateByAuction(auction.id);
+          console.log("Ставки для аукциона:", auction.id, bidsResponse.data);
+
+          bidsData[auction.id] = bidsResponse.data || [];
+        }
+        setAuctionBids(bidsData);
       } catch (error) {
         console.error("Не удалось загрузить данные. Попробуйте позже.");
       }
@@ -99,7 +121,6 @@ const AllAuctions = () => {
     loadData();
   }, []);
 
-  // Обработчик смены страницы
   const handlePageChange = (event, page) => {
     setCurrentPage(page);
     setDisplayedAuctions(
@@ -108,7 +129,6 @@ const AllAuctions = () => {
     setLastLoadedPage(page);
   };
 
-  // Обработчик кнопки "Загрузить еще"
   const handleLoadMore = () => {
     const nextPage = lastLoadedPage + 1;
     const nextAuctions = auctionData.slice(0, nextPage * auctionsPerPage);
@@ -118,20 +138,16 @@ const AllAuctions = () => {
 
   const totalPages = Math.ceil(auctionData.length / auctionsPerPage);
 
-  const baseURL = "http://localhost:3000"; // URL сервера
+  const baseURL = "http://localhost:3000";
 
   return (
     <Box sx={{ padding: "16px" }}>
       {displayedAuctions.length > 0 ? (
         <>
-          <Grid
-            container
-            spacing={2}
-            justifyContent="flex-start"
-            sx={{ padding: "16px" }}
-          >
+          <Grid container spacing={2} justifyContent="flex-start" sx={{ padding: "16px" }}>
             {displayedAuctions.map((auction) => {
               const fullImageUrl = `${baseURL}${auction.photo}`;
+              const bids = auctionBids[auction.id] || []; // Получаем ставки
               return (
                 <Grid
                   key={auction.id}
@@ -155,7 +171,6 @@ const AllAuctions = () => {
                       height: "260px",
                     }}
                   >
-                    {/* Таймер обратного отсчета */}
                     <Box
                       sx={{
                         position: "absolute",
@@ -167,13 +182,9 @@ const AllAuctions = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      <CountdownTimer
-                        createdAt={auction.createdAt}
-                        duration={auction.duration}
-                      />
+                      <CountdownTimer createdAt={auction.createdAt} duration={auction.duration} />
                     </Box>
 
-                    {/* Изображение аукциона */}
                     <img
                       src={fullImageUrl}
                       alt="Auction"
@@ -185,7 +196,6 @@ const AllAuctions = () => {
                       }}
                     />
 
-                    {/* Данные об авторе и цене */}
                     <Box
                       sx={{
                         display: "flex",
@@ -199,7 +209,8 @@ const AllAuctions = () => {
                       </Typography>
                       <CurrentPrice
                         startingPrice={auction.starting_price}
-                        bids={auction.bids || []}
+                        bids={bids}
+                        rate_step={auction.rate_step}
                       />
                     </Box>
                   </Paper>
@@ -208,7 +219,6 @@ const AllAuctions = () => {
             })}
           </Grid>
 
-          {/* Панель постраничного переключения */}
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
             <Pagination
               count={totalPages}
@@ -218,7 +228,6 @@ const AllAuctions = () => {
             />
           </Box>
 
-          {/* Кнопка "Загрузить еще" */}
           {lastLoadedPage < totalPages && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <Button variant="contained" onClick={handleLoadMore}>
