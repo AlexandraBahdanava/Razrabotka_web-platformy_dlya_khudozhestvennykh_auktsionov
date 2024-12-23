@@ -18,7 +18,7 @@ const ArtistHeader = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <Grid width={"100%"} paddingLeft={"0"}>
+    <Grid width={"100%"} paddingLeft={"0"} margin={"0"}>
       <Grid
         container
         width={"100%"}

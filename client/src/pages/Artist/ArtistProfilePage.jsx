@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTheme } from "@emotion/react";
 import {
   Avatar,
@@ -9,6 +9,7 @@ import {
   Typography,
   Alert,
   Snackbar,
+  Divider,
   Button,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
@@ -32,12 +33,12 @@ const ArtistProfilePage = () => {
 
   useEffect(() => {
     const handleRoleChange = () => {
-        setRole(localStorage.getItem("role"));
+      setRole(localStorage.getItem("role"));
     };
 
     window.addEventListener("storage", handleRoleChange);
     return () => window.removeEventListener("storage", handleRoleChange);
-}, []);
+  }, []);
 
   const [readonly, setReadonly] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -137,14 +138,60 @@ const ArtistProfilePage = () => {
 
   const renderHeader = () => {
     if (!role) {
-        return <PublicHeader />;
+      return <PublicHeader />;
     } else if (role === "artist") {
-        return <ArtistHeader />;
+      return <ArtistHeader />;
     } else if (role === "collector") {
-        return <CollectorHeader />;
+      return <CollectorHeader />;
     }
     return <PublicHeader />;
-};
+  };
+
+  const [activeSection, setActiveSection] = useState("about"); // Активный пункт меню
+  const [clicked, setClicked] = useState(false); // Статус, был ли клик
+  const menuRef = useRef(null);
+
+  const sections = [
+    { id: "about", label: "Об авторе" },
+    { id: "portfolio", label: "Портфолио" },
+    // { id: "auctions", label: "Аукционы" },
+    { id: "reviews", label: "Отзывы" },
+  ];
+
+  // Обработчик прокрутки
+  const handleScroll = () => {
+    if (clicked) return; // Если кнопка была нажата, не обновляем активную секцию при прокрутке
+
+    const scrollPosition = window.scrollY;
+    const sectionOffsets = sections.map(({ id }) => {
+      const element = document.getElementById(id);
+      return element ? element.offsetTop : 0;
+    });
+
+    const closestSectionIndex = sectionOffsets
+      .reverse()
+      .findIndex((offset) => scrollPosition >= offset);
+
+    setActiveSection(
+      closestSectionIndex === -1
+        ? sections[0].id
+        : sections.reverse()[closestSectionIndex].id
+    );
+  };
+
+  // Устанавливаем состояние клика на кнопку
+  const handleClick = (id) => {
+    setActiveSection(id);
+    setClicked(true); // Устанавливаем флаг клика
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [sections, clicked]); // Добавляем зависимость от clicked
+
   return (
     <Grid
       container
@@ -156,21 +203,13 @@ const ArtistProfilePage = () => {
     >
       {renderHeader()}
       <Grid container item flexDirection={"column"} alignItems={"flex-start"}>
-        <Grid
-          item
-          mt={"40px"}
-          pb={"46px"}
-          width={"100%"}
-          sx={{
-            paddingLeft: { xs: "1px", md: "33px", lg: "30px" },
-          }}
-        >
+        <Grid item mt={"40px"} pb={"46px"} width={"100%"}>
           <Grid
             container
             direction="row"
             alignItems={editMode ? "center" : "flex-start"}
             sx={{
-              paddingLeft: { xs: "1px", md: "46px", lg: "30px" },
+              paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
               gap: { xs: "5px", md: "50px" },
             }}
           >
@@ -205,49 +244,111 @@ const ArtistProfilePage = () => {
             </Grid>
             {localStorage.getItem("role") === "artist" ? (
               <IconButton
-                style={{ padding: 0, color: "#000000" }}
+                style={{
+                  padding: "10px 20px", // Убираем лишние отступы внутри кнопки
+                  color: "#000000",
+                  border: "1px solid #b3b9c4", // Граница
+                  borderRadius: "31px", // Закругление
+                  marginLeft: "20px", // Внешний отступ слева
+                  marginTop: "30px", // Внешний отступ сверху
+                }}
                 onClick={() => setEditMode(true)}
+                sx={{
+                  display: "flex", // Для выравнивания контента кнопки
+                  alignItems: "center",
+                  gap: "10px", // Расстояние между иконкой и текстом
+                  "&:hover": {
+                    backgroundColor: "rgba(179, 185, 196, 0.2)", // Полупрозрачный серый фон при наведении
+                    borderColor: "#091E42", // Изменение цвета границы при наведении
+                  },
+                }}
               >
-                <Typography variant="h1" textAlign={"top"}>
-                  <Grid
-                    container
-                    height={"100%"}
-                    alignItems={"center"}
-                    border={"1px solid #b3b9c4"}
-                    marginLeft={"20px"}
-                    marginTop={"30px"}
-                    borderRadius={"31px"}
-                    paddingLeft={"10px"}
-                    paddingRight={"10px"}
-                    paddingTop={"10px"}
-                    paddingBottom={"10px"}
-                  >
-                    <Icon
-                      icon="uil:setting"
-                      color="#b3b9c4"
-                      width="24"
-                      height="24"
-                    />
-                    Настройки
-                  </Grid>
+                <Icon
+                  icon="uil:setting"
+                  color="#b3b9c4"
+                  width="24"
+                  height="24"
+                />
+                <Typography variant="h6" color="#091E42">
+                  Настройки
                 </Typography>
               </IconButton>
             ) : (
               <></>
             )}
           </Grid>
+
+          <div
+            style={{
+              position: "sticky",
+              top: 0,
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            {/* Фиксированное меню */}
+            <nav
+              ref={menuRef}
+              style={{
+                position: "sticky",
+                top: 0,
+                width: "100%",
+                backgroundColor: "white",
+              }}
+            >
+              <ul
+                style={{
+                  display: "flex",
+                  justifyContent: "center", // Центрируем элементы по горизонтали
+                  listStyle: "none",
+                  margin: 0,
+                  padding: "10px 0",
+                }}
+              >
+                {sections.map(({ id, label }) => (
+                  <li key={id} style={{ margin: "0 15px" }}>
+                    {" "}
+                    {/* Добавим отступы между кнопками */}
+                    <a
+                      href={`#${id}`}
+                      style={{
+                        textDecoration: "none",
+                        color: activeSection === id ? "#091E42" : "#b3b9c4",
+                        fontWeight: activeSection === id ? "bold" : "normal",
+                        padding: "5px 10px",
+                        borderRadius: "5px",
+                        backgroundColor:
+                          activeSection === id
+                            ? "rgba(9, 30, 66, 0.1)"
+                            : "transparent",
+                      }}
+                    >
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            <Divider
+              sx={{
+                width: "100%",
+                backgroundColor: "#b3b9c4",
+              }}
+            />
+          </div>
           {!editMode ? (
             <>
-              {artistData.about_artist && (
+              {artistData.bio && (
                 <Grid
                   container
                   item
+                  id={"about"}
                   flexDirection={"column"}
                   justifyContent="center"
                   alignItems="center"
                   sx={{
-                    maxWidth: "100%",
-                    paddingLeft: { xs: "1px", md: "46px", lg: "0px" },
+                    paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
                     marginTop: { xs: "10px", md: "50px" },
                   }}
                 >
@@ -265,7 +366,7 @@ const ArtistProfilePage = () => {
                       multiline // Позволяет вводить многострочный текст
                       marginRight={"30px"}
                     >
-                      {artistData.about_artist}
+                      {artistData.bio}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -277,12 +378,13 @@ const ArtistProfilePage = () => {
                 alignItems="center"
                 sx={{
                   maxWidth: "100%",
+                  paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
                 }}
               >
                 <Typography
                   variant="h2"
                   className="section-heading"
-                  margin={"30px 0"}
+                  margin={"30px"}
                 >
                   Портфолио
                 </Typography>
@@ -297,6 +399,9 @@ const ArtistProfilePage = () => {
                     width={"100%"}
                     justifyContent="center"
                     alignItems="center"
+                    sx={{
+                      paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                    }}
                   >
                     {localStorage.getItem("role") === "artist" ? (
                       <Button
@@ -322,7 +427,11 @@ const ArtistProfilePage = () => {
                     spacing={2}
                     justifyContent="center"
                     alignItems="center"
-                    sx={{ maxWidth: "100%", marginY: theme.spacing(2) }}
+                    sx={{
+                      maxWidth: "100%",
+                      marginY: theme.spacing(2),
+                      paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                    }}
                   >
                     {artistData.Portfolios.map((item) => (
                       <Grid key={item.id} item xs={6} md={4} lg={3}>
@@ -356,10 +465,15 @@ const ArtistProfilePage = () => {
                   <Grid
                     container
                     item
+                    id={"reviews"}
                     spacing={2}
                     justifyContent="center"
                     alignItems="center"
-                    sx={{ maxWidth: "100%", marginY: theme.spacing(2) }}
+                    sx={{
+                      maxWidth: "100%",
+                      marginY: theme.spacing(2),
+                      paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                    }}
                   >
                     {artistData.Reviews.map((item) => (
                       <Grid
@@ -417,8 +531,14 @@ const ArtistProfilePage = () => {
                     ))}
                   </Grid>
                 ) : (
-                  <div>
-                    <Typography>Здесь пока ничего нет</Typography>
+                  <div id={"reviews"}>
+                    <Typography
+                      sx={{
+                        paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                      }}
+                    >
+                      Здесь пока ничего нет
+                    </Typography>
                   </div>
                 )}
               </div>{" "}

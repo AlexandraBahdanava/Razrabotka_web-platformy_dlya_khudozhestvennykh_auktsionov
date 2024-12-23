@@ -34,7 +34,6 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
 
   // Логирование каждого изменения в input полях
   const handleChangeWithLogging = (e) => {
-    console.log(`Changed ${e.target.name}:`, e.target.value);
     formik.handleChange(e);
   };
 

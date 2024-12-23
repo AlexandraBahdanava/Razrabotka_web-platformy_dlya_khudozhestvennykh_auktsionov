@@ -332,9 +332,14 @@ const CreateAuctionForm = ({ submitHandler }) => {
           container
           item
           justifyContent={"center"}
-          style={{ marginTop: "20px", width:"100%" }}
+          style={{ marginTop: "20px", width: "100%" }}
         >
-          <Button type="submit" variant="contained" color="primary" style={{ width:"100%" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ width: "100%" }}
+          >
             Сохранить аукцион
           </Button>
         </Grid>
