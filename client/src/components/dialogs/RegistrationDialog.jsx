@@ -158,10 +158,45 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           </Button>
         </Typography>
 
-        <Tabs value={role} onChange={handleRoleChange} centered>
-          <Tab value="artist" label="Художник" />
-          <Tab value="collector" label="Коллекционер" />
+        <Tabs
+          value={role}
+          onChange={handleRoleChange}
+          centered
+          sx={{
+            "& .MuiTabs-indicator": {
+              display: "none", // Скрываем стандартный индикатор
+            },
+            "& .MuiTab-root": {
+              color: "#091E42", // Цвет текста вкладок
+              textTransform: "none", // Отключаем верхний регистр
+            },
+            "& .Mui-selected": {
+              color: "#091E42", // Цвет текста активной вкладки
+              background:
+                "linear-gradient(to top, rgba(9, 30, 66, 0.2), rgba(246, 248, 250, 0.2))", // Градиент для активной вкладки
+              borderBottom: "4px solid #091E42", // Синяя линия внизу
+            },
+            "&.Mui-focused": {
+              color: "#42526D", // Цвет текста активной метки
+            },
+          }}
+        >
+          <Tab
+            value="artist"
+            label="Художник"
+            sx={{
+              width: "50%",
+            }}
+          />
+          <Tab
+            value="collector"
+            label="Коллекционер"
+            sx={{
+              width: "50%",
+            }}
+          />
         </Tabs>
+
         <Divider
           sx={{
             width: "100%",
@@ -178,6 +213,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           name="surname"
           error={!!validationErrors.surname}
           helperText={validationErrors.surname || " "}
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip
@@ -235,7 +278,6 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               surname: value,
             }));
           }}
-          sx={{ marginBottom: "16px" }}
         />
 
         <TextField
@@ -245,6 +287,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           name="name"
           error={!!validationErrors.name}
           helperText={validationErrors.name || " "}
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip
@@ -302,7 +352,6 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               name: value,
             }));
           }}
-          sx={{ marginBottom: "16px" }}
         />
         {role === "collector" ? (
           <></>
@@ -315,6 +364,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               name="country"
               error={!!validationErrors.country}
               helperText={validationErrors.country || " "}
+              InputLabelProps={{
+                sx: {
+                  color: "#42526D", // Цвет текста метки
+                  "&.Mui-focused": {
+                    color: "#42526D", // Цвет текста активной метки
+                  },
+                },
+              }}
               InputProps={{
                 endAdornment: (
                   <Tooltip
@@ -373,7 +430,6 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
                   country: value,
                 }));
               }}
-              sx={{ marginBottom: "16px" }}
             />
 
             <TextField
@@ -383,6 +439,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               name="city"
               error={!!validationErrors.city}
               helperText={validationErrors.city || " "}
+              InputLabelProps={{
+                sx: {
+                  color: "#42526D", // Цвет текста метки
+                  "&.Mui-focused": {
+                    color: "#42526D", // Цвет текста активной метки
+                  },
+                },
+              }}
               InputProps={{
                 endAdornment: (
                   <Tooltip
@@ -440,7 +504,6 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
                   city: value,
                 }));
               }}
-              sx={{ marginBottom: "16px" }}
             />
 
             <TextField
@@ -450,6 +513,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               name="bio"
               multiline
               rows={3}
+              InputLabelProps={{
+                sx: {
+                  color: "#42526D", // Цвет текста метки
+                  "&.Mui-focused": {
+                    color: "#42526D", // Цвет текста активной метки
+                  },
+                },
+              }}
               InputProps={{
                 endAdornment: (
                   <Tooltip
@@ -482,8 +553,11 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               }}
               value={formData.bio}
               onChange={handleInputChange}
-              sx={{ marginBottom: "16px" }}
+              sx ={{
+                marginBottom:"16px"
+              }}
             />
+           
           </>
         )}
 
@@ -495,6 +569,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           name="login"
           error={!!validationErrors.login}
           helperText={validationErrors.login || " "}
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip
@@ -557,7 +639,6 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               login: value,
             }));
           }}
-          sx={{ marginBottom: "16px" }}
         />
 
         <TextField
@@ -568,6 +649,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           type="email"
           error={!!validationErrors.email}
           helperText={validationErrors.email || " "}
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip
@@ -627,7 +716,6 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
               email: value,
             }));
           }}
-          sx={{ marginBottom: "16px" }}
         />
 
         <TextField
@@ -638,6 +726,14 @@ const RegistrationDialog = ({ isOpen, onClose, onLoginClick }) => {
           type="password"
           error={!!validationErrors.password}
           helperText={validationErrors.password || " "}
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip

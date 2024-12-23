@@ -157,10 +157,10 @@ const AllAuctions = () => {
                   md={4}
                   lg={3}
                   xl={2.4}
-                  onClick={() => navigate(`/auction/one/${auction.id}`)}
-                  sx={{ cursor: "pointer" }}
+            
                 >
                   <Paper
+                   onClick={() => navigate(`/auction/one/${auction.id}`)}
                     sx={{
                       borderRadius: "16px",
                       display: "flex",
@@ -169,6 +169,7 @@ const AllAuctions = () => {
                       p: 0,
                       width: "260px",
                       height: "260px",
+                      cursor: "pointer" 
                     }}
                   >
                     <Box

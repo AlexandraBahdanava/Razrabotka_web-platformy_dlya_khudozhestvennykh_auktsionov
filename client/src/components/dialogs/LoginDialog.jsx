@@ -95,6 +95,14 @@ const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
           variant="outlined"
           label="Введите email"
           type="email"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip
@@ -129,12 +137,21 @@ const LoginDialog = ({ isOpen, onClose, onRegisterClick }) => {
           onChange={(e) =>
             setLoginData({ ...loginData, email: e.target.value })
           }
+          sx={{ marginBottom: "16px" }}
         />
         <TextField
           fullWidth
           variant="outlined"
           label="Введите пароль"
           type="password"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
           InputProps={{
             endAdornment: (
               <Tooltip
