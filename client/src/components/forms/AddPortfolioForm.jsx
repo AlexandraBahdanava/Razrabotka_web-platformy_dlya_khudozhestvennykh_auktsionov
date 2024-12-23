@@ -31,7 +31,7 @@ const AddPortfolioForm = ({ submitHandler,cancelHandler }) => {
                     required
                 />
                 <Button type="submit" variant="contained" fullWidth onClick={() => cancelHandler()}>
-                <Link to={"/artiste"} style={{ textDecoration: "none", color: "#000000" }}>
+                <Link to={"/artist"} style={{ textDecoration: "none", color: "#000000" }}>
                         Добавить в Портфолио
                         </Link>
                   

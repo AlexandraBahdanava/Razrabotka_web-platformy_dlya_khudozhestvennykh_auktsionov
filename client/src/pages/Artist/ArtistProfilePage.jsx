@@ -269,7 +269,7 @@ const ArtistProfilePage = () => {
                   width="24"
                   height="24"
                 />
-                <Typography variant="h6" color="#091E42">
+                <Typography fontSize={"14px"} color="#091E42">
                   Настройки
                 </Typography>
               </IconButton>
@@ -284,14 +284,13 @@ const ArtistProfilePage = () => {
               top: 0,
               margin: 0,
               padding: 0,
+              zIndex: 1000, // Меню отображается поверх всех остальных элементов
             }}
           >
             {/* Фиксированное меню */}
             <nav
               ref={menuRef}
               style={{
-                position: "sticky",
-                top: 0,
                 width: "100%",
                 backgroundColor: "white",
               }}
@@ -452,6 +451,8 @@ const ArtistProfilePage = () => {
                     <Typography>Здесь пока ничего нет</Typography>
                   </div>
                 )}
+              </div>{" "}
+              <div id="reviews">
                 <Typography
                   variant="h2"
                   className="section-heading"
@@ -465,7 +466,6 @@ const ArtistProfilePage = () => {
                   <Grid
                     container
                     item
-                    id={"reviews"}
                     spacing={2}
                     justifyContent="center"
                     alignItems="center"
@@ -531,7 +531,7 @@ const ArtistProfilePage = () => {
                     ))}
                   </Grid>
                 ) : (
-                  <div id={"reviews"}>
+                  <div>
                     <Typography
                       sx={{
                         paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
@@ -541,7 +541,7 @@ const ArtistProfilePage = () => {
                     </Typography>
                   </div>
                 )}
-              </div>{" "}
+              </div>
             </>
           ) : (
             <ArtistEditForm
