@@ -4,7 +4,8 @@ const sequelize = require("./database/index");
 const router = require("./routers/index");
 const cors = require("cors");
 const path = require("path");
-
+const initializeApp = require("./controllers/initializeApp");
+const { Auction, AuctionArchive, Rate } = require("./database/models"); // Импорт моделей
 const PORT = process.env.PORT || 3000; // Используем один порт
 
 const app = express();
@@ -22,6 +23,10 @@ const start = async () => {
   try {
     await sequelize.authenticate(); // Аутентификация с базой данных
     await sequelize.sync({ alter: true }); // Синхронизация базы данных
+
+    // Инициализация логики обработки аукционов
+    await initializeApp(Auction, AuctionArchive, Rate);
+
     app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
   } catch (e) {
     console.log("Error while starting the server:", e);

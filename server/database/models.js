@@ -63,7 +63,6 @@ const AuctionArchive = sequelize.define(
     photo: {
       type: DataTypes.TEXT,
       allowNull: false,
-      defaultValue: "https:\/\/upload.wikimedia.org\/wikipedia\/commons\/2\/2f\/No-photo-m.png"
     },
   },
   );
