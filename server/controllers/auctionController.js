@@ -176,7 +176,7 @@ async create(req, res) {
     // Если файл с изображением был загружен
     if (req.file) {
       // Сформируем путь к изображению (папка avatars, имя файла из req.file.filename)
-      const imagePath = path.join('avatars', req.file.filename);
+      const imagePath = path.join('photo/artist', req.file.filename);
       auction.image = imagePath; // Добавляем путь к изображению в объект аукциона
     }
 
@@ -193,38 +193,6 @@ async create(req, res) {
     return res.sendStatus(500);
   }
 }
-
-
-  // Перемещение аукционов в таблицу архива после окончания
-  async moveAuctionsToArchive() {
-    try {
-      const now = moment();
-
-      const endedAuction = await Auction.findAll({
-        where: {
-          closing_date: {
-            [Sequelize.Op.lt]: now,
-          },
-        },
-      });
-
-      if (endedAuction.length > 0) {
-        await AuctionArchive.bulkCreate(
-          endedAuction.map((auction) => ({ ...auction.toJSON(), id: null }))
-        );
-        await Auction.destroy({
-          where: {
-            id: {
-              [Sequelize.Op.in]: endedAuction.map((auction) => auction.id),
-            },
-          },
-        });
-      }
-    } catch (error) {
-      console.error("Error moving auctions to archive:", error);
-      throw error;
-    }
-  }
 
   // Получение всех аукционов
   async getAll(req, res) {

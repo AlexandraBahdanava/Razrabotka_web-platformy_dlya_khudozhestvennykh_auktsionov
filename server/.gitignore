@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/avatars
+/photo
 /.pnp
 .pnp.js
 

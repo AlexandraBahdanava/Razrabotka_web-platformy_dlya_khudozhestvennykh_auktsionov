@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(router); // Основной роутер
 
 // Обслуживание статических файлов (аватары)
-app.use("/avatars", express.static(path.join(__dirname, "avatars")));
+app.use("/photo", express.static(path.join(__dirname, "photo")));
 
 // Функция запуска сервера
 const start = async () => {

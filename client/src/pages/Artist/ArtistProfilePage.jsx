@@ -277,8 +277,10 @@ const ArtistProfilePage = () => {
               <></>
             )}
           </Grid>
-
-          <div
+        
+          {!editMode ? (
+            <>
+             <div
             style={{
               position: "sticky",
               top: 0,
@@ -336,8 +338,7 @@ const ArtistProfilePage = () => {
               }}
             />
           </div>
-          {!editMode ? (
-            <>
+          
               {artistData.bio && (
                 <Grid
                   container
