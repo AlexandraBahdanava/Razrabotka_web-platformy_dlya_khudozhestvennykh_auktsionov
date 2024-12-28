@@ -26,16 +26,33 @@ const ImageUploaderButton = ({ maxImages, onSaveImage }) => {
       return;
     }
 
-    const fileData = {
-      name: file.name,
-      size: (file.size / 1024).toFixed(2) + " KB",
-      type: file.type,
-      resolution: "Неизвестно",
-      path: URL.createObjectURL(file), // Временный URL для предпросмотра
+    const imageURL = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      const resolution = `${img.width}x${img.height}`; // Ширина и высота изображения
+
+      const fileData = {
+        name: file.name,
+        size: (file.size / 1024).toFixed(2) + " KB",
+        type: file.type,
+        resolution,
+        path: imageURL, // Временный URL для предпросмотра
+      };
+
+      setImages((prevImages) => [...prevImages, fileData]);
+      setSelectedFile(file);
+
+      // Освобождаем память после получения информации
+      URL.revokeObjectURL(imageURL);
     };
 
-    setImages((prevImages) => [...prevImages, fileData]);
-    setSelectedFile(file);
+    img.onerror = () => {
+      alert("Не удалось загрузить изображение для определения разрешения.");
+      URL.revokeObjectURL(imageURL); // Очистка в случае ошибки
+    };
+
+    img.src = imageURL; // Устанавливаем источник изображения
   };
 
   // Функция для удаления изображения
