@@ -3,7 +3,6 @@ import host from ".";
 const getRateByAuction = async (id) => {
     try {
         const response = await host.get(`/auth/rates/${id}`); 
-
         return response;
     } catch (error) {
         handleRequestError(error);

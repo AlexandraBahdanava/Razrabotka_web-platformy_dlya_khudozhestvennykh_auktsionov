@@ -24,7 +24,7 @@ const CurrentPrice = ({ startingPrice, bids, rate_step }) => {
   );
 
   // Добавляем начальную цену только в конце, если она еще не была учтена
-  const finalPrice = startingPrice + totalPrice- rate_step;
+  const finalPrice = startingPrice + totalPrice - rate_step;
 
   return (
     <Typography sx={{ fontSize: "16px" }}>
@@ -32,8 +32,6 @@ const CurrentPrice = ({ startingPrice, bids, rate_step }) => {
     </Typography>
   );
 };
-
-
 
 const CountdownTimer = ({ createdAt, duration }) => {
   const calculateRemainingTime = (createdAt, duration) => {
@@ -108,8 +106,6 @@ const AllAuctions = () => {
         const bidsData = {};
         for (const auction of auctions) {
           const bidsResponse = await getRateByAuction(auction.id);
-          console.log("Ставки для аукциона:", auction.id, bidsResponse.data);
-
           bidsData[auction.id] = bidsResponse.data || [];
         }
         setAuctionBids(bidsData);
@@ -144,7 +140,12 @@ const AllAuctions = () => {
     <Box sx={{ padding: "16px" }}>
       {displayedAuctions.length > 0 ? (
         <>
-          <Grid container spacing={2} justifyContent="flex-start" sx={{ padding: "16px" }}>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="flex-start"
+            sx={{ padding: "16px" }}
+          >
             {displayedAuctions.map((auction) => {
               const fullImageUrl = `${baseURL}${auction.photo}`;
               const bids = auctionBids[auction.id] || []; // Получаем ставки
@@ -157,10 +158,9 @@ const AllAuctions = () => {
                   md={4}
                   lg={3}
                   xl={2.4}
-            
                 >
                   <Paper
-                   onClick={() => navigate(`/auction/one/${auction.id}`)}
+                    onClick={() => navigate(`/auction/one/${auction.id}`)}
                     sx={{
                       borderRadius: "16px",
                       display: "flex",
@@ -169,7 +169,7 @@ const AllAuctions = () => {
                       p: 0,
                       width: "260px",
                       height: "260px",
-                      cursor: "pointer" 
+                      cursor: "pointer",
                     }}
                   >
                     <Box
@@ -183,7 +183,10 @@ const AllAuctions = () => {
                         fontWeight: "bold",
                       }}
                     >
-                      <CountdownTimer createdAt={auction.createdAt} duration={auction.duration} />
+                      <CountdownTimer
+                        createdAt={auction.createdAt}
+                        duration={auction.duration}
+                      />
                     </Box>
 
                     <img

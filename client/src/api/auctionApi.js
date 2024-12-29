@@ -12,7 +12,6 @@ const createAuction = async (auctionData) => {
 const getAuctionsByArtist = async (id) => {
   try {
     const response = await host.get(`/api/auctions/${id}`);
-    console.log("Response from getAuctionsByArtist:", response.data);
     return response;
   } catch (error) {
     handleRequestError(error);
@@ -22,8 +21,6 @@ const getAuctionsByArtist = async (id) => {
 const getAuction = async (id) => {
   try {
     const response = await host.get(`/auth/auction/one/${id}`);
-    console.log("Response from getAuction:", response.data);
-
     return response;
   } catch (error) {
     handleRequestError(error);
@@ -33,8 +30,6 @@ const getAuction = async (id) => {
 const getAuctionsByCollector = async (id) => {
   try {
     const response = await host.get(`/api/auctions/active/${id}`);
-    console.log("Response from getAuctionsByArtist:", response.data);
-
     return response;
   } catch (error) {
     handleRequestError(error);
@@ -42,21 +37,18 @@ const getAuctionsByCollector = async (id) => {
 };
 
 const getAuctions = async () => {
-    try {
-      const response = await host.get("/auth/auctions/all");
-      return response;
-    } catch (error) {
-      console.error("Ошибка при запросе:", error);
-      throw error;
-    }
-  };
-  
+  try {
+    const response = await host.get("/auth/auctions/all");
+    return response;
+  } catch (error) {
+    console.error("Ошибка при запросе:", error);
+    throw error;
+  }
+};
 
 const searchByMaterial = async (material) => {
   try {
     const response = await host.get(`/api/auctions/material`, material);
-    console.log("Response from getAuctionsByArtist:", response.data);
-
     return response;
   } catch (error) {
     handleRequestError(error);

@@ -3,7 +3,6 @@ import host from ".";
 const getAuctionArchiveByArtistId = async (id) => {
   try {
     const response = await host.get(`/api/auctions/archive/${id}`);
-    console.log("Response from getAuctionArchiveByArtistId:", response.data);
     return response;
   } catch (error) {
     handleRequestError(error);

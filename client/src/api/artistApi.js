@@ -31,23 +31,27 @@ const handleRequestError = (error) => {
 };
 
 const createImage = async (id, image) => {
-    try {
-      const formData = new FormData();
-      formData.append("image", image); // Убедитесь, что поле "image" соответствует серверному коду
-  
-      const response = await host.post(`/api/artist/create/${id}/photo`, formData, {
+  try {
+    const formData = new FormData();
+    formData.append("image", image);
+    const response = await host.post(
+      `/api/artist/create/${id}/photo`,
+      formData,
+      {
         headers: {
           // 'Content-Type' не требуется при использовании FormData, он будет установлен автоматически
         },
-      });
-  
-      return response.data; // Возвращаем данные с сервера
-    } catch (error) {
-      console.error("Ошибка загрузки изображения:", error.response?.data || error.message);
-      throw error;
-    }
-  };
-  
-  
+      }
+    );
+
+    return response.data; // Возвращаем данные с сервера
+  } catch (error) {
+    console.error(
+      "Ошибка загрузки изображения:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
 
 export { getArtist, updateArtist, createImage };

@@ -88,7 +88,7 @@ const ActiveAuctionsForm = ({ auction }) => {
               height: "220px",
             }}
           >
-            <AuctionRates auctionId={auction} />
+            <AuctionRates auctionId={auction.id} />
           </Box>
           <Typography variant="h1" textAlign={"center"}>
             {" "}

@@ -24,7 +24,6 @@ class rateController {
     }
   }
   
-
   async getRatesByAuction(req, res) {
     const id = req.params.id;
 
