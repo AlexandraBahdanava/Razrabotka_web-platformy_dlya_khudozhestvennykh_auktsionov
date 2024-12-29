@@ -11,10 +11,6 @@ import {
   Snackbar,
   Divider,
   Button,
-  Tab,
-  Tabs,
-  Box,
-  Slider,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -46,7 +42,6 @@ const ArtistProfilePage = () => {
     return () => window.removeEventListener("storage", handleRoleChange);
   }, []);
 
-  const [readonly, setReadonly] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const [artistData, setArtistData] = useState({});
@@ -77,7 +72,6 @@ const ArtistProfilePage = () => {
       }
 
       setArtistData(response.data);
-      setReadonly(id !== undefined);
     };
 
     loadData();
@@ -183,12 +177,6 @@ const ArtistProfilePage = () => {
         ? sections[0].id
         : sections.reverse()[closestSectionIndex].id
     );
-  };
-
-  // Устанавливаем состояние клика на кнопку
-  const handleClick = (id) => {
-    setActiveSection(id);
-    setClicked(true); // Устанавливаем флаг клика
   };
 
   useEffect(() => {
@@ -440,6 +428,7 @@ const ArtistProfilePage = () => {
                       maxWidth: "100%",
                       marginY: theme.spacing(2),
                       paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                      marginBottom: "50px",
                     }}
                   >
                     {artistData.Portfolios.map((item) => (
@@ -469,25 +458,50 @@ const ArtistProfilePage = () => {
                   justifyContent="center"
                   alignItems="center"
                   sx={{
-                    marginBottom: "20px",
-                    gap: "20px",
+                    marginBottom: "50px",
+                    display: "flex",
+                    justifyContent: "center", // Центрируем элементы по горизонтали
+                    listStyle: "none",
+                    padding: 0,
+                    borderTop: "2px solid #d1d1d1", // Серые границы
+                    borderBottom: "2px solid #d1d1d1", // Серые границы
                   }}
                 >
                   <Button
-                    variant={
-                      selectedOption === "active" ? "contained" : "outlined"
-                    }
+                    variant={"h6"}
                     onClick={() => setSelectedOption("active")}
-                    sx={{ flex: 1 }}
+                    sx={{
+                      flex: 1,
+                      textDecoration: "none",
+                      color:
+                        selectedOption === "active" ? "#091E42" : "#b3b9c4", // Синий для активной, серый для неактивной
+                      fontWeight:
+                        selectedOption === "active" ? "bold" : "normal", // Жирный текст для активной
+                      backgroundColor:
+                        selectedOption === "active"
+                          ? "rgba(9, 30, 66, 0.1)"
+                          : "transparent", // Серый фон для активной, белый для неактивной
+                      borderRadius: 0, // Убираем скругления
+                    }}
                   >
                     Активные
                   </Button>
                   <Button
-                    variant={
-                      selectedOption === "archive" ? "contained" : "outlined"
-                    }
+                    variant={"h6"}
                     onClick={() => setSelectedOption("archive")}
-                    sx={{ flex: 1 }}
+                    sx={{
+                      flex: 1,
+                      textDecoration: "none",
+                      color:
+                        selectedOption === "archive" ? "#091E42" : "#b3b9c4", // Синий для активной, серый для неактивной
+                      fontWeight:
+                        selectedOption === "archive" ? "bold" : "normal", // Жирный текст для активной
+                      backgroundColor:
+                        selectedOption === "archive"
+                          ? "rgba(9, 30, 66, 0.1)"
+                          : "transparent", // Серый фон для активной, белый для неактивной
+                      borderRadius: 0, // Убираем скругления
+                    }}
                   >
                     Архив
                   </Button>

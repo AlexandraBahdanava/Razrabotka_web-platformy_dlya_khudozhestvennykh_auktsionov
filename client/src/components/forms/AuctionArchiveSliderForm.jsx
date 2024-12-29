@@ -160,7 +160,7 @@ const AuctionArchiveSliderForm = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Typography variant="h6" sx={{ textAlign: "center" }}>
+                      <Typography variant="body" sx={{ textAlign: "center" }}>
                         ${auction.selling_price}
                       </Typography>
                     </Box>
