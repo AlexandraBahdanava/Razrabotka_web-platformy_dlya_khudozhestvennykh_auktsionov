@@ -11,6 +11,10 @@ import {
   Snackbar,
   Divider,
   Button,
+  Tab,
+  Tabs,
+  Box,
+  Slider,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
@@ -24,6 +28,8 @@ import { addPortfolio } from "../../api/portfolioApi";
 import ArtistEditForm from "./../../components/forms/ArtistEditForm";
 import Footer from "../../components/Footer";
 import AddPortfolioForm from "../../components/forms/AddPortfolioForm";
+import AuctionSliderForm from "../../components/forms/AuctionSliderForm";
+import AuctionArchiveSliderForm from "../../components/forms/AuctionArchiveSliderForm";
 
 const ArtistProfilePage = () => {
   const theme = useTheme();
@@ -154,7 +160,7 @@ const ArtistProfilePage = () => {
   const sections = [
     { id: "about", label: "Об авторе" },
     { id: "portfolio", label: "Портфолио" },
-    // { id: "auctions", label: "Аукционы" },
+    { id: "auctions", label: "Аукционы" },
     { id: "reviews", label: "Отзывы" },
   ];
 
@@ -191,6 +197,8 @@ const ArtistProfilePage = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [sections, clicked]); // Добавляем зависимость от clicked
+
+  const [selectedOption, setSelectedOption] = useState("active"); // Начальное значение "Активные"
 
   return (
     <Grid
@@ -277,68 +285,69 @@ const ArtistProfilePage = () => {
               <></>
             )}
           </Grid>
-        
+
           {!editMode ? (
             <>
-             <div
-            style={{
-              position: "sticky",
-              top: 0,
-              margin: 0,
-              padding: 0,
-              zIndex: 1000, // Меню отображается поверх всех остальных элементов
-            }}
-          >
-            {/* Фиксированное меню */}
-            <nav
-              ref={menuRef}
-              style={{
-                width: "100%",
-                backgroundColor: "white",
-              }}
-            >
-              <ul
+              <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center", // Центрируем элементы по горизонтали
-                  listStyle: "none",
+                  position: "sticky",
+                  top: 0,
                   margin: 0,
-                  padding: "10px 0",
+                  padding: 0,
+                  zIndex: 1000, // Меню отображается поверх всех остальных элементов
                 }}
               >
-                {sections.map(({ id, label }) => (
-                  <li key={id} style={{ margin: "0 15px" }}>
-                    {" "}
-                    {/* Добавим отступы между кнопками */}
-                    <a
-                      href={`#${id}`}
-                      style={{
-                        textDecoration: "none",
-                        color: activeSection === id ? "#091E42" : "#b3b9c4",
-                        fontWeight: activeSection === id ? "bold" : "normal",
-                        padding: "5px 10px",
-                        borderRadius: "5px",
-                        backgroundColor:
-                          activeSection === id
-                            ? "rgba(9, 30, 66, 0.1)"
-                            : "transparent",
-                      }}
-                    >
-                      {label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+                {/* Фиксированное меню */}
+                <nav
+                  ref={menuRef}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <ul
+                    style={{
+                      display: "flex",
+                      justifyContent: "center", // Центрируем элементы по горизонтали
+                      listStyle: "none",
+                      margin: 0,
+                      padding: "10px 0",
+                    }}
+                  >
+                    {sections.map(({ id, label }) => (
+                      <li key={id} style={{ margin: "0 15px" }}>
+                        {" "}
+                        {/* Добавим отступы между кнопками */}
+                        <a
+                          href={`#${id}`}
+                          style={{
+                            textDecoration: "none",
+                            color: activeSection === id ? "#091E42" : "#b3b9c4",
+                            fontWeight:
+                              activeSection === id ? "bold" : "normal",
+                            padding: "5px 10px",
+                            borderRadius: "5px",
+                            backgroundColor:
+                              activeSection === id
+                                ? "rgba(9, 30, 66, 0.1)"
+                                : "transparent",
+                          }}
+                        >
+                          {label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
 
-            <Divider
-              sx={{
-                width: "100%",
-                backgroundColor: "#b3b9c4",
-              }}
-            />
-          </div>
-          
+                <Divider
+                  sx={{
+                    width: "100%",
+                    backgroundColor: "#b3b9c4",
+                  }}
+                />
+              </div>
+
               {artistData.bio && (
                 <Grid
                   container
@@ -452,7 +461,46 @@ const ArtistProfilePage = () => {
                     <Typography>Здесь пока ничего нет</Typography>
                   </div>
                 )}
-              </div>{" "}
+              </div>
+
+              <div id="auctions">
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    marginBottom: "20px",
+                    gap: "20px",
+                  }}
+                >
+                  <Button
+                    variant={
+                      selectedOption === "active" ? "contained" : "outlined"
+                    }
+                    onClick={() => setSelectedOption("active")}
+                    sx={{ flex: 1 }}
+                  >
+                    Активные
+                  </Button>
+                  <Button
+                    variant={
+                      selectedOption === "archive" ? "contained" : "outlined"
+                    }
+                    onClick={() => setSelectedOption("archive")}
+                    sx={{ flex: 1 }}
+                  >
+                    Архив
+                  </Button>
+                </Grid>
+
+                {/* Условный рендеринг формы */}
+                {selectedOption === "active" ? (
+                  <AuctionSliderForm />
+                ) : (
+                  <AuctionArchiveSliderForm />
+                )}
+              </div>
+
               <div id="reviews">
                 <Typography
                   variant="h2"

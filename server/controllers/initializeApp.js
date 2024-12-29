@@ -2,7 +2,7 @@ const sequelize = require("../database/index");
 const fs = require("fs");
 const path = require("path");
 const { Sequelize, Op } = require("sequelize");
-const { Artist } = require("../database/models");
+const { Artist, AuctionArchive } = require("../database/models");
 
 // Функция для обработки аукционов
 const processAuctions = async (Auction, AuctionArchive, Rate) => {

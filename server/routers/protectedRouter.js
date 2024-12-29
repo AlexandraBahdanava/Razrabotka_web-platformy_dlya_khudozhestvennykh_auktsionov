@@ -6,6 +6,7 @@ const collectorController = require("../controllers/collectorController");
 const auctionController = require("../controllers/auctionController");
 const portfolioController = require("../controllers/portfolioController");
 const rateController = require("../controllers/rateController");
+const auctionArchiveController = require("../controllers/auctionArchiveController");
 
 const router = new Router();
 
@@ -22,8 +23,10 @@ router.get("/portfolio/:id", portfolioController.getPortfolioById);
 
 router.post("/auctions", auctionController.create);
 router.get("/auctions/:id", auctionController.getAuctionsByArtist);
-router.get("/auctions/material", auctionController.searchMaterial); // Исправлено
-router.get("/auctions/active/:id", auctionController.getAuctionByCollectorId); // Исправлено
+router.get("/auctions/material", auctionController.searchMaterial); 
+router.get("/auctions/active/:id", auctionController.getAuctionByCollectorId);
+
+router.get("/auctions/archive/:id", auctionArchiveController.getAuctionArchiveByArtistId);
 
 router.post("/rate/create", rateController.createRate);
 router.get("/rates/:id", rateController.getRatesByAuction); 

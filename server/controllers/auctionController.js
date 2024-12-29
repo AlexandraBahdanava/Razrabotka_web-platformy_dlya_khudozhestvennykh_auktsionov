@@ -7,7 +7,7 @@ const {
 } = require("../database/models");
 
 class AuctionController {
-  // Получение аукционов художника
+  // Получение аукционов коллекционера
   async getAuctionByCollectorId(req, res) {
     const id = req.collectorId;
     console.log(req.params);
