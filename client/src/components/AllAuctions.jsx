@@ -24,7 +24,7 @@ const CurrentPrice = ({ startingPrice, bids, rate_step }) => {
   );
 
   // Добавляем начальную цену только в конце, если она еще не была учтена
-  const finalPrice = startingPrice + totalPrice - rate_step;
+  const finalPrice = startingPrice + totalPrice;
 
   return (
     <Typography sx={{ fontSize: "16px" }}>

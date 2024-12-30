@@ -19,7 +19,7 @@ router.post(
   artistController.createImage
 );
 
-router.get("/portfolio/:id", portfolioController.getPortfolioById);
+router.delete("/portfolio/:id", portfolioController.deletePortfolio);
 
 router.post("/auctions", auctionController.create);
 router.get("/auctions/:id", auctionController.getAuctionsByArtist);

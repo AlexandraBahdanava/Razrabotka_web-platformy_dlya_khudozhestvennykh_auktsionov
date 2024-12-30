@@ -10,6 +10,7 @@ import {
   Alert,
   Snackbar,
   Divider,
+  Box,
   Button,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
@@ -20,10 +21,9 @@ import CollectorHeader from "../../components/headers/CollectorHeader";
 import { Icon } from "@iconify/react";
 import { useParams } from "react-router-dom";
 import { getArtist, updateArtist } from "../../api/artistApi";
-import { addPortfolio } from "../../api/portfolioApi";
 import ArtistEditForm from "./../../components/forms/ArtistEditForm";
 import Footer from "../../components/Footer";
-import AddPortfolioForm from "../../components/forms/AddPortfolioForm";
+import EditPortfolioForm from "../../components/forms/EditPortfolioForm";
 import AuctionSliderForm from "../../components/forms/AuctionSliderForm";
 import AuctionArchiveSliderForm from "../../components/forms/AuctionArchiveSliderForm";
 
@@ -77,28 +77,6 @@ const ArtistProfilePage = () => {
     loadData();
   }, [id]);
 
-  const createPortfolio = async (portfolioData) => {
-    const response = await addPortfolio(portfolioData);
-
-    if (!response) {
-      displayError("Сервис временно недоступен");
-      return;
-    }
-
-    if (response.status === 401) {
-      localStorage.removeItem("jwt");
-      localStorage.removeItem("role");
-      window.location.reload();
-    }
-
-    if (response.status >= 300) {
-      displayError("Ошибка при создании аукциона. Код: " + response.status);
-      return;
-    }
-
-    // navigate("/");
-  };
-
   const displayError = (message) => {
     setErrorMessage(message);
     setError(true);
@@ -130,10 +108,6 @@ const ArtistProfilePage = () => {
       displayError("Ошибка при изменении данных. Код: " + response.status);
       return;
     }
-  };
-
-  const displayAddPortfolioForm = () => {
-    setShowAddPortfolioForm(true);
   };
 
   const renderHeader = () => {
@@ -187,6 +161,29 @@ const ArtistProfilePage = () => {
   }, [sections, clicked]); // Добавляем зависимость от clicked
 
   const [selectedOption, setSelectedOption] = useState("active"); // Начальное значение "Активные"
+
+  const refreshPortfolio = async () => {
+    const response = await getArtist(id);
+
+    if (!response) {
+      displayError("Сервис временно недоступен");
+      return;
+    }
+
+    if (response.status === 401) {
+      localStorage.removeItem("jwt");
+      localStorage.removeItem("role");
+      window.location.reload();
+    }
+
+    if (response.status >= 300) {
+      displayError("Ошибка при загрузке профиля. Код: " + response.status);
+      console.log(response);
+      return;
+    }
+
+    setArtistData(response.data); // Обновляем данные
+  };
 
   return (
     <Grid
@@ -368,56 +365,70 @@ const ArtistProfilePage = () => {
                   </Grid>
                 </Grid>
               )}
-              <div
-                id="portfolio"
-                className="scroll-section"
-                justifyContent="center"
-                alignItems="center"
-                sx={{
-                  maxWidth: "100%",
-                  paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
-                }}
-              >
-                <Typography
-                  variant="h2"
-                  className="section-heading"
-                  margin={"30px"}
+              <div id="portfolio">
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center" // Выравниваем содержимое по центру вертикально
+                  sx={{
+                    paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                    gap: { xs: "5px", md: "50px" },
+                  }}
                 >
-                  Портфолио
-                </Typography>
-                {showAddPortfolioForm ? (
-                  <AddPortfolioForm
-                    submitHandler={createPortfolio}
-                    showAddPortfolioForm={setShowAddPortfolioForm}
-                    cancelHandler={() => setShowAddPortfolioForm(true)}
-                  />
-                ) : (
-                  <Grid
-                    width={"100%"}
-                    justifyContent="center"
-                    alignItems="center"
+                  <Typography
+                    variant="h2"
                     sx={{
-                      paddingLeft: { xs: "1px", md: "20px", lg: "30px" },
+                      fontSize: { xs: "24px", md: "30px" },
+                      display: "flex", // Используем flexbox
+                      alignItems: "center", // Центрируем текст вертикально
                     }}
                   >
-                    {localStorage.getItem("role") === "artist" ? (
-                      <Button
-                        onClick={displayAddPortfolioForm}
-                        variant="outlined"
-                        sx={{
-                          color: "#7A8699",
-                          border: "2px solid #000000", // Ширина и цвет обводки
-                          borderRadius: "4px", // Закругление углов (по желанию)
-                        }}
-                      >
-                        Добавить работу в портфолио
-                      </Button>
-                    ) : (
-                      <></>
-                    )}
-                  </Grid>
-                )}
-                {artistData.Portfolios && artistData.Portfolios.length > 0 ? (
+                    Портфолио
+                  </Typography>
+
+                  {localStorage.getItem("role") === "artist" ? (
+                    <IconButton
+                      style={{
+                        padding: "10px 20px", // Убираем лишние отступы внутри кнопки
+                        color: "#000000",
+                        border: "1px solid #b3b9c4", // Граница
+                        borderRadius: "31px", // Закругление
+                        marginLeft: "20px", // Внешний отступ слева
+                      }}
+                      onClick={() => setShowAddPortfolioForm(true)}
+                      sx={{
+                        display: "flex", // Для выравнивания контента кнопки
+                        alignItems: "center",
+                        gap: "10px", // Расстояние между иконкой и текстом
+                        "&:hover": {
+                          backgroundColor: "rgba(179, 185, 196, 0.2)", // Полупрозрачный серый фон при наведении
+                          borderColor: "#091E42", // Изменение цвета границы при наведении
+                        },
+                      }}
+                    >
+                      <Icon
+                        icon="uil:setting"
+                        color="#b3b9c4"
+                        width="24"
+                        height="24"
+                      />
+                      <Typography fontSize={"14px"} color="#091E42">
+                        Редактировать
+                      </Typography>
+                    </IconButton>
+                  ) : (
+                    <></>
+                  )}
+                </Grid>
+
+                {showAddPortfolioForm ? (
+                  <EditPortfolioForm
+                    cancelHandler={() => setShowAddPortfolioForm(false)}
+                    refreshPortfolio={refreshPortfolio}
+                    portfolios={artistData.Portfolios || []}
+                  />
+                ) : artistData.Portfolios &&
+                  artistData.Portfolios.length > 0 ? (
                   <Grid
                     container
                     item
@@ -460,11 +471,11 @@ const ArtistProfilePage = () => {
                   sx={{
                     marginBottom: "50px",
                     display: "flex",
-                    justifyContent: "center", // Центрируем элементы по горизонтали
+                    justifyContent: "center",
                     listStyle: "none",
                     padding: 0,
-                    borderTop: "2px solid #d1d1d1", // Серые границы
-                    borderBottom: "2px solid #d1d1d1", // Серые границы
+                    borderTop: "2px solid #d1d1d1",
+                    borderBottom: "2px solid #d1d1d1",
                   }}
                 >
                   <Button
@@ -472,16 +483,15 @@ const ArtistProfilePage = () => {
                     onClick={() => setSelectedOption("active")}
                     sx={{
                       flex: 1,
-                      textDecoration: "none",
                       color:
-                        selectedOption === "active" ? "#091E42" : "#b3b9c4", // Синий для активной, серый для неактивной
+                        selectedOption === "active" ? "#091E42" : "#b3b9c4",
                       fontWeight:
-                        selectedOption === "active" ? "bold" : "normal", // Жирный текст для активной
+                        selectedOption === "active" ? "bold" : "normal",
                       backgroundColor:
                         selectedOption === "active"
                           ? "rgba(9, 30, 66, 0.1)"
-                          : "transparent", // Серый фон для активной, белый для неактивной
-                      borderRadius: 0, // Убираем скругления
+                          : "transparent",
+                      borderRadius: 0,
                     }}
                   >
                     Активные
@@ -491,23 +501,21 @@ const ArtistProfilePage = () => {
                     onClick={() => setSelectedOption("archive")}
                     sx={{
                       flex: 1,
-                      textDecoration: "none",
                       color:
-                        selectedOption === "archive" ? "#091E42" : "#b3b9c4", // Синий для активной, серый для неактивной
+                        selectedOption === "archive" ? "#091E42" : "#b3b9c4",
                       fontWeight:
-                        selectedOption === "archive" ? "bold" : "normal", // Жирный текст для активной
+                        selectedOption === "archive" ? "bold" : "normal",
                       backgroundColor:
                         selectedOption === "archive"
                           ? "rgba(9, 30, 66, 0.1)"
-                          : "transparent", // Серый фон для активной, белый для неактивной
-                      borderRadius: 0, // Убираем скругления
+                          : "transparent",
+                      borderRadius: 0,
                     }}
                   >
                     Архив
                   </Button>
                 </Grid>
 
-                {/* Условный рендеринг формы */}
                 {selectedOption === "active" ? (
                   <AuctionSliderForm />
                 ) : (

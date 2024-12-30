@@ -3,13 +3,22 @@ import host from ".";
 const addPortfolio = async (portfolioData) => {
     try {
         const response = await host.post(`/api/portfolio`, portfolioData);
-
         return response;
     } catch (error) {
         handleRequestError(error);
     }
 };
 
+
+const deletePortfolio = async (id) => {
+    try {
+      const response = await host.delete(`/api/portfolio/${id}`);
+      return response;
+    } catch (error) {
+      handleRequestError(error);
+    }
+  };
+  
 const handleRequestError = (error) => {
     if (error.response) {
         return error.response;
@@ -20,4 +29,4 @@ const handleRequestError = (error) => {
     }
 };
 
-export { addPortfolio };
+export { addPortfolio, deletePortfolio };
