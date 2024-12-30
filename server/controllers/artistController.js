@@ -13,7 +13,7 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, "../photo/artist/auction");
+    const dir = path.join(__dirname, "../photo/artist");
     cb(null, dir);
   },
   filename: (req, file, cb) => {
@@ -86,13 +86,13 @@ class ArtistController {
       const originalName = path.parse(req.file.originalname).name;
       const fileExtension = path.extname(req.file.originalname);
       const newFileName = `${artistLogin}_${originalName}${fileExtension}`;
-      const imagePath = path.join(__dirname, "../photo/artist/auction", newFileName);
+      const imagePath = path.join(__dirname, "../photo/artist", newFileName);
   
       fs.renameSync(req.file.path, imagePath);
   
       return res.status(201).json({
         message: "Image uploaded successfully",
-        path: `/photo/artist/auction/${newFileName}`,
+        path: `/photo/artist/${newFileName}`,
       });
     } catch (err) {
       console.error(err);

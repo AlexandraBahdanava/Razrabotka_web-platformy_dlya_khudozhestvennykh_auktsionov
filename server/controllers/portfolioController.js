@@ -1,5 +1,6 @@
 const { Portfolio } = require("../database/models");
-const bcrypt = require("bcrypt");
+const fs = require("fs");
+const path = require("path");
 
 class PortfolioController {
   async addToPortfolio(req, res) {
@@ -32,7 +33,7 @@ class PortfolioController {
         where: { artistId: id },
       });
 
-      if (artist == null) {
+      if (photo == null) {
         return res.sendStatus(404);
       }
 
@@ -41,7 +42,7 @@ class PortfolioController {
       return res.sendStatus(500);
     }
   }
-  // Новый метод для удаления портфолио
+
   async deletePortfolio(req, res) {
     const { id } = req.params; // Получаем id портфолио из параметров запроса
 
@@ -57,7 +58,22 @@ class PortfolioController {
         return res.sendStatus(404); // Если портфолио не найдено, возвращаем ошибку
       }
 
-      // Удаляем портфолио
+      // Абсолютный путь к изображению
+      const imagesDir = path.resolve(
+        "C:/Users/bahda/Desktop/7 семестр/Экспертные системы/Razrabotka_web-platformy_dlya_khudozhestvennykh_auktsionov/server"
+      );
+      const photoPath = path.join(imagesDir, portfolio.photo);
+
+      // Проверяем, существует ли изображение
+      if (fs.existsSync(photoPath)) {
+        // Удаляем изображение
+        fs.unlinkSync(photoPath);
+        console.log(`Фото удалено: ${photoPath}`);
+      } else {
+        console.log("Файл не существует:", photoPath);
+      }
+
+      // Удаляем запись из базы данных
       await portfolio.destroy();
 
       return res.status(200).send("Портфолио успешно удалено"); // Отправляем успешный ответ

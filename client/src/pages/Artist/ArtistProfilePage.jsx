@@ -185,6 +185,9 @@ const ArtistProfilePage = () => {
     setArtistData(response.data); // Обновляем данные
   };
 
+  
+  const baseURL = "http://localhost:3000";
+  
   return (
     <Grid
       container
@@ -442,19 +445,22 @@ const ArtistProfilePage = () => {
                       marginBottom: "50px",
                     }}
                   >
-                    {artistData.Portfolios.map((item) => (
-                      <Grid key={item.id} item xs={6} md={4} lg={3}>
-                        <img
-                          src={item.photo}
-                          alt={`Портфолио ${item.id}`}
-                          style={{
-                            width: "100%",
-                            height: "400px",
-                            objectFit: "cover",
-                          }}
-                        />
-                      </Grid>
-                    ))}
+                    {artistData.Portfolios.map((item) => {
+                      const fullImageUrl = `${baseURL}${item.photo}`;
+                      return (
+                        <Grid key={item.id} item xs={6} md={4} lg={3}>
+                          <img
+                            src={fullImageUrl}
+                            alt={`Портфолио ${item.id}`}
+                            style={{
+                              width: "100%",
+                              height: "400px",
+                              objectFit: "cover",
+                            }}
+                          />
+                        </Grid>
+                      );
+                    })}
                   </Grid>
                 ) : (
                   <div>

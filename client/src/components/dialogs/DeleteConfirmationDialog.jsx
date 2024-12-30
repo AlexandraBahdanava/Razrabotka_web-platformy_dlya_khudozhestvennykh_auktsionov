@@ -26,7 +26,7 @@ const DeleteConfirmationDialog = ({ open, onClose, onConfirm }) => {
         Подтвердите удаление
       </DialogTitle>
       <DialogContent variant="body2" sx={{ marginBottom: "24px" }}>
-        Вы уверены, что хотите удалить это портфолио?
+        Вы уверены, что хотите удалить эту работу из портфолио?
       </DialogContent>
 
       <DialogActions container justifyContent="space-between">
