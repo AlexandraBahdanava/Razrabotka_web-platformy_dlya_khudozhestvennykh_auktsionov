@@ -32,8 +32,6 @@ const upload = multer({
   },
 });
 
-
-
 // Контроллер артиста
 class ArtistController {
   async create(req, res) {
@@ -66,40 +64,42 @@ class ArtistController {
     }
   }
 
-  async createImage (req, res) {
+  async createImage(req, res) {
     try {
       const artistId = req.artistId; // Получаем artistId из токена
       if (!artistId) {
         return res.status(400).json({ error: "Invalid artist ID" });
       }
-  
+
       if (!req.file) {
         return res.status(400).json({ error: "No file provided" });
       }
-  
+
       const artist = await Artist.findByPk(artistId, { attributes: ["login"] });
       if (!artist) {
         return res.status(404).json({ error: "Artist not found" });
       }
-  
+
       const artistLogin = artist.login;
       const originalName = path.parse(req.file.originalname).name;
       const fileExtension = path.extname(req.file.originalname);
       const newFileName = `${artistLogin}_${originalName}${fileExtension}`;
       const imagePath = path.join(__dirname, "../photo/artist", newFileName);
-  
+
       fs.renameSync(req.file.path, imagePath);
-  
+
       return res.status(201).json({
         message: "Image uploaded successfully",
         path: `/photo/artist/${newFileName}`,
       });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: "Server error", details: err.message });
+      return res
+        .status(500)
+        .json({ error: "Server error", details: err.message });
     }
-  };
-  
+  }
+
   async getOne(req, res) {
     const id = req.artistId;
 
@@ -131,30 +131,43 @@ class ArtistController {
 
   async update(req, res) {
     const { id } = req.params;
-
+  
     if (!/^\d+$/.test(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-
+  
     const allowedFields = ["name", "email", "bio", "password"];
     const artistData = {};
+  
     for (const field of allowedFields) {
       if (req.body[field] !== undefined) {
         artistData[field] = req.body[field];
       }
     }
-
+  
     try {
       const artist = await Artist.findByPk(id);
       if (!artist) {
         return res.status(404).json({ error: "Artist not found" });
       }
-
+  
+      // Если передан новый пароль, хешируем его
+      if (artistData.password) {
+        if (artistData.password.length < 6) {
+          return res
+            .status(400)
+            .json({ error: "Password must be at least 6 characters long" });
+        }
+        artistData.password = await bcrypt.hash(artistData.password, 10);
+      }
+  
+      // Обновляем данные художника
       await Artist.update(artistData, { where: { id } });
-
+  
+      // Получаем обновленную информацию о художнике
       const updatedArtist = await Artist.findOne({
         where: { id },
-        attributes: { exclude: ["password"] },
+        attributes: { exclude: ["password"] }, // Исключаем пароль из возвращаемых данных
         include: [
           { model: AuctionArchive },
           { model: Auction },
@@ -162,14 +175,14 @@ class ArtistController {
           { model: Review },
         ],
       });
-
+  
       return res.json(updatedArtist);
     } catch (err) {
       console.error("Error in update:", err);
       return res.status(500).json({ error: "Server error" });
     }
   }
-
+  
   // Получение электронной почты художника по его идентификатору
   async getEmailById(id) {
     try {
@@ -206,5 +219,3 @@ class ArtistController {
 
 module.exports = new ArtistController();
 module.exports.upload = upload;
-
-

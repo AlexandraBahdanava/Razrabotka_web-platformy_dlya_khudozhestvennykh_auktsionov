@@ -10,23 +10,30 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
   const formik = useFormik({
     initialValues: {
       name: artistData.name,
+      surname: artistData.surname,
       country: artistData.country,
       city: artistData.city,
-      bio: artistData.bio,
       avatar: artistData.avatar,
+      bio: artistData.bio,
+      email: artistData.email,
+      login: artistData.login,
+      password: artistData.password,
     },
 
     onSubmit: async (values) => {
-      
       const updatedArtistData = {
         name: values.name,
+        surname: values.surname !== "" ? values.surname : null,
         country: values.country !== "" ? values.country : null,
         city: values.city !== "" ? values.city : null,
-        bio: values.bio !== "" ? values.bio : null,
         avatar: values.avatar,
+        bio: values.bio !== "" ? values.bio : null,
+        email: values.email,
+        login: values.login,
+        password: values.password,
       };
-    
-        applyCallback(updatedArtistData);
+
+      applyCallback(updatedArtistData);
       // Переходим на главную страницу
       navigate("/");
     },
@@ -116,6 +123,22 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
               required
             ></TextField>
             <TextField
+              id="surname"
+              name="surname"
+              fullWidth
+              variant="outlined"
+              label="Фамилия"
+              value={formik.values.surname ?? ""}
+              onChange={handleChangeWithLogging}
+              onBlur={formik.handleBlur}
+              error={formik.touched.surname && formik.errors.surname !== undefined}
+              helperText={
+                formik.touched.surname && formik.errors.surname !== undefined
+                  ? formik.errors.surname
+                  : ""
+              }
+            ></TextField>
+            <TextField
               id="country"
               name="country"
               fullWidth
@@ -166,6 +189,58 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                   ? formik.errors.bio
                   : ""
               }
+            ></TextField>
+            <TextField
+              id="email"
+              name="email"
+              fullWidth
+              variant="outlined"
+              label="Email"
+              value={formik.values.email ?? ""}
+              onChange={handleChangeWithLogging}
+              onBlur={formik.handleBlur}
+              error={formik.touched.email && formik.errors.email !== undefined}
+              helperText={
+                formik.touched.email && formik.errors.email !== undefined
+                  ? formik.errors.email
+                  : ""
+              }
+              required
+            ></TextField>
+            <TextField
+              id="login"
+              name="login"
+              fullWidth
+              variant="outlined"
+              label="Логин"
+              value={formik.values.login ?? ""}
+              onChange={handleChangeWithLogging}
+              onBlur={formik.handleBlur}
+              error={formik.touched.login && formik.errors.login !== undefined}
+              helperText={
+                formik.touched.login && formik.errors.login !== undefined
+                  ? formik.errors.login
+                  : ""
+              }
+              required
+            ></TextField>
+            <TextField
+              id="password"
+              name="password"
+              fullWidth
+              variant="outlined"
+              label="Пароль"
+              type="password"
+              value={formik.values.password ?? ""}
+              onChange={handleChangeWithLogging}
+              onBlur={formik.handleBlur}
+              error={formik.touched.password && formik.errors.password !== undefined}
+              helperText={
+                formik.touched.password && formik.errors.password !== undefined
+                  ? formik.errors.password
+                  : ""
+              }
+              required
             ></TextField>
           </Grid>
 

@@ -11,7 +11,7 @@ import {
 import { createImage } from "../../api/artistApi"; // Импорт метода
 import { useParams } from "react-router-dom";
 
-const ImageUploaderButton = ({ maxImages, onSaveImage }) => {
+const ImageUploaderButton = ({ onSaveImage }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [images, setImages] = useState([]); // Массив для хранения изображений
   const { id } = useParams();
@@ -21,8 +21,8 @@ const ImageUploaderButton = ({ maxImages, onSaveImage }) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    if (images.length >= maxImages) {
-      alert(`Вы можете загрузить не более ${maxImages} изображений.`);
+    if (images.length >= 1) {
+      alert(`Вы можете загрузить не более 1 изображения.`);
       return;
     }
 
