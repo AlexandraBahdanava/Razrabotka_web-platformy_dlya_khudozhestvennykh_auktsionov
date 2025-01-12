@@ -70,24 +70,31 @@ class ArtistController {
       if (!artistId) {
         return res.status(400).json({ error: "Invalid artist ID" });
       }
-
+  
       if (!req.file) {
         return res.status(400).json({ error: "No file provided" });
       }
-
+  
       const artist = await Artist.findByPk(artistId, { attributes: ["login"] });
       if (!artist) {
         return res.status(404).json({ error: "Artist not found" });
       }
-
+  
       const artistLogin = artist.login;
       const originalName = path.parse(req.file.originalname).name;
       const fileExtension = path.extname(req.file.originalname);
       const newFileName = `${artistLogin}_${originalName}${fileExtension}`;
       const imagePath = path.join(__dirname, "../photo/artist", newFileName);
-
+  
+      // Переименовываем файл
       fs.renameSync(req.file.path, imagePath);
-
+  
+      // Обновляем путь изображения в базе данных
+      await Artist.update(
+        { avatar: `/photo/artist/${newFileName}` }, // Обновляем поле с путем к изображению
+        { where: { id: artistId } }
+      );
+  
       return res.status(201).json({
         message: "Image uploaded successfully",
         path: `/photo/artist/${newFileName}`,
@@ -99,6 +106,7 @@ class ArtistController {
         .json({ error: "Server error", details: err.message });
     }
   }
+  
 
   async getOne(req, res) {
     const id = req.artistId;
@@ -132,37 +140,48 @@ class ArtistController {
   async update(req, res) {
     const { id } = req.params;
   
+    // Проверяем формат ID
     if (!/^\d+$/.test(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
   
-    const allowedFields = ["name", "email", "bio", "password"];
-    const artistData = {};
-  
-    for (const field of allowedFields) {
-      if (req.body[field] !== undefined) {
-        artistData[field] = req.body[field];
-      }
-    }
-  
     try {
+      // Ищем художника в базе данных
       const artist = await Artist.findByPk(id);
       if (!artist) {
         return res.status(404).json({ error: "Artist not found" });
       }
   
-      // Если передан новый пароль, хешируем его
-      if (artistData.password) {
-        if (artistData.password.length < 6) {
+      // Проверяем, нужно ли хешировать пароль
+      if (req.body.password) {
+        if (req.body.password.length < 6) {
           return res
             .status(400)
             .json({ error: "Password must be at least 6 characters long" });
         }
-        artistData.password = await bcrypt.hash(artistData.password, 10);
+        req.body.password = await bcrypt.hash(req.body.password, 10);
       }
   
       // Обновляем данные художника
-      await Artist.update(artistData, { where: { id } });
+      await Artist.update(req.body, { where: { id } });
+  
+      // Если было загружено новое изображение, обновляем путь к нему
+      if (req.file) {
+        const artistLogin = artist.login;
+        const originalName = path.parse(req.file.originalname).name;
+        const fileExtension = path.extname(req.file.originalname);
+        const newFileName = `${artistLogin}_${originalName}${fileExtension}`;
+        const imagePath = path.join(__dirname, "../photo/artist", newFileName);
+  
+        // Переименовываем файл
+        fs.renameSync(req.file.path, imagePath);
+  
+        // Обновляем путь изображения в базе данных
+        await Artist.update(
+          { avatar: `/photo/artist/${newFileName}` },
+          { where: { id } }
+        );
+      }
   
       // Получаем обновленную информацию о художнике
       const updatedArtist = await Artist.findOne({
@@ -182,6 +201,7 @@ class ArtistController {
       return res.status(500).json({ error: "Server error" });
     }
   }
+  
   
   // Получение электронной почты художника по его идентификатору
   async getEmailById(id) {

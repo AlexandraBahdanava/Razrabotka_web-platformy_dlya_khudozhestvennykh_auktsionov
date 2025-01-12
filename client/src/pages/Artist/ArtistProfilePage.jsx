@@ -185,9 +185,9 @@ const ArtistProfilePage = () => {
     setArtistData(response.data); // Обновляем данные
   };
 
-  
   const baseURL = "http://localhost:3000";
-  
+  const fullAvatarUrl = `${baseURL}${artistData.avatar}`;
+
   return (
     <Grid
       container
@@ -210,11 +210,7 @@ const ArtistProfilePage = () => {
             }}
           >
             <Avatar
-              src={
-                artistData.id !== undefined
-                  ? artistData.avatar
-                  : "" /* Путь к стандартной иконке, если нет аватара */
-              }
+              src={fullAvatarUrl}
               variant="circular"
               sx={{
                 width: { xs: 80, md: 120 } /* Размеры круглого аватара */,
