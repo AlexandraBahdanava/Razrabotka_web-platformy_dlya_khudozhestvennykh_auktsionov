@@ -89,12 +89,6 @@ class ArtistController {
       // Переименовываем файл
       fs.renameSync(req.file.path, imagePath);
   
-      // Обновляем путь изображения в базе данных
-      await Artist.update(
-        { avatar: `/photo/artist/${newFileName}` }, // Обновляем поле с путем к изображению
-        { where: { id: artistId } }
-      );
-  
       return res.status(201).json({
         message: "Image uploaded successfully",
         path: `/photo/artist/${newFileName}`,

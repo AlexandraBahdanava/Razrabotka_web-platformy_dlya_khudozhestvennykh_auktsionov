@@ -93,7 +93,14 @@ const ImageUploaderButton = ({ onSaveImage }) => {
         variant="contained"
         color="primary"
         component="label"
-        style={{ marginBottom: "16px" }}
+        sx={{
+          borderColor: "#dcdcdc",
+          color: "#333",
+          borderRadius: "8px",
+          padding: "10px 20px",
+          textTransform: "none",
+          marginRight: "10px",
+        }}
       >
         Загрузить изображение
         <input

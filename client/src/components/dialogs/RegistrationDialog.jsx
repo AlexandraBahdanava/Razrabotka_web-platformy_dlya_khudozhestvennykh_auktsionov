@@ -1,4 +1,3 @@
-// components/RegistrationDialog.js
 import React, { useState } from "react";
 import {
   Dialog,

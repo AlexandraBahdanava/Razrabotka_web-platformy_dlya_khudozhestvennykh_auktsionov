@@ -11,12 +11,68 @@ import {
   FormControl,
 } from "@mui/material";
 import { useFormik } from "formik";
-import validateAuctionData from "../../utils/validateAuctionData";
 import React from "react";
 import * as Yup from "yup";
 import ImageUploader from "../buttons/ImageUploaderButton";
 
 const CreateAuctionForm = ({ submitHandler }) => {
+  const validationSchema = Yup.object({
+    title: Yup.string()
+
+      .required("Название не может быть пустым")
+      .min(3, "Название должно быть не менее 3 символов")
+      .max(50, "Название не должно превышать 50 символов"),
+
+    description: Yup.string()
+      .min(10, "Описание должно быть не менее 10 символов")
+      .max(200, "Описание не должно превышать 200 символов"),
+
+    genre: Yup.string()
+      .required("Выберите жанр")
+      .notOneOf([""], "Выберите жанр из списка"),
+
+    material: Yup.string()
+      .required("Выберите материал")
+      .notOneOf([""], "Выберите материал из списка"),
+
+    color: Yup.string()
+      .required("Выберите цвет")
+      .notOneOf([""], "Выберите цвет"),
+
+    duration: Yup.number()
+      .required("Введите длительность")
+      .min(1, "Длительность должна быть больше 0")
+      .nullable()
+      .typeError("Длительность должна быть числом"),
+
+    starting_price: Yup.number()
+      .required("Введите начальную цену")
+      .min(1, "Цена должна быть больше 0")
+      .typeError("Цена должна быть числом"),
+
+    rate_step: Yup.number()
+      .required("Введите шаг ставки")
+      .min(1, "Шаг ставки должен быть больше 0")
+      .max(100, "Шаг ставки должен быть не больше 100")
+      .typeError("Шаг ставки должен быть числом"),
+
+    bidding: Yup.string().required("Выберите возможность биддинга"),
+    
+    bidding_rate: Yup.number()
+    .typeError("Цена должна быть числом"),
+    
+    auto_renewal: Yup.boolean().required("Выберите возможность автообновления"),
+
+    tags: Yup.string()
+      .required("Введите теги")
+      .matches(
+        /^[a-zA-Z0-9, ]+$/,
+        "Теги могут содержать только буквы, цифры и запятые"
+      ),
+
+    photo: Yup.mixed().required("Загрузите фото"),
+  });
+
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -33,36 +89,35 @@ const CreateAuctionForm = ({ submitHandler }) => {
       tags: "",
       photo: "",
     },
-    validate: validateAuctionData,
+    validationSchema,
     onSubmit: (values) => {
       submitHandler(values);
     },
   });
 
-  // Схема валидации
-  const validationSchema = Yup.object({
-    bidding: Yup.string().required("Выберите возможность биддинга"),
-    bidding_rate: Yup.number()
-      .when("bidding", {
-        is: "1", // Если выбрано "да"
-        then: Yup.number()
-          .required("Введите цену биддинга")
-          .min(1, "Цена должна быть больше 0"),
-        otherwise: Yup.number().notRequired(),
-      })
-      .typeError("Цена должна быть числом"),
-  });
+  const textFieldStyles = {
+    borderRadius: "8px",
+    "& .MuiInputLabel-root": {
+      fontSize: "14px", // Размер шрифта метки
+    },
+    "& .MuiInputBase-root": {
+      fontSize: "14px", // Размер текста ввода
+    },
+  };
+
+  const labelStyles = {
+    fontWeight: "bold",
+    color: "#091E42",
+    fontSize: "14px",
+  };
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Grid
         container
-        item
-        maxWidth={"700px"}
-        width={"700px"}
-        gap={"15px"}
-        mt={"50px"}
-        marginBottom={"50px"}
+        flexDirection="column"
+        gap="10px"
+        style={{ width: "800px", marginBottom: "50px" }}
       >
         <Grid
           container
@@ -71,18 +126,33 @@ const CreateAuctionForm = ({ submitHandler }) => {
           justifyContent={"center"}
           alignItems={"center"}
         >
-          <Typography variant="h2" textAlign={"center"}>
+          <Typography
+            sx={{
+              fontWeight: "bold",
+              color: "#091E42",
+              fontSize: "22px",
+              marginTop: "20px",
+            }}
+            textAlign={"center"}
+          >
             Создание аукциона
           </Typography>
         </Grid>
-        <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Заголовок*:
-        </Typography>
+        <Typography sx={labelStyles}>Заголовок*:</Typography>
         <TextField
           id="title"
           name="title"
           fullWidth
           variant="outlined"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
+          sx={textFieldStyles}
           label="Придумайте заголовок"
           value={formik.values.title}
           onChange={formik.handleChange}
@@ -94,14 +164,21 @@ const CreateAuctionForm = ({ submitHandler }) => {
               : ""
           }
         />
-        <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Теги*:
-        </Typography>
+        <Typography sx={labelStyles}>Теги*:</Typography>
         <TextField
           id="tags"
           name="tags"
           fullWidth
           variant="outlined"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
+          sx={textFieldStyles}
           label="Начните писать (через запятую)"
           value={formik.values.tags}
           onChange={formik.handleChange}
@@ -114,14 +191,21 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
           required
         />
-        <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Описание:
-        </Typography>
+        <Typography sx={labelStyles}>Описание:</Typography>
         <TextField
           id="description"
           name="description"
           fullWidth
           variant="outlined"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
+          sx={textFieldStyles}
           label="Заполните описание"
           multiline
           maxRows={10}
@@ -140,9 +224,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
         />
         <FormControl fullWidth>
-          <Typography variant="body1" style={{ marginRight: "10px" }}>
-            Жанр*:
-          </Typography>
+          <Typography sx={labelStyles}>Жанр*:</Typography>
           <Select
             id="genre"
             name="genre"
@@ -152,16 +234,24 @@ const CreateAuctionForm = ({ submitHandler }) => {
             error={formik.touched.genre && formik.errors.genre !== undefined}
             label="Жанр"
           >
-            <MenuItem value="Мифологический">Мифологический</MenuItem>
-            <MenuItem value="Портрет">Портрет</MenuItem>
-            <MenuItem value="Анималистический">Анималистический</MenuItem>
-            <MenuItem value="Бытовой">Бытовой</MenuItem>
-            <MenuItem value="Пейзаж">Пейзаж</MenuItem>
+            <MenuItem value="Мифологический" sx={{ fontSize: "14px" }}>
+              Мифологический
+            </MenuItem>
+            <MenuItem value="Портрет" sx={{ fontSize: "14px" }}>
+              Портрет
+            </MenuItem>
+            <MenuItem value="Анималистический" sx={{ fontSize: "14px" }}>
+              Анималистический
+            </MenuItem>
+            <MenuItem value="Бытовой" sx={{ fontSize: "14px" }}>
+              Бытовой
+            </MenuItem>
+            <MenuItem value="Пейзаж" sx={{ fontSize: "14px" }}>
+              Пейзаж
+            </MenuItem>
           </Select>
         </FormControl>
-        <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Материал*:
-        </Typography>
+        <Typography sx={labelStyles}>Материал*:</Typography>
         <FormControl fullWidth>
           <Select
             id="material"
@@ -174,15 +264,21 @@ const CreateAuctionForm = ({ submitHandler }) => {
             }
             label="Материал"
           >
-            <MenuItem value="Цифровое">Цифровое</MenuItem>
-            <MenuItem value="Акрил">Акрил</MenuItem>
-            <MenuItem value="Карандаш">Карандаш</MenuItem>
-            <MenuItem value="Акварель">Акварель</MenuItem>
+            <MenuItem value="Цифровое" sx={{ fontSize: "14px" }}>
+              Цифровое
+            </MenuItem>
+            <MenuItem value="Акрил" sx={{ fontSize: "14px" }}>
+              Акрил
+            </MenuItem>
+            <MenuItem value="Карандаш" sx={{ fontSize: "14px" }}>
+              Карандаш
+            </MenuItem>
+            <MenuItem value="Акварель" sx={{ fontSize: "14px" }}>
+              Акварель
+            </MenuItem>
           </Select>
         </FormControl>
-        <Typography variant="body1" style={{ marginRight: "10px" }}>
-          Цвет*:
-        </Typography>
+        <Typography sx={labelStyles}>Цвет*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="color"
@@ -194,18 +290,47 @@ const CreateAuctionForm = ({ submitHandler }) => {
           >
             <FormControlLabel
               value="Пастельное"
-              control={<Radio />}
-              label="Пастельное"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Пастельное</span>}
             />
             <FormControlLabel
               value="Черно-белое"
-              control={<Radio />}
-              label="Черно-белое"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Черно-белое</span>}
             />
-            <FormControlLabel value="Яркое" control={<Radio />} label="Яркое" />
+            <FormControlLabel
+              value="Яркое"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Яркое</span>}
+            />
           </RadioGroup>
         </Grid>
-        <Typography variant="body1">Продолжительность аукциона*:</Typography>
+
+        <Typography sx={labelStyles}>Продолжительность аукциона*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="duration"
@@ -215,18 +340,75 @@ const CreateAuctionForm = ({ submitHandler }) => {
             onBlur={formik.handleBlur}
             style={{ display: "flex", flexDirection: "row" }}
           >
-            <FormControlLabel value="1" control={<Radio />} label="1 день" />
-            <FormControlLabel value="3" control={<Radio />} label="3 дня" />
-            <FormControlLabel value="7" control={<Radio />} label="7 дней" />
-            <FormControlLabel value="12" control={<Radio />} label="12 дней" />
+            <FormControlLabel
+              value="1"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>1 день</span>}
+            />
+            <FormControlLabel
+              value="3"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>3 дня</span>}
+            />
+            <FormControlLabel
+              value="7"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>7 дней</span>}
+            />
+            <FormControlLabel
+              value="12"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>12 дней</span>}
+            />
           </RadioGroup>
         </Grid>
-        <Typography variant="body1">Начальная цена*:</Typography>
+        <Typography sx={labelStyles}>Начальная цена*:</Typography>
         <TextField
           id="starting_price"
           name="starting_price"
           fullWidth
           variant="outlined"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
+          sx={textFieldStyles}
           label="Введите сумму"
           value={formik.values.starting_price}
           onChange={formik.handleChange}
@@ -243,12 +425,21 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
           required
         />
-        <Typography variant="body1">Шаг ставки*:</Typography>
+        <Typography sx={labelStyles}>Шаг ставки*:</Typography>
         <TextField
           id="rate_step"
           name="rate_step"
           fullWidth
           variant="outlined"
+          InputLabelProps={{
+            sx: {
+              color: "#42526D", // Цвет текста метки
+              "&.Mui-focused": {
+                color: "#42526D", // Цвет текста активной метки
+              },
+            },
+          }}
+          sx={textFieldStyles}
           label="Введите сумму"
           value={formik.values.rate_step}
           onChange={formik.handleChange}
@@ -263,7 +454,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           }
           required
         />
-        <Typography variant="body1">Возможность биддинга*:</Typography>
+        <Typography sx={labelStyles}>Возможность биддинга*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="bidding"
@@ -273,8 +464,32 @@ const CreateAuctionForm = ({ submitHandler }) => {
             onBlur={formik.handleBlur}
             style={{ display: "flex", flexDirection: "row" }}
           >
-            <FormControlLabel value="1" control={<Radio />} label="да" />
-            <FormControlLabel value="0" control={<Radio />} label="нет" />
+            <FormControlLabel
+              value="1"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Да</span>}
+            />
+            <FormControlLabel
+              value="0"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Нет</span>}
+            />
           </RadioGroup>
           {formik.touched.bidding && formik.errors.bidding && (
             <Typography variant="body2" color="error">
@@ -283,7 +498,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
           )}
         </Grid>
         {formik.values.bidding === "1" && (
-          <Typography variant="body1">Сумма биддинга*:</Typography>
+          <Typography sx={labelStyles}>Сумма биддинга*:</Typography>
         )}
         {formik.values.bidding === "1" && (
           <TextField
@@ -291,6 +506,15 @@ const CreateAuctionForm = ({ submitHandler }) => {
             name="bidding_rate"
             fullWidth
             variant="outlined"
+            sx={textFieldStyles}
+            InputLabelProps={{
+              sx: {
+                color: "#42526D", // Цвет текста метки
+                "&.Mui-focused": {
+                  color: "#42526D", // Цвет текста активной метки
+                },
+              },
+            }}
             label="Введите сумму"
             value={formik.values.bidding_rate}
             onChange={formik.handleChange}
@@ -308,7 +532,7 @@ const CreateAuctionForm = ({ submitHandler }) => {
             required
           />
         )}
-        <Typography variant="body1">Автопродление*:</Typography>
+        <Typography sx={labelStyles}>Автопродление*:</Typography>
         <Grid container direction="row" alignItems="center">
           <RadioGroup
             id="auto_renewal"
@@ -318,8 +542,32 @@ const CreateAuctionForm = ({ submitHandler }) => {
             onBlur={formik.handleBlur}
             style={{ display: "flex", flexDirection: "row" }}
           >
-            <FormControlLabel value="1" control={<Radio />} label="да" />
-            <FormControlLabel value="0" control={<Radio />} label="нет" />
+            <FormControlLabel
+              value="1"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Да</span>}
+            />
+            <FormControlLabel
+              value="0"
+              control={
+                <Radio
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#091E42",
+                    },
+                  }}
+                />
+              }
+              label={<span style={{ fontSize: "14px" }}>Нет</span>}
+            />
           </RadioGroup>
         </Grid>
 
@@ -338,7 +586,15 @@ const CreateAuctionForm = ({ submitHandler }) => {
             type="submit"
             variant="contained"
             color="primary"
-            style={{ width: "100%" }}
+            sx={{
+              borderColor: "#dcdcdc",
+              color: "#333",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              textTransform: "none",
+              marginRight: "10px",
+              width: "100%",
+            }}
           >
             Сохранить аукцион
           </Button>
