@@ -1,27 +1,52 @@
-import React, { useState } from "react";
+import React from "react";
 import { Grid, Typography, TextField, Button, Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { useFormik } from "formik";
+import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import ImageUploader from "../buttons/ImageUploaderButton";
 
 const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
   const navigate = useNavigate();
-  const [validationErrors, setValidationErrors] = useState({});
 
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-
-  const [formData, setFormData] = useState({
-    name: artistData.name,
-    surname: artistData.surname,
-    country: artistData.country,
-    city: artistData.city,
-    avatar: artistData.avatar,
-    bio: artistData.bio,
-    email: artistData.email,
-    login: artistData.login,
-    password: artistData.password,
+  // Validation schema using Yup
+  const validationSchema = Yup.object({
+    login: Yup.string()
+      .required("Логин не может быть пустым")
+      .matches(
+        /^[a-zA-Z0-9]+$/,
+        "Логин может содержать только латинские буквы и цифры"
+      )
+      .max(20, "Логин не может быть длиннее 20 символов"),
+    bio: Yup.string().nullable(),
+    password: Yup.string()
+      .required("Пароль не может быть пустым")
+      .max(20, "Пароль не может быть длиннее 20 символов")
+      .matches(
+        /^[a-zA-Z0-9]+$/,
+        "Пароль может содержать только латинские буквы и цифры"
+      ),
+    email: Yup.string()
+      .required("Email не может быть пустым")
+      .email("Введите корректный адрес электронной почты"),
+    name: Yup.string()
+      .required("Имя не может быть пустым")
+      .matches(/^[а-яА-ЯёЁa-zA-Z]+$/, "Имя может содержать только буквы"),
+    surname: Yup.string()
+      .required("Фамилия не может быть пустой")
+      .matches(/^[а-яА-ЯёЁa-zA-Z]+$/, "Фамилия может содержать только буквы"),
+    country: Yup.string()
+      .required("Страна не может быть пустой")
+      .matches(
+        /^[а-яА-ЯёЁa-zA-Z\s-]+$/,
+        "Страна может содержать только буквы, пробелы и дефисы"
+      ),
+    city: Yup.string()
+      .required("Город не может быть пустым")
+      .matches(
+        /^[а-яА-ЯёЁa-zA-Z\s-]+$/,
+        "Город может содержать только буквы, пробелы и дефисы"
+      ),
   });
 
   const formik = useFormik({
@@ -36,11 +61,8 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
       login: artistData.login,
       password: artistData.password,
     },
-
+    validationSchema,
     onSubmit: async (values) => {
-      if (!formik.isValid) {
-        return; // Не продолжаем выполнение, если есть ошибки
-      }
       const updatedArtistData = {
         name: values.name,
         surname: values.surname !== "" ? values.surname : null,
@@ -58,15 +80,22 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
     },
   });
 
-  const handleChangeWithLogging = (e) => {
-    formik.handleChange(e);
+  const textFieldStyles = {
+    borderRadius: "8px",
+    "& .MuiInputLabel-root": {
+      fontSize: "14px", // Размер шрифта метки
+    },
+    "& .MuiInputBase-root": {
+      fontSize: "14px", // Размер текста ввода
+    },
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const labelStyles = {
+    fontWeight: "bold",
+    color: "#091E42",
+    fontSize: "14px",
   };
-  
+
   return (
     <form onSubmit={formik.handleSubmit} style={{ width: "100%" }}>
       <Grid
@@ -100,21 +129,13 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
         </Grid>
 
         <Grid container flexDirection="column" gap="10px">
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            *Логин:
-          </Typography>
+          <Typography sx={labelStyles}>*Логин:</Typography>
           <TextField
             id="login"
             name="login"
+            label="Введите логин"
             fullWidth
             variant="outlined"
-            label="Введите логин"
             InputLabelProps={{
               sx: {
                 color: "#42526D", // Цвет текста метки
@@ -153,62 +174,20 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                 </Tooltip>
               ),
             }}
-            value={formData.login}
-            onChange={(e) => {
-              const { value } = e.target;
-
-              if (!value.trim()) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  login: "Логин не может быть пустым",
-                }));
-              } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  login: "Логин может содержать только латинские буквы и цифры",
-                }));
-              } else if (value.length > 20) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  login: "Логин не может быть длиннее 20 символов",
-                }));
-              } else {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  login: "",
-                }));
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                login: value,
-              }));
-            }}
+            value={formik.values.login}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={!!validationErrors.login}
-            helperText={validationErrors.login || " "}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px", // Укажите размер шрифта
-              },
-            }}
+            error={formik.touched.login && Boolean(formik.errors.login)}
+            helperText={formik.touched.login && formik.errors.login}
+            sx={textFieldStyles}
           />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            *Пароль:
-          </Typography>
+          <Typography sx={labelStyles}>*Пароль:</Typography>
           <TextField
             id="password"
             name="password"
+            label="Введите пароль"
             fullWidth
             variant="outlined"
-            label="Введите пароль"
             InputLabelProps={{
               sx: {
                 color: "#42526D", // Цвет текста метки
@@ -247,88 +226,34 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
                 </Tooltip>
               ),
             }}
-            value={formData.password}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              let error = "";
-              if (!value.trim()) {
-                error = "Пароль не может быть пустым";
-              } else if (value.length > 20) {
-                error = "Пароль не может быть длиннее 20 символов";
-              } else if (!/^[a-zA-Z0-9]+$/.test(value)) {
-                error = "Пароль может содержать только латинские буквы и цифры";
-              }
-
-              setValidationErrors((prev) => ({
-                ...prev,
-                password: error,
-              }));
-              setFormData((prev) => ({
-                ...prev,
-                password: value,
-              }));
-            }}
+            value={formik.values.password}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={!!validationErrors.password}
-            helperText={validationErrors.password || " "}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px",
-              },
-            }}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+            sx={textFieldStyles}
           />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            *Email:
-          </Typography>
+          <Typography sx={labelStyles}>*Email:</Typography>
           <TextField
             id="email"
             name="email"
+            label="Введите email"
             fullWidth
             variant="outlined"
-            label="Введите email"
-            onBlur={formik.handleBlur}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px", // Укажите размер шрифта
+            InputLabelProps={{
+              sx: {
+                color: "#42526D", // Цвет текста метки
+                "&.Mui-focused": {
+                  color: "#42526D", // Цвет текста активной метки
+                },
               },
             }}
-            value={formData.email}
-            onChange={(e) => {
-              const { value } = e.target;
-
-              if (!value.trim()) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  email: "Email не может быть пустым",
-                }));
-              } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  email: "Введите корректный адрес электронной почты",
-                }));
-              } else {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  email: "",
-                }));
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                email: value,
-              }));
-            }}
-            error={!!validationErrors.email}
-            helperText={validationErrors.email || " "}
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+            sx={textFieldStyles}
           />
           <Grid container justifyContent="center" alignItems="center">
             <Typography
@@ -344,222 +269,95 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
             </Typography>
           </Grid>
 
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            *Имя:
-          </Typography>
+          <Typography sx={labelStyles}>*Имя:</Typography>
           <TextField
             id="name"
             name="name"
+            label="Введите имя пользователя"
             fullWidth
             variant="outlined"
-            label="Введите имя пользователя"
-            onBlur={formik.handleBlur}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px", // Укажите размер шрифта
+            InputLabelProps={{
+              sx: {
+                color: "#42526D", // Цвет текста метки
+                "&.Mui-focused": {
+                  color: "#42526D", // Цвет текста активной метки
+                },
               },
             }}
-            value={formData.name}
-            onChange={(e) => {
-              const { value } = e.target;
-
-              if (!value.trim()) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  name: "Имя не может быть пустым",
-                }));
-              } else if (!/^[а-яА-ЯёЁa-zA-Z]+$/.test(value)) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  name: "Имя может содержать только буквы",
-                }));
-              } else {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  name: "",
-                }));
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                name: value,
-              }));
-            }}
-            error={!!validationErrors.name}
-            helperText={validationErrors.name || " "}
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+            sx={textFieldStyles}
           />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px"
-            }}
-          >
-            *Фамилия:
-          </Typography>
+          <Typography sx={labelStyles}>*Фамилия:</Typography>
           <TextField
             id="surname"
             name="surname"
+            label="Введите фамилию"
             fullWidth
             variant="outlined"
-            label="Введите фамилию"
-            onBlur={formik.handleBlur}
-            error={!!validationErrors.surname}
-            helperText={validationErrors.surname || " "}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px",
+            InputLabelProps={{
+              sx: {
+                color: "#42526D", // Цвет текста метки
+                "&.Mui-focused": {
+                  color: "#42526D", // Цвет текста активной метки
+                },
               },
             }}
-            value={formData.surname}
-            onChange={(e) => {
-              const { value } = e.target;
-
-              if (!value.trim()) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  surname: "Фамилия не может быть пустой",
-                }));
-              } else if (!/^[а-яА-ЯёЁa-zA-Z]+$/.test(value)) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  surname: "Фамилия может содержать только буквы",
-                }));
-              } else {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  surname: "",
-                }));
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                surname: value,
-              }));
-            }}
+            value={formik.values.surname}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.surname && Boolean(formik.errors.surname)}
+            helperText={formik.touched.surname && formik.errors.surname}
+            sx={textFieldStyles}
           />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            *Страна:
-          </Typography>
+          <Typography sx={labelStyles}>*Страна:</Typography>
           <TextField
             id="country"
             name="country"
+            label="Введите страну"
             fullWidth
             variant="outlined"
-            label="Введите страну"
-            onBlur={formik.handleBlur}
-            error={!!validationErrors.country}
-            helperText={validationErrors.country || " "}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px", // Укажите размер шрифта
+            InputLabelProps={{
+              sx: {
+                color: "#42526D", // Цвет текста метки
+                "&.Mui-focused": {
+                  color: "#42526D", // Цвет текста активной метки
+                },
               },
             }}
-            value={formData.country}
-            onChange={(e) => {
-              const { value } = e.target;
-
-              if (!value.trim()) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  country: "Страна не может быть пустой",
-                }));
-              } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  country:
-                    "Страна может содержать только буквы, пробелы и дефисы",
-                }));
-              } else {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  country: "",
-                }));
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                country: value,
-              }));
-            }}
+            value={formik.values.country}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.country && Boolean(formik.errors.country)}
+            helperText={formik.touched.country && formik.errors.country}
+            sx={textFieldStyles}
           />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            
-            }}
-          >
-            *Город:
-          </Typography>
+          <Typography sx={labelStyles}>*Город:</Typography>
           <TextField
             id="city"
             name="city"
+            label="Введите город"
             fullWidth
             variant="outlined"
-            label="Введите город"
-            onBlur={formik.handleBlur}
-            error={!!validationErrors.city}
-            helperText={validationErrors.city || " "}
-            sx={{
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px", // Укажите размер шрифта
+            InputLabelProps={{
+              sx: {
+                color: "#42526D", // Цвет текста метки
+                "&.Mui-focused": {
+                  color: "#42526D", // Цвет текста активной метки
+                },
               },
             }}
-            value={formData.city}
-            onChange={(e) => {
-              const { value } = e.target;
-
-              if (!value.trim()) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  city: "Город не может быть пустым",
-                }));
-              } else if (!/^[а-яА-ЯёЁa-zA-Z\s-]+$/.test(value)) {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  city: "Город может содержать только буквы, пробелы и дефисы",
-                }));
-              } else {
-                setValidationErrors((prev) => ({
-                  ...prev,
-                  city: "",
-                }));
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                city: value,
-              }));
-            }}
+            value={formik.values.city}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.city && Boolean(formik.errors.city)}
+            helperText={formik.touched.city && formik.errors.city}
+            sx={textFieldStyles}
           />
-
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            О себе:
-          </Typography>
+          <Typography sx={labelStyles}>О себе:</Typography>
           <TextField
             id="bio"
             name="bio"
@@ -568,32 +366,14 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
             multiline
             rows={4}
             label="О себе"
-            value={formik.values.bio ?? ""}
-            onChange={handleChangeWithLogging}
+            value={formik.values.bio}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.bio && formik.errors.bio !== undefined}
-            helperText={
-              formik.touched.bio && formik.errors.bio !== undefined
-                ? formik.errors.bio
-                : ""
-            }
-            sx={{
-              background: "#F9FAFB",
-              borderRadius: "8px",
-              "& .MuiInputLabel-root": {
-                fontSize: "14px", // Укажите размер шрифта
-              },
-            }}
+            error={formik.touched.bio && Boolean(formik.errors.bio)}
+            helperText={formik.touched.bio && formik.errors.bio}
+            sx={textFieldStyles}
           />
-          <Typography
-            sx={{
-              fontWeight: "bold",
-              color: "#091E42",
-              fontSize: "14px",
-            }}
-          >
-            Аватар:
-          </Typography>
+          <Typography sx={labelStyles}>Аватар:</Typography>
           <ImageUploader
             onSaveImage={(imagePath) => {
               if (imagePath) {
@@ -614,16 +394,6 @@ const ArtistEditForm = ({ artistData, cancelHandler, applyCallback }) => {
           >
             Поля, помеченные "*" обязательно должны быть заполнены
           </Typography>
-
-          {error && (
-            <Typography
-              variant="body2"
-              color="error"
-              sx={{ marginBottom: "16px" }}
-            >
-              {errorMessage}
-            </Typography>
-          )}
 
           <Grid container justifyContent="center">
             <Button
