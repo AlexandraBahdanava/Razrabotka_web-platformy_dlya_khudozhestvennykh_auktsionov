@@ -125,6 +125,10 @@ const AuctionArchive = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: false
     },
+    is_ai_generated: {
+      type: DataTypes.SMALLINT,
+      allowNull: false,
+    },
   }, 
   {
     tableName: "Auctions", // фактическое имя таблицы в базе данных

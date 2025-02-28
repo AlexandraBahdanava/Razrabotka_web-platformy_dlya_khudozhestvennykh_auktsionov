@@ -2,9 +2,11 @@
 
 # dependencies
 /node_modules
+/venv
 /photo
 /.pnp
 .pnp.js
+/AiChecked/trained_model.h5
 
 # testing
 /coverage
